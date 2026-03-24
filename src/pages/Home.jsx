@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Trophy, Handshake, Calendar, Heart, ArrowRight } from 'lucide-react';
 import SectionHeading from '../components/shared/SectionHeading';
-import { useSiteSettings } from '../hooks/useSiteSettings';
+import LatestUpdates from '../components/home/LatestUpdates';
 import { base44 } from '@/api/base44Client';
 
 const highlights = [
@@ -126,6 +126,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Latest Updates */}
+      <LatestUpdates />
 
       {/* CTA */}
       <section className="py-20 md:py-28 bg-primary relative overflow-hidden">
