@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Users, Target, HeartHandshake, ArrowRight } from 'lucide-react';
 import SectionHeading from '../components/shared/SectionHeading';
 import { useSiteSettings } from '../hooks/useSiteSettings';
+import ReactMarkdown from 'react-markdown';
 
 const MEETING_IMG = 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/cd49e8311_generated_b0a84d9f.png';
 
@@ -23,7 +24,6 @@ export default function About() {
           <SectionHeading
             eyebrow={settings.about_eyebrow || 'About Us'}
             title={settings.about_heading || 'Who We Are'}
-            description={settings.about_intro || "Key Club International is the oldest and largest service program for high school students, with over 250,000 members worldwide. Our Milford chapter carries on this proud tradition."}
           />
         </div>
       </section>
