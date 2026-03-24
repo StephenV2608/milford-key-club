@@ -17,15 +17,7 @@ const HERO_FALLBACK = 'https://media.base44.com/images/public/69c2a0f26438a6d865
 const PROJECT_FALLBACK = 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/966810261_generated_0f8cf771.png';
 
 export default function Home() {
-  const { settings } = useSiteSettings();
-  const [featuredProject, setFeaturedProject] = useState(null);
-
-  useEffect(() => {
-    base44.entities.Project.list('order', 1).then(list => {
-      if (list[0]) setFeaturedProject(list[0]);
-    });
-  }, []);
-
+  const [settings] = useState({});
   const heroTitle = settings.hero_title || 'Milford\nKey Club';
   const heroSubtitle = settings.hero_subtitle || 'Building Leaders Through Service';
 
