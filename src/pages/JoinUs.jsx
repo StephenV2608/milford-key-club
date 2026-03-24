@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Clock, MapPin, DollarSign, Heart, Users, Sparkles, ArrowRight } from 'lucide-react';
 import SectionHeading from '../components/shared/SectionHeading';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 
 const reasons = [
   { icon: Users, title: 'Leadership Skills', desc: 'Develop real-world leadership experience through organizing projects and leading teams.' },
@@ -10,6 +11,8 @@ const reasons = [
 ];
 
 export default function JoinUs() {
+  const { settings } = useSiteSettings();
+
   return (
     <div>
       <section className="py-16 md:py-24 bg-muted/50">
@@ -22,7 +25,6 @@ export default function JoinUs() {
         </div>
       </section>
 
-      {/* How to Join */}
       <section className="py-16 md:py-24">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-10 md:gap-16">
@@ -35,7 +37,7 @@ export default function JoinUs() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-sm mb-1">Meeting Time</h4>
-                    <p className="text-sm text-muted-foreground">Every Wednesday, 3:00 PM – 4:00 PM</p>
+                    <p className="text-sm text-muted-foreground">{settings.meeting_time || 'Every Wednesday, 3:00 PM – 4:00 PM'}</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
@@ -44,7 +46,7 @@ export default function JoinUs() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-sm mb-1">Location</h4>
-                    <p className="text-sm text-muted-foreground">Room 204, Milford High School</p>
+                    <p className="text-sm text-muted-foreground">{settings.meeting_location || 'Room 204, Milford High School'}</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
@@ -53,7 +55,7 @@ export default function JoinUs() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-sm mb-1">Dues</h4>
-                    <p className="text-sm text-muted-foreground">$15 per year (covers international dues & supplies)</p>
+                    <p className="text-sm text-muted-foreground">{settings.dues_info || '$15 per year'}</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
@@ -62,13 +64,12 @@ export default function JoinUs() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-sm mb-1">Requirements</h4>
-                    <p className="text-sm text-muted-foreground">Minimum 50 service hours per year & regular meeting attendance</p>
+                    <p className="text-sm text-muted-foreground">{settings.requirements_info || 'Minimum 50 service hours per year & regular meeting attendance'}</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Sign Up CTA */}
             <div className="bg-primary rounded-2xl p-8 md:p-10 flex flex-col justify-center text-primary-foreground">
               <h3 className="font-heading font-bold text-2xl mb-3">Ready to Start?</h3>
               <p className="text-primary-foreground/80 mb-6 leading-relaxed">
@@ -84,7 +85,6 @@ export default function JoinUs() {
         </div>
       </section>
 
-      {/* Why Join */}
       <section className="py-16 md:py-24 bg-muted/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading

@@ -15,6 +15,7 @@ import Officers from './pages/Officers';
 import Gallery from './pages/Gallery';
 import JoinUs from './pages/JoinUs';
 import Contact from './pages/Contact';
+import Admin from './pages/Admin';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -47,6 +48,7 @@ const AuthenticatedApp = () => {
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/join" element={<JoinUs />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/admin" element={<Admin />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

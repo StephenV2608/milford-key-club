@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { useSiteSettings } from '../../hooks/useSiteSettings';
 
 const navLinks = [
   { label: 'Home', path: '/' },
@@ -17,6 +18,10 @@ const navLinks = [
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const { settings } = useSiteSettings();
+
+  const siteName = settings.site_name || 'Milford Key Club';
+  const tagline = settings.tagline || 'Service · Leadership · Caring';
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
@@ -24,12 +29,16 @@ export default function Header() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0">
-            <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-heading font-black text-sm">KC</span>
-            </div>
+            {settings.logo_url ? (
+              <img src={settings.logo_url} alt={siteName} className="h-10 w-10 rounded-lg object-contain" />
+            ) : (
+              <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center">
+                <span className="text-primary-foreground font-heading font-black text-sm">KC</span>
+              </div>
+            )}
             <div className="leading-tight">
-              <span className="font-heading font-bold text-foreground text-sm sm:text-base block">Milford Key Club</span>
-              <span className="text-[10px] sm:text-xs text-muted-foreground font-medium tracking-wide uppercase">Service · Leadership · Caring</span>
+              <span className="font-heading font-bold text-foreground text-sm sm:text-base block">{siteName}</span>
+              <span className="text-[10px] sm:text-xs text-muted-foreground font-medium tracking-wide uppercase">{tagline}</span>
             </div>
           </Link>
 

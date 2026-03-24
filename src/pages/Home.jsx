@@ -1,7 +1,10 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Trophy, Handshake, Calendar, Heart, ArrowRight } from 'lucide-react';
 import SectionHeading from '../components/shared/SectionHeading';
+import { useSiteSettings } from '../hooks/useSiteSettings';
+import { base44 } from '@/api/base44Client';
 
 const highlights = [
   { icon: Trophy, title: 'Awards & Recognition', desc: 'District and state-level honors for outstanding service' },
@@ -10,13 +13,28 @@ const highlights = [
   { icon: Heart, title: 'Community Impact', desc: 'Thousands of service hours logged by our dedicated members' },
 ];
 
+const HERO_FALLBACK = 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/fed622b44_generated_8d496406.png';
+const PROJECT_FALLBACK = 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/966810261_generated_0f8cf771.png';
+
 export default function Home() {
+  const { settings } = useSiteSettings();
+  const [featuredProject, setFeaturedProject] = useState(null);
+
+  useEffect(() => {
+    base44.entities.Project.list('order', 1).then(list => {
+      if (list[0]) setFeaturedProject(list[0]);
+    });
+  }, []);
+
+  const heroTitle = settings.hero_title || 'Milford\nKey Club';
+  const heroSubtitle = settings.hero_subtitle || 'Building Leaders Through Service';
+
   return (
     <div>
       {/* Hero */}
       <section className="relative h-[70vh] min-h-[500px] max-h-[700px] flex items-center justify-center overflow-hidden">
         <img
-          src="https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/fed622b44_generated_8d496406.png"
+          src={HERO_FALLBACK}
           alt="Milford Key Club members volunteering together"
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -25,11 +43,11 @@ export default function Home() {
           <span className="inline-block text-xs font-bold uppercase tracking-[0.2em] text-white/80 mb-4 border border-white/20 px-4 py-1.5 rounded-full backdrop-blur-sm">
             Key Club International
           </span>
-          <h1 className="font-heading font-black text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[1.1] mb-6">
-            Milford<br />Key Club
+          <h1 className="font-heading font-black text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[1.1] mb-6 whitespace-pre-line">
+            {heroTitle}
           </h1>
           <p className="text-lg sm:text-xl text-white/85 font-medium mb-8">
-            Building Leaders Through Service
+            {heroSubtitle}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button asChild size="lg" className="text-base px-8 h-12 rounded-full font-semibold">
@@ -69,7 +87,7 @@ export default function Home() {
             <SectionHeading
               eyebrow="Who We Are"
               title="Student-Led. Community-Driven."
-              description="Milford Key Club is a student-led organization dedicated to serving our school and community while building leadership skills. We believe every student has the power to make a positive difference."
+              description={settings.about_intro || "Milford Key Club is a student-led organization dedicated to serving our school and community while building leadership skills. We believe every student has the power to make a positive difference."}
             />
             <Button asChild variant="outline" className="rounded-full px-6">
               <Link to="/about">
@@ -86,19 +104,18 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
             <div className="rounded-2xl overflow-hidden aspect-[3/2]">
               <img
-                src="https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/966810261_generated_0f8cf771.png"
-                alt="Got Bags Initiative - weaving plastic bags into sleeping mats"
+                src={featuredProject?.image_url || PROJECT_FALLBACK}
+                alt={featuredProject?.title || 'Featured Project'}
                 className="w-full h-full object-cover"
               />
             </div>
             <div>
               <span className="inline-block text-xs font-bold uppercase tracking-widest text-secondary mb-3">Featured Project</span>
-              <h3 className="font-heading font-bold text-2xl sm:text-3xl mb-4">Got Bags? Initiative</h3>
-              <p className="text-muted-foreground leading-relaxed mb-2">
-                Our flagship project transforms plastic bags into durable sleeping mats for those experiencing homelessness. It takes approximately <strong className="text-foreground">700 bags to create 1 mat</strong>.
-              </p>
+              <h3 className="font-heading font-bold text-2xl sm:text-3xl mb-4">
+                {featuredProject?.title || 'Got Bags? Initiative'}
+              </h3>
               <p className="text-muted-foreground leading-relaxed mb-6">
-                Members collect, cut, and weave bags into mats — reducing waste while providing comfort to someone in need.
+                {featuredProject?.description || 'Our flagship project transforms plastic bags into durable sleeping mats for those experiencing homelessness. It takes approximately 700 bags to create 1 mat.'}
               </p>
               <Button asChild className="rounded-full px-6">
                 <Link to="/projects">
