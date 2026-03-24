@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import SectionHeading from '../components/shared/SectionHeading';
 import OfficerCard from '../components/shared/OfficerCard';
 import { base44 } from '@/api/base44Client';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 
 const FALLBACK_OFFICERS = [
   { id: 'f1', name: 'Alex Johnson', role: 'President', fun_fact: 'Can weave a plastic bag mat in under 3 hours' },
@@ -14,6 +15,7 @@ const FALLBACK_OFFICERS = [
 ];
 
 export default function Officers() {
+  const { settings } = useSiteSettings();
   const [officers, setOfficers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -31,9 +33,9 @@ export default function Officers() {
       <section className="py-16 md:py-24 bg-muted/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
-            eyebrow="Our Team"
-            title="Meet the Officers"
-            description="The dedicated students (and advisor) who keep Milford Key Club running strong."
+            eyebrow={settings.officers_eyebrow || 'Our Team'}
+            title={settings.officers_heading || 'Meet the Officers'}
+            description={settings.officers_description || 'The dedicated students (and advisor) who keep Milford Key Club running strong.'}
           />
         </div>
       </section>

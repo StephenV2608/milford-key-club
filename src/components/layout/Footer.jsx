@@ -1,8 +1,29 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSiteSettings } from '../../hooks/useSiteSettings';
+import { base44 } from '@/api/base44Client';
+
+const DEFAULT_LINKS = [
+  { label: 'About', path: '/about' },
+  { label: 'Projects', path: '/projects' },
+  { label: 'Events', path: '/events' },
+  { label: 'Officers', path: '/officers' },
+  { label: 'Gallery', path: '/gallery' },
+  { label: 'Join Us', path: '/join' },
+];
 
 export default function Footer() {
   const { settings } = useSiteSettings();
+  const [customPages, setCustomPages] = useState([]);
+
+  useEffect(() => {
+    base44.entities.CustomPage.filter({ show_in_footer: true }, 'order').then(setCustomPages);
+  }, []);
+
+  const footerLinks = settings.footer_links
+    ? JSON.parse(settings.footer_links)
+    : DEFAULT_LINKS;
+  const allFooterLinks = [...footerLinks, ...customPages.map(p => ({ label: p.title, path: `/pages/${p.slug}` }))];
 
   return (
     <footer className="bg-foreground text-background">
@@ -20,21 +41,14 @@ export default function Footer() {
               <span className="font-heading font-bold text-lg">{settings.site_name || 'Milford Key Club'}</span>
             </div>
             <p className="text-sm opacity-70 leading-relaxed max-w-xs">
-              A student-led organization at Milford High School dedicated to serving our community and developing future leaders.
+              {settings.footer_tagline || 'A student-led organization at Milford High School dedicated to serving our community and developing future leaders.'}
             </p>
           </div>
 
           <div>
             <h4 className="font-heading font-semibold text-sm uppercase tracking-wider mb-4 opacity-60">Quick Links</h4>
             <div className="grid grid-cols-2 gap-2">
-              {[
-                { label: 'About', path: '/about' },
-                { label: 'Projects', path: '/projects' },
-                { label: 'Events', path: '/events' },
-                { label: 'Officers', path: '/officers' },
-                { label: 'Gallery', path: '/gallery' },
-                { label: 'Join Us', path: '/join' },
-              ].map((link) => (
+              {allFooterLinks.map((link) => (
                 <Link key={link.path} to={link.path} className="text-sm opacity-70 hover:opacity-100 transition-opacity py-1">
                   {link.label}
                 </Link>

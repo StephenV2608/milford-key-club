@@ -8,7 +8,8 @@ import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Settings, Layers, Calendar, Users, Image as ImageIcon,
-  Plus, Trash2, Save, Upload, Edit2, X, Check, Clock, Newspaper, Shield, LogOut, Crown
+  Plus, Trash2, Save, Upload, Edit2, X, Check, Clock, Newspaper, Shield, LogOut, Crown,
+  FileText, Layout, PanelBottom
 } from 'lucide-react';
 import { invalidateSettings } from '../hooks/useSiteSettings';
 import { useAdminAuth } from '../hooks/useAdminAuth';
@@ -16,6 +17,9 @@ import AdminLogin from '../components/admin/AdminLogin';
 import HoursTab from '../components/admin/HoursTab';
 import NewsTab from '../components/admin/NewsTab';
 import AdminUsersTab from '../components/admin/AdminUsersTab';
+import PageTextsTab from '../components/admin/PageTextsTab';
+import FooterTab from '../components/admin/FooterTab';
+import CustomPagesTab from '../components/admin/CustomPagesTab';
 
 export default function Admin() {
   const { adminUser, checking, login, logout, isSuperAdmin, hasPermission } = useAdminAuth();
@@ -34,6 +38,9 @@ export default function Admin() {
 
   const tabs = [
     { value: 'settings', label: 'Site Settings', icon: Settings, perm: 'settings' },
+    { value: 'page-texts', label: 'Page Texts', icon: FileText, perm: 'settings' },
+    { value: 'footer', label: 'Footer', icon: PanelBottom, perm: 'settings' },
+    { value: 'custom-pages', label: 'Custom Pages', icon: Layout, perm: 'settings' },
     { value: 'projects', label: 'Projects', icon: Layers, perm: 'projects' },
     { value: 'events', label: 'Events', icon: Calendar, perm: 'events' },
     { value: 'officers', label: 'Officers', icon: Users, perm: 'officers' },
@@ -71,6 +78,9 @@ export default function Admin() {
           </TabsList>
 
           <TabsContent value="settings"><SiteSettingsTab /></TabsContent>
+          <TabsContent value="page-texts"><PageTextsTab /></TabsContent>
+          <TabsContent value="footer"><FooterTab /></TabsContent>
+          <TabsContent value="custom-pages"><CustomPagesTab /></TabsContent>
           <TabsContent value="projects"><ProjectsTab /></TabsContent>
           <TabsContent value="events"><EventsTab /></TabsContent>
           <TabsContent value="officers"><OfficersTab /></TabsContent>

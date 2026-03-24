@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import SectionHeading from '../components/shared/SectionHeading';
 import ProjectCard from '../components/shared/ProjectCard';
 import { base44 } from '@/api/base44Client';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 
 const FALLBACK_PROJECTS = [
   { id: 'f1', image_url: 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/966810261_generated_0f8cf771.png', title: 'Got Bags? Initiative', description: 'We collect plastic bags from the community and weave them into durable sleeping mats for those experiencing homelessness. It takes about 700 bags to make a single mat.' },
@@ -10,6 +11,7 @@ const FALLBACK_PROJECTS = [
 ];
 
 export default function Projects() {
+  const { settings } = useSiteSettings();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,9 +29,9 @@ export default function Projects() {
       <section className="py-16 md:py-24 bg-muted/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
-            eyebrow="Our Work"
-            title="Service Projects"
-            description="Every project is an opportunity to learn, grow, and give back. Here's a look at what we've been working on."
+            eyebrow={settings.projects_eyebrow || 'Our Work'}
+            title={settings.projects_heading || 'Service Projects'}
+            description={settings.projects_description || "Every project is an opportunity to learn, grow, and give back. Here's a look at what we've been working on."}
           />
         </div>
       </section>

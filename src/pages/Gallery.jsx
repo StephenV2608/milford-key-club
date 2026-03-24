@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import SectionHeading from '../components/shared/SectionHeading';
 import { base44 } from '@/api/base44Client';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 
 const FALLBACK_IMAGES = [
   { id: 'f1', image_url: 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/fed622b44_generated_8d496406.png', alt_text: 'Members volunteering outdoors', category: 'Service' },
@@ -17,6 +18,7 @@ const FALLBACK_IMAGES = [
 const categories = ['All', 'Service', 'Projects', 'Meetings', 'Events'];
 
 export default function Gallery() {
+  const { settings } = useSiteSettings();
   const [filter, setFilter] = useState('All');
   const [lightbox, setLightbox] = useState(null);
   const [images, setImages] = useState([]);
@@ -37,9 +39,9 @@ export default function Gallery() {
       <section className="py-16 md:py-24 bg-muted/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
-            eyebrow="Photo Gallery"
-            title="Moments That Matter"
-            description="A look at our members in action — serving, leading, and having fun along the way."
+            eyebrow={settings.gallery_eyebrow || 'Photo Gallery'}
+            title={settings.gallery_heading || 'Moments That Matter'}
+            description={settings.gallery_description || "A look at our members in action — serving, leading, and having fun along the way."}
           />
         </div>
       </section>

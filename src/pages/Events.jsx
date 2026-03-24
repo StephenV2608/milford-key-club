@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Calendar, MapPin, Clock } from 'lucide-react';
 import SectionHeading from '../components/shared/SectionHeading';
 import { base44 } from '@/api/base44Client';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 
 const FALLBACK_EVENTS = [
   { id: 'f1', date: 'April 2, 2026', title: 'Weekly Club Meeting', time: '3:00 PM – 4:00 PM', location: 'Room 204, Milford High School', type: 'meeting' },
@@ -18,6 +19,7 @@ const typeColors = {
 };
 
 export default function Events() {
+  const { settings } = useSiteSettings();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -35,9 +37,9 @@ export default function Events() {
       <section className="py-16 md:py-24 bg-muted/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
-            eyebrow="What's Happening"
-            title="Upcoming Events"
-            description="Stay up to date with our meetings, service projects, and volunteer opportunities."
+            eyebrow={settings.events_eyebrow || "What's Happening"}
+            title={settings.events_heading || 'Upcoming Events'}
+            description={settings.events_description || 'Stay up to date with our meetings, service projects, and volunteer opportunities.'}
           />
         </div>
       </section>

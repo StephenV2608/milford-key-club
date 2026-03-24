@@ -18,9 +18,9 @@ export default function JoinUs() {
       <section className="py-16 md:py-24 bg-muted/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
-            eyebrow="Get Involved"
-            title="Join Milford Key Club"
-            description="Ready to make a difference? Here's everything you need to know about becoming a member."
+            eyebrow={settings.join_eyebrow || 'Get Involved'}
+            title={settings.join_heading || 'Join Milford Key Club'}
+            description={settings.join_description || "Ready to make a difference? Here's everything you need to know about becoming a member."}
           />
         </div>
       </section>
@@ -76,7 +76,7 @@ export default function JoinUs() {
                 Fill out our quick sign-up form and a club officer will reach out to you with next steps. We can't wait to meet you!
               </p>
               <Button asChild variant="secondary" size="lg" className="rounded-full font-semibold w-fit">
-                <Link to="/contact">
+                <Link to={settings.join_form_url || '/contact'}>
                   Sign Up Form <ArrowRight className="ml-2 w-4 h-4" />
                 </Link>
               </Button>

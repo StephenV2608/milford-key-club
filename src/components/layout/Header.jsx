@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { useSiteSettings } from '../../hooks/useSiteSettings';
 
-const navLinks = [
+const BUILT_IN_NAV = [
   { label: 'Home', path: '/' },
   { label: 'About', path: '/about' },
   { label: 'Projects', path: '/projects' },
@@ -21,10 +21,18 @@ export default function Header() {
   const location = useLocation();
   const { settings } = useSiteSettings();
 
+  const [customPages, setCustomPages] = useState([]);
+  useEffect(() => {
+    const { base44 } = require('@/api/base44Client');
+    base44.entities.CustomPage.filter({ show_in_nav: true }, 'order').then(setCustomPages);
+  }, []);
+
   const siteName = settings.site_name || 'Milford Key Club';
   const tagline = settings.tagline || 'Service · Leadership · Caring';
   const hiddenPaths = (settings.hidden_nav_items || '').split(',').map(s => s.trim()).filter(Boolean);
-  const visibleLinks = navLinks.filter(l => !hiddenPaths.includes(l.path));
+  const builtInVisible = BUILT_IN_NAV.filter(l => !hiddenPaths.includes(l.path));
+  const customNav = customPages.map(p => ({ label: p.title, path: `/pages/${p.slug}` }));
+  const visibleLinks = [...builtInVisible, ...customNav];
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">

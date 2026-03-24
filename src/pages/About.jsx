@@ -21,8 +21,8 @@ export default function About() {
       <section className="py-16 md:py-24 bg-muted/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
-            eyebrow="About Us"
-            title="Who We Are"
+            eyebrow={settings.about_eyebrow || 'About Us'}
+            title={settings.about_heading || 'Who We Are'}
             description={settings.about_intro || "Key Club International is the oldest and largest service program for high school students, with over 250,000 members worldwide. Our Milford chapter carries on this proud tradition."}
           />
         </div>

@@ -27,9 +27,9 @@ export default function Contact() {
       <section className="py-16 md:py-24 bg-muted/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
-            eyebrow="Reach Out"
-            title="Contact Us"
-            description="Have a question, want to collaborate, or just want to say hi? We'd love to hear from you."
+            eyebrow={settings.contact_eyebrow || 'Reach Out'}
+            title={settings.contact_heading || 'Contact Us'}
+            description={settings.contact_description || "Have a question, want to collaborate, or just want to say hi? We'd love to hear from you."}
           />
         </div>
       </section>
