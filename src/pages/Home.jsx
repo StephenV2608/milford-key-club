@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 import { Button } from "@/components/ui/button";
 import { Trophy, Handshake, Calendar, Heart, ArrowRight } from 'lucide-react';
 import SectionHeading from '../components/shared/SectionHeading';
@@ -14,8 +15,6 @@ const highlights = [
 ];
 
 const HERO_FALLBACK = 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/fed622b44_generated_8d496406.png';
-
-import { useSiteSettings } from '../hooks/useSiteSettings';
 const PROJECT_FALLBACK = 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/966810261_generated_0f8cf771.png';
 
 export default function Home() {
