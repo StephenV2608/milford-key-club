@@ -14,10 +14,12 @@ const highlights = [
 ];
 
 const HERO_FALLBACK = 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/fed622b44_generated_8d496406.png';
+
+import { useSiteSettings } from '../hooks/useSiteSettings';
 const PROJECT_FALLBACK = 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/966810261_generated_0f8cf771.png';
 
 export default function Home() {
-  const [settings] = useState({});
+  const { settings } = useSiteSettings();
   const [featuredProject, setFeaturedProject] = useState(null);
 
   useEffect(() => {
@@ -33,7 +35,7 @@ export default function Home() {
       {/* Hero */}
       <section className="relative h-[70vh] min-h-[500px] max-h-[700px] flex items-center justify-center overflow-hidden">
         <img
-          src={HERO_FALLBACK}
+          src={settings.hero_image_url || HERO_FALLBACK}
           alt="Milford Key Club members volunteering together"
           className="absolute inset-0 w-full h-full object-cover"
         />

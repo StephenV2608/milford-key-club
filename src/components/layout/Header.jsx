@@ -23,6 +23,8 @@ export default function Header() {
 
   const siteName = settings.site_name || 'Milford Key Club';
   const tagline = settings.tagline || 'Service · Leadership · Caring';
+  const hiddenPaths = (settings.hidden_nav_items || '').split(',').map(s => s.trim()).filter(Boolean);
+  const visibleLinks = navLinks.filter(l => !hiddenPaths.includes(l.path));
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
@@ -45,7 +47,7 @@ export default function Header() {
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link) => (
+            {visibleLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
@@ -76,7 +78,7 @@ export default function Header() {
       {mobileOpen && (
         <div className="lg:hidden border-t border-border bg-background">
           <nav className="max-w-7xl mx-auto px-4 py-3 flex flex-col gap-1">
-            {navLinks.map((link) => (
+            {visibleLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}

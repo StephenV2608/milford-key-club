@@ -6,6 +6,7 @@ import { useSiteSettings } from '../hooks/useSiteSettings';
 
 const MEETING_IMG = 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/cd49e8311_generated_b0a84d9f.png';
 
+
 const values = [
   { icon: Users, title: 'Leadership', desc: 'Developing skills that last a lifetime through hands-on experience and mentorship.' },
   { icon: Target, title: 'Character', desc: 'Building integrity, responsibility, and empathy in everything we do.' },
@@ -31,7 +32,7 @@ export default function About() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div className="rounded-2xl overflow-hidden aspect-[3/2]">
-              <img src={MEETING_IMG} alt="Key Club members at a meeting" className="w-full h-full object-cover" />
+              <img src={settings.about_image_url || MEETING_IMG} alt="Key Club members at a meeting" className="w-full h-full object-cover" />
             </div>
             <div>
               <h3 className="font-heading font-bold text-2xl sm:text-3xl mb-4">Our Milford Chapter</h3>

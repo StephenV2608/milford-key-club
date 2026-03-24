@@ -91,7 +91,11 @@ function SiteSettingsTab() {
   const [settingsId, setSettingsId] = useState(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadingHero, setUploadingHero] = useState(false);
+  const [uploadingAbout, setUploadingAbout] = useState(false);
   const fileRef = useRef();
+  const heroFileRef = useRef();
+  const aboutFileRef = useRef();
 
   useEffect(() => {
     base44.entities.SiteSettings.list().then(list => {
@@ -120,6 +124,24 @@ function SiteSettingsTab() {
     set('logo_url', file_url);
     setUploading(false);
     toast.success('Logo uploaded!');
+  };
+
+  const handleHeroImageUpload = async (e) => {
+    const file = e.target.files[0]; if (!file) return;
+    setUploadingHero(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    set('hero_image_url', file_url);
+    setUploadingHero(false);
+    toast.success('Hero image uploaded!');
+  };
+
+  const handleAboutImageUpload = async (e) => {
+    const file = e.target.files[0]; if (!file) return;
+    setUploadingAbout(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    set('about_image_url', file_url);
+    setUploadingAbout(false);
+    toast.success('About image uploaded!');
   };
 
   const save = async () => {
@@ -176,11 +198,80 @@ function SiteSettingsTab() {
           <Field label="Requirements" value={form.requirements_info} onChange={v => set('requirements_info', v)} />
         </div>
       </Card>
+      <Card title="Home Page Hero Image">
+        <div className="space-y-3">
+          <div className="flex items-center gap-4">
+            <div className="w-32 h-20 rounded-xl border-2 border-dashed border-border flex items-center justify-center bg-muted overflow-hidden">
+              {form.hero_image_url ? <img src={form.hero_image_url} alt="Hero" className="w-full h-full object-cover" /> : <ImageIcon className="w-6 h-6 text-muted-foreground" />}
+            </div>
+            <div>
+              <Button variant="outline" size="sm" onClick={() => heroFileRef.current.click()} disabled={uploadingHero} className="gap-1.5">
+                <Upload className="w-3.5 h-3.5" />{uploadingHero ? 'Uploading...' : 'Upload Hero Image'}
+              </Button>
+              <p className="text-xs text-muted-foreground mt-1.5">Recommended: 1600×900px or wider</p>
+              <input ref={heroFileRef} type="file" accept="image/*" className="hidden" onChange={handleHeroImageUpload} />
+            </div>
+          </div>
+        </div>
+      </Card>
+      <Card title="About Page Image">
+        <div className="space-y-3">
+          <div className="flex items-center gap-4">
+            <div className="w-32 h-20 rounded-xl border-2 border-dashed border-border flex items-center justify-center bg-muted overflow-hidden">
+              {form.about_image_url ? <img src={form.about_image_url} alt="About" className="w-full h-full object-cover" /> : <ImageIcon className="w-6 h-6 text-muted-foreground" />}
+            </div>
+            <div>
+              <Button variant="outline" size="sm" onClick={() => aboutFileRef.current.click()} disabled={uploadingAbout} className="gap-1.5">
+                <Upload className="w-3.5 h-3.5" />{uploadingAbout ? 'Uploading...' : 'Upload About Image'}
+              </Button>
+              <input ref={aboutFileRef} type="file" accept="image/*" className="hidden" onChange={handleAboutImageUpload} />
+            </div>
+          </div>
+        </div>
+      </Card>
+      <Card title="Navigation">
+        <p className="text-xs text-muted-foreground mb-3">Check items to <strong>hide</strong> them from the top navigation bar.</p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {[
+            { label: 'Home', path: '/' },
+            { label: 'About', path: '/about' },
+            { label: 'Projects', path: '/projects' },
+            { label: 'Events', path: '/events' },
+            { label: 'Officers', path: '/officers' },
+            { label: 'Gallery', path: '/gallery' },
+            { label: 'Log Hours', path: '/hours' },
+            { label: 'Join Us', path: '/join' },
+            { label: 'Contact', path: '/contact' },
+          ].map(({ label, path }) => {
+            const hidden = (form.hidden_nav_items || '').split(',').map(s => s.trim()).includes(path);
+            const toggle = () => {
+              const current = (form.hidden_nav_items || '').split(',').map(s => s.trim()).filter(Boolean);
+              const updated = hidden ? current.filter(p => p !== path) : [...current, path];
+              set('hidden_nav_items', updated.join(','));
+            };
+            return (
+              <label key={path} className="flex items-center gap-2 cursor-pointer text-sm">
+                <input type="checkbox" checked={hidden} onChange={toggle} className="rounded" />
+                <span className={hidden ? 'line-through text-muted-foreground' : ''}>{label}</span>
+              </label>
+            );
+          })}
+        </div>
+      </Card>
       <Card title="Contact & Social">
         <div className="grid sm:grid-cols-2 gap-4">
           <Field label="Contact Email" value={form.contact_email} onChange={v => set('contact_email', v)} />
           <Field label="Instagram URL" value={form.instagram_url} onChange={v => set('instagram_url', v)} />
+          <Field label="Facebook URL" value={form.facebook_url} onChange={v => set('facebook_url', v)} />
           <Field label="Twitter/X URL" value={form.twitter_url} onChange={v => set('twitter_url', v)} />
+          <label className="flex items-center gap-2 cursor-pointer text-sm">
+            <input type="checkbox" checked={form.show_twitter !== false} onChange={e => set('show_twitter', e.target.checked)} className="rounded" />
+            Show Twitter/X icon in footer
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer text-sm">
+            <input type="checkbox" checked={form.show_facebook !== false} onChange={e => set('show_facebook', e.target.checked)} className="rounded" />
+            Show Facebook icon in footer
+          </label>
         </div>
       </Card>
       <Button onClick={save} disabled={saving} className="gap-2 rounded-full px-8">
