@@ -1,0 +1,88 @@
+import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+
+const navLinks = [
+  { label: 'Home', path: '/' },
+  { label: 'About', path: '/about' },
+  { label: 'Projects', path: '/projects' },
+  { label: 'Events', path: '/events' },
+  { label: 'Officers', path: '/officers' },
+  { label: 'Gallery', path: '/gallery' },
+  { label: 'Join Us', path: '/join' },
+  { label: 'Contact', path: '/contact' },
+];
+
+export default function Header() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
+
+  return (
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 md:h-20">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2.5 shrink-0">
+            <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center">
+              <span className="text-primary-foreground font-heading font-black text-sm">KC</span>
+            </div>
+            <div className="leading-tight">
+              <span className="font-heading font-bold text-foreground text-sm sm:text-base block">Milford Key Club</span>
+              <span className="text-[10px] sm:text-xs text-muted-foreground font-medium tracking-wide uppercase">Service · Leadership · Caring</span>
+            </div>
+          </Link>
+
+          {/* Desktop Nav */}
+          <nav className="hidden lg:flex items-center gap-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  location.pathname === link.path
+                    ? 'text-primary bg-accent'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Mobile Toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+        </div>
+      </div>
+
+      {/* Mobile Nav */}
+      {mobileOpen && (
+        <div className="lg:hidden border-t border-border bg-background">
+          <nav className="max-w-7xl mx-auto px-4 py-3 flex flex-col gap-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                onClick={() => setMobileOpen(false)}
+                className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
+                  location.pathname === link.path
+                    ? 'text-primary bg-accent'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      )}
+    </header>
+  );
+}
