@@ -18,6 +18,13 @@ const PROJECT_FALLBACK = 'https://media.base44.com/images/public/69c2a0f26438a6d
 
 export default function Home() {
   const [settings] = useState({});
+  const [featuredProject, setFeaturedProject] = useState(null);
+
+  useEffect(() => {
+    base44.entities.Project.list('order', 1).then(list => {
+      if (list[0]) setFeaturedProject(list[0]);
+    });
+  }, []);
   const heroTitle = settings.hero_title || 'Milford\nKey Club';
   const heroSubtitle = settings.hero_subtitle || 'Building Leaders Through Service';
 
