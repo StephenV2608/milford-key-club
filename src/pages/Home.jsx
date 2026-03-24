@@ -16,7 +16,7 @@ export default function Home() {
       {/* Hero */}
       <section className="relative h-[70vh] min-h-[500px] max-h-[700px] flex items-center justify-center overflow-hidden">
         <img
-          src="/__generating__/img_b196aaa88c7b.png"
+          src="https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/fed622b44_generated_8d496406.png"
           alt="Milford Key Club members volunteering together"
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -86,7 +86,7 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
             <div className="rounded-2xl overflow-hidden aspect-[3/2]">
               <img
-                src="/__generating__/img_27af8f23500d.png"
+                src="https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/966810261_generated_0f8cf771.png"
                 alt="Got Bags Initiative - weaving plastic bags into sleeping mats"
                 className="w-full h-full object-cover"
               />

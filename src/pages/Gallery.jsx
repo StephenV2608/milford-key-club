@@ -3,14 +3,14 @@ import { X } from 'lucide-react';
 import SectionHeading from '../components/shared/SectionHeading';
 
 const galleryImages = [
-  { src: '/__generating__/img_b196aaa88c7b.png', alt: 'Members volunteering outdoors', category: 'Service' },
-  { src: '/__generating__/img_27af8f23500d.png', alt: 'Got Bags weaving project', category: 'Projects' },
-  { src: '/__generating__/img_b077131f7169.png', alt: 'Care Closet hygiene drive', category: 'Projects' },
-  { src: '/__generating__/img_f4e1af6e4411.png', alt: 'Community event volunteering', category: 'Events' },
-  { src: '/__generating__/img_5129f022ae23.png', alt: 'Club meeting discussion', category: 'Meetings' },
-  { src: '/__generating__/img_070ea661710d.png', alt: 'Awards ceremony', category: 'Events' },
-  { src: '/__generating__/img_2428e41bf033.png', alt: 'Mural painting project', category: 'Projects' },
-  { src: '/__generating__/img_2173a2a13fce.png', alt: 'Soup kitchen service', category: 'Service' },
+  { src: 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/fed622b44_generated_8d496406.png', alt: 'Members volunteering outdoors', category: 'Service' },
+  { src: 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/966810261_generated_0f8cf771.png', alt: 'Got Bags weaving project', category: 'Projects' },
+  { src: 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/eae6320ab_generated_d26c231a.png', alt: 'Care Closet hygiene drive', category: 'Projects' },
+  { src: 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/e36514680_generated_a44aae9c.png', alt: 'Community event volunteering', category: 'Events' },
+  { src: 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/cd49e8311_generated_b0a84d9f.png', alt: 'Club meeting discussion', category: 'Meetings' },
+  { src: 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/38e41a503_generated_e444290c.png', alt: 'Awards ceremony', category: 'Events' },
+  { src: 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/3b1b294b4_generated_e38479b8.png', alt: 'Mural painting project', category: 'Projects' },
+  { src: 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/2db13ba81_generated_e2bd570e.png', alt: 'Soup kitchen service', category: 'Service' },
 ];
 
 const categories = ['All', 'Service', 'Projects', 'Meetings', 'Events'];

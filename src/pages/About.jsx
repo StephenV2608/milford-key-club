@@ -29,7 +29,7 @@ export default function About() {
           <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div className="rounded-2xl overflow-hidden aspect-[3/2]">
               <img
-                src="/__generating__/img_5129f022ae23.png"
+                src="https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/cd49e8311_generated_b0a84d9f.png"
                 alt="Key Club members at a meeting"
                 className="w-full h-full object-cover"
               />
