@@ -11,6 +11,7 @@ const navLinks = [
   { label: 'Events', path: '/events' },
   { label: 'Officers', path: '/officers' },
   { label: 'Gallery', path: '/gallery' },
+  { label: 'Log Hours', path: '/hours' },
   { label: 'Join Us', path: '/join' },
   { label: 'Contact', path: '/contact' },
 ];
