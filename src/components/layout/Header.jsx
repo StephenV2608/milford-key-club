@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { base44 } from '@/api/base44Client';
 import { Menu, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { useSiteSettings } from '../../hooks/useSiteSettings';
@@ -23,7 +25,6 @@ export default function Header() {
 
   const [customPages, setCustomPages] = useState([]);
   useEffect(() => {
-    const { base44 } = require('@/api/base44Client');
     base44.entities.CustomPage.filter({ show_in_nav: true }, 'order').then(setCustomPages);
   }, []);
 
