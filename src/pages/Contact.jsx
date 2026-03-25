@@ -50,6 +50,7 @@ export default function Contact() {
                       <p className="text-sm text-muted-foreground">{settings.contact_email || 'milfordkeyclub@gmail.com'}</p>
                     </div>
                   </div>
+                  {settings.show_contact_location !== false && (
                   <div className="flex gap-3">
                     <div className="shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                       <MapPin className="w-4 h-4 text-primary" />
@@ -61,6 +62,7 @@ export default function Contact() {
                       </p>
                     </div>
                   </div>
+                  )}
                 </div>
               </div>
 

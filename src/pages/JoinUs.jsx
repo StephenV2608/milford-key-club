@@ -31,6 +31,7 @@ export default function JoinUs() {
             <div>
               <h3 className="font-heading font-bold text-2xl mb-6">How to Join</h3>
               <div className="space-y-5">
+                {settings.show_meeting_time !== false && (
                 <div className="flex gap-4">
                   <div className="shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                     <Clock className="w-5 h-5 text-primary" />
@@ -40,6 +41,8 @@ export default function JoinUs() {
                     <p className="text-sm text-muted-foreground">{settings.meeting_time || 'Every Wednesday, 3:00 PM – 4:00 PM'}</p>
                   </div>
                 </div>
+                )}
+                {settings.show_meeting_location !== false && (
                 <div className="flex gap-4">
                   <div className="shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                     <MapPin className="w-5 h-5 text-primary" />
@@ -49,6 +52,8 @@ export default function JoinUs() {
                     <p className="text-sm text-muted-foreground">{settings.meeting_location || 'Room 204, Milford High School'}</p>
                   </div>
                 </div>
+                )}
+                {settings.show_dues !== false && (
                 <div className="flex gap-4">
                   <div className="shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                     <DollarSign className="w-5 h-5 text-primary" />
@@ -58,6 +63,8 @@ export default function JoinUs() {
                     <p className="text-sm text-muted-foreground">{settings.dues_info || '$15 per year'}</p>
                   </div>
                 </div>
+                )}
+                {settings.show_requirements !== false && (
                 <div className="flex gap-4">
                   <div className="shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                     <Heart className="w-5 h-5 text-primary" />
@@ -67,6 +74,7 @@ export default function JoinUs() {
                     <p className="text-sm text-muted-foreground">{settings.requirements_info || 'Minimum 50 service hours per year & regular meeting attendance'}</p>
                   </div>
                 </div>
+                )}
               </div>
             </div>
 
