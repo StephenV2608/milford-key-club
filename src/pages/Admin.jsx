@@ -20,6 +20,8 @@ import AdminUsersTab from '../components/admin/AdminUsersTab';
 import PageTextsTab from '../components/admin/PageTextsTab';
 import FooterTab from '../components/admin/FooterTab';
 import CustomPagesTab from '../components/admin/CustomPagesTab';
+import MembersTab from '../components/admin/MembersTab';
+import HelpDialog from '../components/admin/HelpDialog';
 
 export default function Admin() {
   const { adminUser, checking, login, logout, isSuperAdmin, hasPermission } = useAdminAuth();
@@ -39,14 +41,13 @@ export default function Admin() {
   const tabs = [
     { value: 'settings', label: 'Site Settings', icon: Settings, perm: 'settings' },
     { value: 'page-texts', label: 'Page Texts', icon: FileText, perm: 'settings' },
-    { value: 'footer', label: 'Footer', icon: PanelBottom, perm: 'settings' },
-    { value: 'custom-pages', label: 'Custom Pages', icon: Layout, perm: 'settings' },
     { value: 'projects', label: 'Projects', icon: Layers, perm: 'projects' },
     { value: 'events', label: 'Events', icon: Calendar, perm: 'events' },
     { value: 'officers', label: 'Officers', icon: Users, perm: 'officers' },
     { value: 'gallery', label: 'Gallery', icon: ImageIcon, perm: 'gallery' },
     { value: 'hours', label: 'Hours', icon: Clock, perm: 'hours' },
     { value: 'news', label: 'News', icon: Newspaper, perm: 'news' },
+    { value: 'members', label: 'Members', icon: Users, perm: 'settings' },
     ...(isSuperAdmin ? [{ value: 'admins', label: 'Admins', icon: Crown, perm: null }] : []),
   ].filter(t => t.perm === null || hasPermission(t.perm));
 
@@ -54,18 +55,21 @@ export default function Admin() {
     <div className="min-h-screen bg-muted/40">
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="font-heading font-bold text-3xl">Admin Dashboard</h1>
-            <div className="flex items-center gap-2 mt-1">
-              {isSuperAdmin ? <Crown className="w-3.5 h-3.5 text-primary" /> : <Shield className="w-3.5 h-3.5 text-muted-foreground" />}
-              <p className="text-muted-foreground text-sm">
-                Logged in as <strong>{adminUser.username}</strong> · {isSuperAdmin ? 'Super Admin' : 'Admin'}
-              </p>
-            </div>
+        <div>
+          <h1 className="font-heading font-bold text-3xl">Admin Dashboard</h1>
+          <div className="flex items-center gap-2 mt-1">
+            {isSuperAdmin ? <Crown className="w-3.5 h-3.5 text-primary" /> : <Shield className="w-3.5 h-3.5 text-muted-foreground" />}
+            <p className="text-muted-foreground text-sm">
+              Logged in as <strong>{adminUser.username}</strong> · {isSuperAdmin ? 'Super Admin' : 'Admin'}
+            </p>
           </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <HelpDialog />
           <Button variant="outline" size="sm" onClick={logout} className="gap-1.5">
             <LogOut className="w-3.5 h-3.5" /> Sign Out
           </Button>
+        </div>
         </div>
 
         <Tabs defaultValue={tabs[0]?.value}>
@@ -79,14 +83,13 @@ export default function Admin() {
 
           <TabsContent value="settings"><SiteSettingsTab /></TabsContent>
           <TabsContent value="page-texts"><PageTextsTab /></TabsContent>
-          <TabsContent value="footer"><FooterTab /></TabsContent>
-          <TabsContent value="custom-pages"><CustomPagesTab /></TabsContent>
           <TabsContent value="projects"><ProjectsTab /></TabsContent>
           <TabsContent value="events"><EventsTab /></TabsContent>
           <TabsContent value="officers"><OfficersTab /></TabsContent>
           <TabsContent value="gallery"><GalleryTab /></TabsContent>
           <TabsContent value="hours"><HoursTab /></TabsContent>
           <TabsContent value="news"><NewsTab /></TabsContent>
+          <TabsContent value="members"><MembersTab isSuperAdmin={isSuperAdmin} /></TabsContent>
           {isSuperAdmin && <TabsContent value="admins"><AdminUsersTab /></TabsContent>}
         </Tabs>
       </div>
@@ -201,12 +204,37 @@ function SiteSettingsTab() {
         </div>
       </Card>
       <Card title="Join Us Page">
-        <div className="grid sm:grid-cols-2 gap-4">
-          <Field label="Meeting Time" value={form.meeting_time} onChange={v => set('meeting_time', v)} />
-          <Field label="Meeting Location" value={form.meeting_location} onChange={v => set('meeting_location', v)} />
-          <Field label="Dues Info" value={form.dues_info} onChange={v => set('dues_info', v)} />
-          <Field label="Requirements" value={form.requirements_info} onChange={v => set('requirements_info', v)} />
+        <p className="text-xs text-muted-foreground mb-4">Uncheck items to hide them from the Join Us page.</p>
+        <div className="space-y-4">
+          <div className="grid sm:grid-cols-2 gap-4">
+            <Field label="Meeting Time" value={form.meeting_time} onChange={v => set('meeting_time', v)} />
+            <label className="flex items-center gap-2 text-sm pt-5 cursor-pointer">
+              <input type="checkbox" checked={form.show_meeting_time !== false} onChange={e => set('show_meeting_time', e.target.checked)} />
+              Show Meeting Time
+            </label>
+            <Field label="Meeting Location" value={form.meeting_location} onChange={v => set('meeting_location', v)} />
+            <label className="flex items-center gap-2 text-sm pt-5 cursor-pointer">
+              <input type="checkbox" checked={form.show_meeting_location !== false} onChange={e => set('show_meeting_location', e.target.checked)} />
+              Show Meeting Location
+            </label>
+            <Field label="Dues Info" value={form.dues_info} onChange={v => set('dues_info', v)} />
+            <label className="flex items-center gap-2 text-sm pt-5 cursor-pointer">
+              <input type="checkbox" checked={form.show_dues !== false} onChange={e => set('show_dues', e.target.checked)} />
+              Show Dues
+            </label>
+            <Field label="Requirements" value={form.requirements_info} onChange={v => set('requirements_info', v)} />
+            <label className="flex items-center gap-2 text-sm pt-5 cursor-pointer">
+              <input type="checkbox" checked={form.show_requirements !== false} onChange={e => set('show_requirements', e.target.checked)} />
+              Show Requirements
+            </label>
+          </div>
         </div>
+      </Card>
+      <Card title="Footer">
+        <FooterSubSection form={form} set={set} />
+      </Card>
+      <Card title="Custom Pages">
+        <CustomPagesTab />
       </Card>
       <Card title="Home Page Hero Image">
         <div className="space-y-3">
