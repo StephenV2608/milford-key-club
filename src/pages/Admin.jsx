@@ -310,11 +310,56 @@ function SiteSettingsTab() {
             <input type="checkbox" checked={form.show_facebook !== false} onChange={e => set('show_facebook', e.target.checked)} className="rounded" />
             Show Facebook icon in footer
           </label>
+          <label className="flex items-center gap-2 cursor-pointer text-sm col-span-2">
+            <input type="checkbox" checked={form.show_contact_location !== false} onChange={e => set('show_contact_location', e.target.checked)} className="rounded" />
+            Show Location block on Contact page
+          </label>
         </div>
       </Card>
       <Button onClick={save} disabled={saving} className="gap-2 rounded-full px-8">
         <Save className="w-4 h-4" />{saving ? 'Saving...' : 'Save All Settings'}
       </Button>
+    </div>
+  );
+}
+
+// ─── FOOTER SUB-SECTION (used inside SiteSettingsTab) ───────────────────────
+
+function FooterSubSection({ form, set }) {
+  const DEFAULT_LINKS = [
+    { label: 'About', path: '/about' },
+    { label: 'Projects', path: '/projects' },
+    { label: 'Events', path: '/events' },
+    { label: 'Officers', path: '/officers' },
+    { label: 'Gallery', path: '/gallery' },
+    { label: 'Join Us', path: '/join' },
+  ];
+  const links = (() => { try { return form.footer_links ? JSON.parse(form.footer_links) : DEFAULT_LINKS; } catch { return DEFAULT_LINKS; } })();
+  const setLinks = (fn) => set('footer_links', JSON.stringify(typeof fn === 'function' ? fn(links) : fn));
+  const addLink = () => setLinks(l => [...l, { label: '', path: '' }]);
+  const removeLink = (i) => setLinks(l => l.filter((_, idx) => idx !== i));
+  const updateLink = (i, field, value) => setLinks(l => l.map((item, idx) => idx === i ? { ...item, [field]: value } : item));
+  return (
+    <div className="space-y-4">
+      <div>
+        <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Footer Tagline</Label>
+        <Input className="mt-1" value={form.footer_tagline || ''} onChange={e => set('footer_tagline', e.target.value)} placeholder="A student-led organization dedicated to serving our community..." />
+      </div>
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Quick Links</Label>
+          <Button size="sm" variant="outline" onClick={addLink} className="gap-1 h-7 text-xs"><Plus className="w-3 h-3" />Add</Button>
+        </div>
+        <div className="space-y-2">
+          {links.map((link, i) => (
+            <div key={i} className="flex items-center gap-2">
+              <Input placeholder="Label" value={link.label} onChange={e => updateLink(i, 'label', e.target.value)} className="h-8 text-sm" />
+              <Input placeholder="/path" value={link.path} onChange={e => updateLink(i, 'path', e.target.value)} className="h-8 text-sm" />
+              <Button size="icon" variant="ghost" className="h-8 w-8 text-destructive hover:text-destructive shrink-0" onClick={() => removeLink(i)}><Trash2 className="w-3.5 h-3.5" /></Button>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
