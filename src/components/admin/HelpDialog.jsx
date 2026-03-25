@@ -13,17 +13,13 @@ export default function HelpDialog() {
   const [sending, setSending] = useState(false);
 
   const send = async () => {
-    if (!form.name || !form.email || !form.problem) {
-      toast.error('Please fill in all fields.');
+    if (!form.name || !form.problem) {
+      toast.error('Please fill in your name and problem.');
       return;
     }
     setSending(true);
-    await base44.integrations.Core.SendEmail({
-      to: 'milfordkeyclub@gmail.com',
-      subject: `Admin Help Request from ${form.name}`,
-      body: `Name: ${form.name}\nEmail: ${form.email}\n\nProblem:\n${form.problem}`,
-    });
-    toast.success('Help request sent!');
+    await base44.entities.HelpRequest.create({ name: form.name, email: form.email, problem: form.problem, status: 'open' });
+    toast.success('Help request submitted!');
     setForm({ name: '', email: '', problem: '' });
     setSending(false);
     setOpen(false);
