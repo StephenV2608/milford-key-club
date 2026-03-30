@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSiteSettings } from '../../hooks/useSiteSettings';
 import { base44 } from '@/api/base44Client';
+import { toast } from 'sonner';
 
 const DEFAULT_LINKS = [
   { label: 'About', path: '/about' },
@@ -15,6 +16,27 @@ const DEFAULT_LINKS = [
 export default function Footer() {
   const { settings } = useSiteSettings();
   const [customPages, setCustomPages] = useState([]);
+  const [subEmail, setSubEmail] = useState('');
+  const [subName, setSubName] = useState('');
+  const [subscribing, setSubscribing] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!subEmail) return;
+    setSubscribing(true);
+    const existing = await base44.entities.NewsletterSubscriber.filter({ email: subEmail });
+    if (existing.length) {
+      toast.info('You are already subscribed!');
+    } else {
+      await base44.entities.NewsletterSubscriber.create({ email: subEmail, name: subName, subscribed_at: new Date().toISOString() });
+      toast.success('Subscribed! Thanks for signing up.');
+      setSubscribed(true);
+    }
+    setSubEmail('');
+    setSubName('');
+    setSubscribing(false);
+  };
 
   useEffect(() => {
     base44.entities.CustomPage.filter({ show_in_footer: true }, 'order').then(setCustomPages);
@@ -80,7 +102,43 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-background/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+        {/* Newsletter */}
+        <div className="mt-10 pt-10 border-t border-background/10">
+          <div className="max-w-md">
+            <h4 className="font-heading font-semibold text-sm uppercase tracking-wider mb-1 opacity-60">Stay in the Loop</h4>
+            <p className="text-xs opacity-60 mb-3">Get updates on events, projects, and club news.</p>
+            {subscribed ? (
+              <p className="text-sm opacity-80">✓ You're subscribed! Thanks for joining.</p>
+            ) : (
+              <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="text"
+                  placeholder="Your name (optional)"
+                  value={subName}
+                  onChange={e => setSubName(e.target.value)}
+                  className="flex-none sm:w-32 h-9 px-3 rounded-lg text-sm bg-white/10 border border-background/20 text-background placeholder:text-background/40 focus:outline-none focus:ring-1 focus:ring-background/40"
+                />
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  value={subEmail}
+                  onChange={e => setSubEmail(e.target.value)}
+                  required
+                  className="flex-1 h-9 px-3 rounded-lg text-sm bg-white/10 border border-background/20 text-background placeholder:text-background/40 focus:outline-none focus:ring-1 focus:ring-background/40"
+                />
+                <button
+                  type="submit"
+                  disabled={subscribing}
+                  className="h-9 px-4 rounded-lg text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shrink-0"
+                >
+                  {subscribing ? '...' : 'Subscribe'}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-8 pt-8 border-t border-background/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs opacity-50">© {new Date().getFullYear()} {settings.site_name || 'Milford Key Club'}. All rights reserved.</p>
           <p className="text-xs opacity-50 font-medium">Powered by Students 💙</p>
         </div>

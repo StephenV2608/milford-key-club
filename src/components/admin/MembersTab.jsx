@@ -35,17 +35,33 @@ export default function MembersTab({ isSuperAdmin }) {
 
   const sendMassEmail = async () => {
     if (!massEmail.subject || !massEmail.body) { toast.error('Fill in subject and body.'); return; }
-    const active = members.filter(m => m.active !== false && m.email);
-    if (!active.length) { toast.error('No active members with emails.'); return; }
     setSending(true);
-    for (const m of active) {
-      await base44.integrations.Core.SendEmail({
-        to: m.email,
-        subject: massEmail.subject,
-        body: `Hi ${m.name},\n\n${massEmail.body}\n\n— Milford Key Club`,
-      });
+    // Send to app users (within-app emails work); try matching by member email
+    const appUsers = await base44.entities.User.list();
+    const memberEmails = new Set(members.filter(m => m.active !== false && m.email).map(m => m.email.toLowerCase()));
+    const recipients = appUsers.filter(u => u.email && memberEmails.has(u.email.toLowerCase()));
+    if (!recipients.length) {
+      // Fall back to all app users if no matches
+      toast.info('No app-user matches for members. Sending to all app users instead.');
+      const all = appUsers.filter(u => u.email);
+      for (const u of all) {
+        await base44.integrations.Core.SendEmail({
+          to: u.email,
+          subject: massEmail.subject,
+          body: `Hi ${u.full_name || 'there'},\n\n${massEmail.body}\n\n— Milford Key Club`,
+        });
+      }
+      toast.success(`Sent to ${all.length} app user(s)!`);
+    } else {
+      for (const u of recipients) {
+        await base44.integrations.Core.SendEmail({
+          to: u.email,
+          subject: massEmail.subject,
+          body: `Hi ${u.full_name || 'there'},\n\n${massEmail.body}\n\n— Milford Key Club`,
+        });
+      }
+      toast.success(`Sent to ${recipients.length} member(s)!`);
     }
-    toast.success(`Email sent to ${active.length} member(s)!`);
     setMassEmail({ subject: '', body: '' });
     setSending(false);
   };

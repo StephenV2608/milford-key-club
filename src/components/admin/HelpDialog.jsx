@@ -19,6 +19,17 @@ export default function HelpDialog() {
     }
     setSending(true);
     await base44.entities.HelpRequest.create({ name: form.name, email: form.email, problem: form.problem, status: 'open' });
+    // Also email the logged-in admin user
+    try {
+      const me = await base44.auth.me();
+      if (me?.email) {
+        await base44.integrations.Core.SendEmail({
+          to: me.email,
+          subject: `Help Request from ${form.name}`,
+          body: `Name: ${form.name}\nEmail: ${form.email || 'N/A'}\n\nProblem:\n${form.problem}`,
+        });
+      }
+    } catch (_) {}
     toast.success('Help request submitted!');
     setForm({ name: '', email: '', problem: '' });
     setSending(false);

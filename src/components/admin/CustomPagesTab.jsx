@@ -103,6 +103,11 @@ function PageForm({ form, set, onSave, onCancel }) {
           <Input value={form.description || ''} onChange={e => set('description', e.target.value)} className="mt-1" />
         </div>
         <div className="sm:col-span-2">
+          <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Redirect URL (optional — leave blank to show content)</Label>
+          <Input value={form.redirect_url || ''} onChange={e => set('redirect_url', e.target.value)} className="mt-1" placeholder="https://example.com" />
+          <p className="text-xs text-muted-foreground mt-1">If set, visiting this page will redirect visitors to the URL above instead of showing content.</p>
+        </div>
+        <div className="sm:col-span-2">
           <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Page Content (Markdown supported)</Label>
           <Textarea value={form.content || ''} onChange={e => set('content', e.target.value)} rows={8} className="mt-1 font-mono text-sm" placeholder="# Heading&#10;&#10;Write your content here using **Markdown**." />
         </div>

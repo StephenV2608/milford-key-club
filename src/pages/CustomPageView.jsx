@@ -10,7 +10,12 @@ export default function CustomPageView() {
 
   useEffect(() => {
     base44.entities.CustomPage.filter({ slug }, 'order').then(list => {
-      setPage(list[0] || null);
+      const found = list[0] || null;
+      if (found?.redirect_url) {
+        window.location.replace(found.redirect_url);
+        return;
+      }
+      setPage(found);
       setLoading(false);
     });
   }, [slug]);

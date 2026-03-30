@@ -1,0 +1,47 @@
+{
+  "name": "CustomPage",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Page Title"
+    },
+    "slug": {
+      "type": "string",
+      "title": "URL Slug (e.g. 'resources')"
+    },
+    "eyebrow": {
+      "type": "string",
+      "title": "Eyebrow Text (small label above title)"
+    },
+    "description": {
+      "type": "string",
+      "title": "Page Description / Subtitle"
+    },
+    "content": {
+      "type": "string",
+      "title": "Page Content (Markdown supported)",
+      "format": "textarea"
+    },
+    "redirect_url": {
+      "type": "string",
+      "title": "Redirect URL (if set, page redirects to this URL instead of showing content)"
+    },
+    "show_in_nav": {
+      "type": "boolean",
+      "title": "Show in Navigation Bar"
+    },
+    "show_in_footer": {
+      "type": "boolean",
+      "title": "Show in Footer Quick Links"
+    },
+    "order": {
+      "type": "number",
+      "title": "Display Order"
+    }
+  },
+  "required": [
+    "title",
+    "slug"
+  ]
+}
