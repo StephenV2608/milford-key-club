@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 import { Button } from "@/components/ui/button";
-import { Trophy, Handshake, Calendar, Heart, ArrowRight } from 'lucide-react';
+import { Trophy, Handshake, Calendar, Heart, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import SectionHeading from '../components/shared/SectionHeading';
 import LatestUpdates from '../components/home/LatestUpdates';
 import { base44 } from '@/api/base44Client';
@@ -20,12 +20,36 @@ const PROJECT_FALLBACK = 'https://media.base44.com/images/public/69c2a0f26438a6d
 export default function Home() {
   const { settings } = useSiteSettings();
   const [featuredProject, setFeaturedProject] = useState(null);
+  const [galleryImages, setGalleryImages] = useState([]);
+  const [slideIndex, setSlideIndex] = useState(0);
+  const slideTimer = useRef(null);
 
   useEffect(() => {
     base44.entities.Project.list('order', 1).then(list => {
       if (list[0]) setFeaturedProject(list[0]);
     });
+    base44.entities.GalleryImage.list('order').then(imgs => {
+      if (imgs.length) setGalleryImages(imgs.map(i => i.image_url));
+    });
   }, []);
+
+  const heroImages = [
+    ...(settings.hero_image_url ? [settings.hero_image_url] : []),
+    ...galleryImages,
+  ].filter(Boolean);
+  const slides = heroImages.length ? heroImages : [HERO_FALLBACK];
+
+  useEffect(() => {
+    if (slides.length <= 1) return;
+    slideTimer.current = setInterval(() => setSlideIndex(i => (i + 1) % slides.length), 5000);
+    return () => clearInterval(slideTimer.current);
+  }, [slides.length]);
+
+  const goTo = (idx) => {
+    clearInterval(slideTimer.current);
+    setSlideIndex((idx + slides.length) % slides.length);
+    slideTimer.current = setInterval(() => setSlideIndex(i => (i + 1) % slides.length), 5000);
+  };
   const heroTitle = settings.hero_title || 'Milford\nKey Club';
   const heroSubtitle = settings.hero_subtitle || 'Building Leaders Through Service';
 
@@ -33,11 +57,14 @@ export default function Home() {
     <div>
       {/* Hero */}
       <section className="relative h-[70vh] min-h-[500px] max-h-[700px] flex items-center justify-center overflow-hidden">
-        <img
-          src={settings.hero_image_url || HERO_FALLBACK}
-          alt="Milford Key Club members volunteering together"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
+        {slides.map((src, i) => (
+          <img
+            key={src}
+            src={src}
+            alt=""
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${i === slideIndex ? 'opacity-100' : 'opacity-0'}`}
+          />
+        ))}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
         <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
           <span className="inline-block text-xs font-bold uppercase tracking-[0.2em] text-white/80 mb-4 border border-white/20 px-4 py-1.5 rounded-full backdrop-blur-sm">
@@ -58,6 +85,21 @@ export default function Home() {
             </Button>
           </div>
         </div>
+        {slides.length > 1 && (
+          <>
+            <button onClick={() => goTo(slideIndex - 1)} className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center text-white transition-colors">
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button onClick={() => goTo(slideIndex + 1)} className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center text-white transition-colors">
+              <ChevronRight className="w-5 h-5" />
+            </button>
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+              {slides.map((_, i) => (
+                <button key={i} onClick={() => goTo(i)} className={`w-2 h-2 rounded-full transition-all ${i === slideIndex ? 'bg-white scale-125' : 'bg-white/50'}`} />
+              ))}
+            </div>
+          </>
+        )}
       </section>
 
       {/* Highlights */}

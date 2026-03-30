@@ -1,22 +1,30 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Trash2, Send, Mail, Users } from 'lucide-react';
+import { Trash2, Mail, Users, Copy, ClipboardList } from 'lucide-react';
+
+const DEFAULT_TEMPLATE = `Hi [Name],
+
+We hope you're doing well! Here's the latest from Milford Key Club.
+
+📅 Upcoming Events:
+[Add events here]
+
+📢 Announcements:
+[Add announcements here]
+
+💙 Thank you for your support!
+
+— Milford Key Club`;
 
 export default function NewsletterTab() {
   const [subscribers, setSubscribers] = useState([]);
-  const [appUsers, setAppUsers] = useState([]);
-  const [subject, setSubject] = useState('');
-  const [body, setBody] = useState('');
-  const [sending, setSending] = useState(false);
-  const [sendTo, setSendTo] = useState('subscribers');
+  const [template, setTemplate] = useState(DEFAULT_TEMPLATE);
 
   useEffect(() => {
     base44.entities.NewsletterSubscriber.list('-created_date').then(setSubscribers);
-    base44.entities.User.list().then(setAppUsers);
   }, []);
 
   const del = async (id) => {
@@ -25,29 +33,16 @@ export default function NewsletterTab() {
     setSubscribers(s => s.filter(x => x.id !== id));
   };
 
-  const sendEmails = async () => {
-    if (!subject || !body) { toast.error('Fill in subject and body.'); return; }
-    const targets = sendTo === 'app_users' ? appUsers : subscribers;
-    const withEmail = targets.filter(t => t.email);
-    if (!withEmail.length) { toast.error('No recipients found.'); return; }
-    setSending(true);
-    let sent = 0;
-    for (const t of withEmail) {
-      try {
-        await base44.integrations.Core.SendEmail({
-          to: t.email,
-          subject,
-          body: `Hi ${t.name || t.full_name || 'there'},\n\n${body}\n\n— Milford Key Club`,
-        });
-        sent++;
-      } catch (e) {
-        // skip non-app users silently
-      }
-    }
-    toast.success(`Sent to ${sent} recipient(s)!`);
-    setSubject('');
-    setBody('');
-    setSending(false);
+  const copyAllEmails = () => {
+    const emails = subscribers.map(s => s.email).join(', ');
+    if (!emails) { toast.error('No subscribers yet.'); return; }
+    navigator.clipboard.writeText(emails);
+    toast.success(`Copied ${subscribers.length} email(s) to clipboard!`);
+  };
+
+  const copyTemplate = () => {
+    navigator.clipboard.writeText(template);
+    toast.success('Email template copied to clipboard!');
   };
 
   return (
@@ -61,7 +56,20 @@ export default function NewsletterTab() {
             </h3>
             <p className="text-xs text-muted-foreground mt-0.5">{subscribers.length} subscriber{subscribers.length !== 1 ? 's' : ''}</p>
           </div>
+          <Button variant="outline" size="sm" onClick={copyAllEmails} className="gap-1.5">
+            <Copy className="w-3.5 h-3.5" /> Copy All Emails
+          </Button>
         </div>
+
+        {subscribers.length > 0 && (
+          <div className="mb-4 p-3 bg-muted/50 rounded-lg border border-border">
+            <p className="text-xs text-muted-foreground mb-1 font-medium">All emails (paste into Gmail BCC, Mailchimp, etc.):</p>
+            <p className="text-xs font-mono break-all text-foreground select-all">
+              {subscribers.map(s => s.email).join(', ')}
+            </p>
+          </div>
+        )}
+
         <div className="space-y-2">
           {subscribers.map(s => (
             <div key={s.id} className="flex items-center gap-3 bg-muted/40 rounded-lg px-4 py-2.5">
@@ -78,40 +86,27 @@ export default function NewsletterTab() {
         </div>
       </div>
 
-      {/* Send email */}
+      {/* Email template */}
       <div className="bg-card rounded-xl border border-border p-5">
-        <h3 className="font-heading font-semibold text-base mb-1 flex items-center gap-2">
-          <Mail className="w-4 h-4 text-primary" /> Send Newsletter
-        </h3>
-        <p className="text-xs text-muted-foreground mb-4">Send an email to your audience. Only app users can receive emails.</p>
-        <div className="space-y-3">
-          <div className="flex gap-3">
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input type="radio" name="sendTo" checked={sendTo === 'app_users'} onChange={() => setSendTo('app_users')} />
-              App Users ({appUsers.length})
-            </label>
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input type="radio" name="sendTo" checked={sendTo === 'subscribers'} onChange={() => setSendTo('subscribers')} />
-              Newsletter Subscribers ({subscribers.length})
-            </label>
-          </div>
-          <div>
-            <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Subject</Label>
-            <Input className="mt-1" value={subject} onChange={e => setSubject(e.target.value)} placeholder="Key Club Newsletter – March 2026" />
-          </div>
-          <div>
-            <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Message Body</Label>
-            <textarea
-              className="mt-1 w-full border border-input rounded-md px-3 py-2 text-sm bg-background min-h-[120px] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-              value={body}
-              onChange={e => setBody(e.target.value)}
-              placeholder="Write your message here..."
-            />
-          </div>
-          <Button onClick={sendEmails} disabled={sending} className="gap-1.5">
-            <Send className="w-4 h-4" />{sending ? 'Sending...' : 'Send Newsletter'}
+        <div className="flex items-center justify-between mb-1">
+          <h3 className="font-heading font-semibold text-base flex items-center gap-2">
+            <Mail className="w-4 h-4 text-primary" /> Email Template
+          </h3>
+          <Button variant="outline" size="sm" onClick={copyTemplate} className="gap-1.5">
+            <ClipboardList className="w-3.5 h-3.5" /> Copy Template
           </Button>
         </div>
+        <p className="text-xs text-muted-foreground mb-3">
+          Edit your template below, then click "Copy Template" and paste it into Gmail, Outlook, or any email client.
+        </p>
+        <textarea
+          className="w-full border border-input rounded-md px-3 py-2 text-sm bg-background min-h-[260px] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring font-mono"
+          value={template}
+          onChange={e => setTemplate(e.target.value)}
+        />
+        <p className="text-xs text-muted-foreground mt-2">
+          💡 Tip: Copy all subscriber emails above, then paste into the BCC field of your email client.
+        </p>
       </div>
     </div>
   );
