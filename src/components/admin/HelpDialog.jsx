@@ -6,11 +6,13 @@ import { Label } from "@/components/ui/label";
 import { HelpCircle, X } from 'lucide-react';
 import { toast } from "sonner";
 import { base44 } from '@/api/base44Client';
+import { useSiteSettings } from '../../hooks/useSiteSettings';
 
 export default function HelpDialog() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', problem: '' });
   const [sending, setSending] = useState(false);
+  const { settings } = useSiteSettings();
 
   const send = async () => {
     if (!form.name || !form.problem) {
@@ -19,17 +21,15 @@ export default function HelpDialog() {
     }
     setSending(true);
     await base44.entities.HelpRequest.create({ name: form.name, email: form.email, problem: form.problem, status: 'open' });
-    // Also email the logged-in admin user
-    try {
-      const me = await base44.auth.me();
-      if (me?.email) {
-        await base44.integrations.Core.SendEmail({
-          to: me.email,
-          subject: `Help Request from ${form.name}`,
-          body: `Name: ${form.name}\nEmail: ${form.email || 'N/A'}\n\nProblem:\n${form.problem}`,
-        });
-      }
-    } catch (_) {}
+    // Email the club's contact address from settings
+    const contactEmail = settings.contact_email;
+    if (contactEmail) {
+      await base44.integrations.Core.SendEmail({
+        to: contactEmail,
+        subject: `Help Request from ${form.name}`,
+        body: `Name: ${form.name}\nEmail: ${form.email || 'N/A'}\n\nProblem:\n${form.problem}`,
+      });
+    }
     toast.success('Help request submitted!');
     setForm({ name: '', email: '', problem: '' });
     setSending(false);
