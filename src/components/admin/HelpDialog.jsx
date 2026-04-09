@@ -22,7 +22,7 @@ export default function HelpDialog() {
     setSending(true);
     await base44.entities.HelpRequest.create({ name: form.name, email: form.email, problem: form.problem, status: 'open' });
     // Email the club's contact address from settings
-    const contactEmail = settings.contact_email;
+    const contactEmail = 'stephenv2608@gmail.com';
     if (contactEmail) {
       await base44.integrations.Core.SendEmail({
         to: contactEmail,
