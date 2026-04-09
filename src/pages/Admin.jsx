@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Settings, Layers, Calendar, Users, Image as ImageIcon,
   Plus, Trash2, Save, Upload, Edit2, X, Check, Clock, Newspaper, Shield, LogOut, Crown,
-  FileText, Layout, PanelBottom, Mail
+  FileText, Layout, PanelBottom, Mail, HelpCircle
 } from 'lucide-react';
 import { invalidateSettings } from '../hooks/useSiteSettings';
 import { useAdminAuth } from '../hooks/useAdminAuth';
@@ -23,6 +23,7 @@ import CustomPagesTab from '../components/admin/CustomPagesTab';
 import MembersTab from '../components/admin/MembersTab';
 import HelpDialog from '../components/admin/HelpDialog';
 import NewsletterTab from '../components/admin/NewsletterTab';
+import HelpRequestsTab from '../components/admin/HelpRequestsTab';
 
 export default function Admin() {
   const { adminUser, checking, login, logout, isSuperAdmin, hasPermission } = useAdminAuth();
@@ -50,7 +51,10 @@ export default function Admin() {
     { value: 'news', label: 'News', icon: Newspaper, perm: 'news' },
     { value: 'members', label: 'Members', icon: Users, perm: 'settings' },
     { value: 'newsletter', label: 'Newsletter', icon: Mail, perm: 'settings' },
-    ...(isSuperAdmin ? [{ value: 'admins', label: 'Admins', icon: Crown, perm: null }] : []),
+    ...(isSuperAdmin ? [
+      { value: 'admins', label: 'Admins', icon: Crown, perm: null },
+      { value: 'help-requests', label: 'Help Requests', icon: HelpCircle, perm: null },
+    ] : []),
   ].filter(t => t.perm === null || hasPermission(t.perm));
 
   return (
@@ -94,6 +98,7 @@ export default function Admin() {
           <TabsContent value="members"><MembersTab isSuperAdmin={isSuperAdmin} /></TabsContent>
           <TabsContent value="newsletter"><NewsletterTab /></TabsContent>
           {isSuperAdmin && <TabsContent value="admins"><AdminUsersTab /></TabsContent>}
+          {isSuperAdmin && <TabsContent value="help-requests"><HelpRequestsTab /></TabsContent>}
         </Tabs>
       </div>
     </div>
