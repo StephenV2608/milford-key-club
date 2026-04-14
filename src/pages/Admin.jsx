@@ -29,6 +29,7 @@ import ResourcesTab from '../components/admin/ResourcesTab';
 
 export default function Admin() {
   const { adminUser, checking, login, logout, isSuperAdmin, hasPermission } = useAdminAuth();
+  const [activeTab, setActiveTab] = useState(null);
 
   if (checking) {
     return (
@@ -61,6 +62,8 @@ export default function Admin() {
     ] : []),
   ].filter(t => t.perm === null || hasPermission(t.perm));
 
+  const currentTab = activeTab || tabs[0]?.value;
+
   return (
     <div className="min-h-screen bg-muted/40">
       <div className="max-w-6xl mx-auto px-4 py-8">
@@ -82,12 +85,25 @@ export default function Admin() {
         </div>
         </div>
 
-        <Tabs defaultValue={tabs[0]?.value}>
-          <TabsList className="mb-6 flex flex-wrap gap-1 h-auto p-1">
+        <Tabs value={currentTab} onValueChange={setActiveTab}>
+          <div className="mb-6 flex flex-wrap gap-1.5">
             {tabs.map(({ value, label, icon: Icon }) => (
-              <TabsTrigger key={value} value={value} className="flex items-center gap-1.5">
+              <button
+                key={value}
+                onClick={() => setActiveTab(value)}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors border ${
+                  currentTab === value
+                    ? 'bg-primary text-primary-foreground border-primary'
+                    : 'border-border bg-background hover:bg-muted text-foreground'
+                }`}
+              >
                 <Icon className="w-3.5 h-3.5" />{label}
-              </TabsTrigger>
+              </button>
+            ))}
+          </div>
+          <TabsList className="hidden">
+            {tabs.map(({ value }) => (
+              <TabsTrigger key={value} value={value} />
             ))}
           </TabsList>
 
