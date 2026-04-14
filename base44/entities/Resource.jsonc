@@ -1,0 +1,42 @@
+{
+  "name": "Resource",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Title"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "file_url": {
+      "type": "string",
+      "title": "File URL"
+    },
+    "file_name": {
+      "type": "string",
+      "title": "Original File Name"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "enum": [
+        "Guides",
+        "Templates",
+        "Documents",
+        "Forms",
+        "Other"
+      ]
+    },
+    "order": {
+      "type": "number",
+      "title": "Display Order"
+    }
+  },
+  "required": [
+    "title",
+    "file_url",
+    "category"
+  ]
+}

@@ -18,6 +18,7 @@ import Contact from './pages/Contact';
 import Admin from './pages/Admin';
 import ServiceHours from './pages/ServiceHours';
 import CustomPageView from './pages/CustomPageView';
+import Resources from './pages/Resources';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -53,6 +54,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin" element={<Admin />} />
         <Route path="/hours" element={<ServiceHours />} />
         <Route path="/pages/:slug" element={<CustomPageView />} />
+        <Route path="/resources" element={<Resources />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

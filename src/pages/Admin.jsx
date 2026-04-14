@@ -25,6 +25,7 @@ import HelpDialog from '../components/admin/HelpDialog';
 import NewsletterTab from '../components/admin/NewsletterTab';
 import HelpRequestsTab from '../components/admin/HelpRequestsTab';
 import FormsTab from '../components/admin/FormsTab';
+import ResourcesTab from '../components/admin/ResourcesTab';
 
 export default function Admin() {
   const { adminUser, checking, login, logout, isSuperAdmin, hasPermission } = useAdminAuth();
@@ -53,6 +54,7 @@ export default function Admin() {
     { value: 'members', label: 'Members', icon: Users, perm: 'settings' },
     { value: 'newsletter', label: 'Newsletter', icon: Mail, perm: 'settings' },
     { value: 'forms', label: 'Forms', icon: FileText, perm: 'settings' },
+    { value: 'resources', label: 'Resources', icon: FileText, perm: 'settings' },
     ...(isSuperAdmin ? [
       { value: 'admins', label: 'Admins', icon: Crown, perm: null },
       { value: 'help-requests', label: 'Help Requests', icon: HelpCircle, perm: null },
@@ -100,6 +102,7 @@ export default function Admin() {
           <TabsContent value="members"><MembersTab isSuperAdmin={isSuperAdmin} /></TabsContent>
           <TabsContent value="newsletter"><NewsletterTab /></TabsContent>
           <TabsContent value="forms"><FormsTab /></TabsContent>
+          <TabsContent value="resources"><ResourcesTab /></TabsContent>
           {isSuperAdmin && <TabsContent value="admins"><AdminUsersTab /></TabsContent>}
           {isSuperAdmin && <TabsContent value="help-requests"><HelpRequestsTab /></TabsContent>}
         </Tabs>
