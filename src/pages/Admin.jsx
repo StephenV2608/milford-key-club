@@ -60,7 +60,7 @@ export default function Admin() {
       { value: 'admins', label: 'Admins', icon: Crown, perm: null },
       { value: 'help-requests', label: 'Help Requests', icon: HelpCircle, perm: null },
     ] : []),
-  ].filter(t => t.perm === null || hasPermission(t.perm));
+  ].filter(t => isSuperAdmin || t.perm === null || hasPermission(t.perm));
 
   const currentTab = activeTab || tabs[0]?.value;
 
