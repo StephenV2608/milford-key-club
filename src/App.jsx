@@ -15,7 +15,7 @@ import Officers from './pages/Officers';
 import Gallery from './pages/Gallery';
 import JoinUs from './pages/JoinUs';
 import Contact from './pages/Contact';
-import Admin from './pages/Admin';
+import Admin from './pages/Admin.jsx';
 import ServiceHours from './pages/ServiceHours';
 import CustomPageView from './pages/CustomPageView';
 import Resources from './pages/Resources';
