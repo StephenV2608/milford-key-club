@@ -9,9 +9,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Settings, Layers, Calendar, Users, Image as ImageIcon,
   Plus, Trash2, Save, Upload, Edit2, X, Check, Clock, Newspaper, Shield, LogOut, Crown,
-  FileText, Layout, PanelBottom, Mail, HelpCircle
+  FileText, Layout, PanelBottom, Mail, HelpCircle, ChevronDown, ChevronRight
 } from 'lucide-react';
 import { invalidateSettings } from '../hooks/useSiteSettings';
+import SettingsSection from '../components/admin/SettingsSection';
 import { useAdminAuth } from '../hooks/useAdminAuth';
 import AdminLogin from '../components/admin/AdminLogin';
 import HoursTab from '../components/admin/HoursTab';
@@ -27,8 +28,10 @@ import HelpRequestsTab from '../components/admin/HelpRequestsTab';
 import FormsTab from '../components/admin/FormsTab';
 import ResourcesTab from '../components/admin/ResourcesTab';
 
-export default function Admin() {
-  const { adminUser, checking, login, logout, isSuperAdmin, hasPermission } = useAdminAuth();
+export default function Admin({ injectedAuth } = {}) {
+  const ownAuth = useAdminAuth();
+  const auth = injectedAuth || ownAuth;
+  const { adminUser, checking, login, logout, isSuperAdmin, hasPermission } = auth;
   const [activeTab, setActiveTab] = useState(null);
 
   if (checking) {
@@ -45,17 +48,17 @@ export default function Admin() {
 
   const tabs = [
     { value: 'settings', label: 'Site Settings', icon: Settings, perm: 'settings' },
-    { value: 'page-texts', label: 'Page Texts', icon: FileText, perm: 'settings' },
+    { value: 'page-texts', label: 'Page Texts', icon: FileText, perm: 'page-texts' },
     { value: 'projects', label: 'Projects', icon: Layers, perm: 'projects' },
     { value: 'events', label: 'Events', icon: Calendar, perm: 'events' },
     { value: 'officers', label: 'Officers', icon: Users, perm: 'officers' },
     { value: 'gallery', label: 'Gallery', icon: ImageIcon, perm: 'gallery' },
     { value: 'hours', label: 'Hours', icon: Clock, perm: 'hours' },
     { value: 'news', label: 'News', icon: Newspaper, perm: 'news' },
-    { value: 'members', label: 'Members', icon: Users, perm: 'settings' },
-    { value: 'newsletter', label: 'Newsletter', icon: Mail, perm: 'settings' },
-    { value: 'forms', label: 'Forms', icon: FileText, perm: 'settings' },
-    { value: 'resources', label: 'Resources', icon: FileText, perm: 'settings' },
+    { value: 'members', label: 'Members', icon: Users, perm: 'members' },
+    { value: 'newsletter', label: 'Newsletter', icon: Mail, perm: 'newsletter' },
+    { value: 'forms', label: 'Forms', icon: FileText, perm: 'forms' },
+    { value: 'resources', label: 'Resources', icon: FileText, perm: 'resources' },
     ...(isSuperAdmin ? [
       { value: 'admins', label: 'Admins', icon: Crown, perm: null },
       { value: 'help-requests', label: 'Help Requests', icon: HelpCircle, perm: null },
@@ -116,10 +119,11 @@ export default function Admin() {
           <TabsContent value="hours"><HoursTab /></TabsContent>
           <TabsContent value="news"><NewsTab /></TabsContent>
           <TabsContent value="members"><MembersTab isSuperAdmin={isSuperAdmin} /></TabsContent>
+
           <TabsContent value="newsletter"><NewsletterTab /></TabsContent>
           <TabsContent value="forms"><FormsTab /></TabsContent>
           <TabsContent value="resources"><ResourcesTab /></TabsContent>
-          {isSuperAdmin && <TabsContent value="admins"><AdminUsersTab /></TabsContent>}
+          {isSuperAdmin && <TabsContent value="admins"><AdminUsersTab isSuperAdmin={isSuperAdmin} /></TabsContent>}
           {isSuperAdmin && <TabsContent value="help-requests"><HelpRequestsTab /></TabsContent>}
         </Tabs>
       </div>
@@ -199,9 +203,11 @@ function SiteSettingsTab() {
   if (!form) return <div className="py-12 text-center text-muted-foreground">Loading...</div>;
 
   return (
-    <div className="space-y-6">
-      <Card title="Logo & Branding">
-        <div className="space-y-4">
+    <div className="space-y-3">
+      <p className="text-xs text-muted-foreground">Click a section to expand and edit it.</p>
+
+      <SettingsSection title="Logo & Branding" icon={ImageIcon} defaultOpen>
+        <div className="space-y-4 pt-2">
           <div className="flex items-center gap-4">
             <div className="w-20 h-20 rounded-xl border-2 border-dashed border-border flex items-center justify-center bg-muted overflow-hidden">
               {form.logo_url ? <img src={form.logo_url} alt="Logo" className="w-full h-full object-contain p-1" /> : <ImageIcon className="w-7 h-7 text-muted-foreground" />}
@@ -219,23 +225,51 @@ function SiteSettingsTab() {
             <Field label="Tagline" value={form.tagline} onChange={v => set('tagline', v)} />
           </div>
         </div>
-      </Card>
-      <Card title="Home Page Hero">
-        <div className="grid sm:grid-cols-2 gap-4">
-          <Field label="Hero Title" value={form.hero_title} onChange={v => set('hero_title', v)} multiline />
-          <Field label="Hero Subtitle" value={form.hero_subtitle} onChange={v => set('hero_subtitle', v)} />
+      </SettingsSection>
+
+      <SettingsSection title="Home Page Hero" icon={Layout}>
+        <div className="space-y-4 pt-2">
+          <div className="grid sm:grid-cols-2 gap-4">
+            <Field label="Hero Title" value={form.hero_title} onChange={v => set('hero_title', v)} multiline />
+            <Field label="Hero Subtitle" value={form.hero_subtitle} onChange={v => set('hero_subtitle', v)} />
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="w-32 h-20 rounded-xl border-2 border-dashed border-border flex items-center justify-center bg-muted overflow-hidden">
+              {form.hero_image_url ? <img src={form.hero_image_url} alt="Hero" className="w-full h-full object-cover" /> : <ImageIcon className="w-6 h-6 text-muted-foreground" />}
+            </div>
+            <div>
+              <Button variant="outline" size="sm" onClick={() => heroFileRef.current.click()} disabled={uploadingHero} className="gap-1.5">
+                <Upload className="w-3.5 h-3.5" />{uploadingHero ? 'Uploading...' : 'Upload Hero Image'}
+              </Button>
+              <p className="text-xs text-muted-foreground mt-1.5">Recommended: 1600×900px or wider</p>
+              <input ref={heroFileRef} type="file" accept="image/*" className="hidden" onChange={handleHeroImageUpload} />
+            </div>
+          </div>
         </div>
-      </Card>
-      <Card title="About Page">
-        <div className="space-y-4">
+      </SettingsSection>
+
+      <SettingsSection title="About Page" icon={Layout}>
+        <div className="space-y-4 pt-2">
           <Field label="Intro Paragraph" value={form.about_intro} onChange={v => set('about_intro', v)} multiline rows={3} />
           <Field label="Our Milford Chapter" value={form.about_chapter} onChange={v => set('about_chapter', v)} multiline rows={4} />
           <Field label="Why It Matters" value={form.about_why} onChange={v => set('about_why', v)} multiline rows={3} />
+          <div className="flex items-center gap-4">
+            <div className="w-32 h-20 rounded-xl border-2 border-dashed border-border flex items-center justify-center bg-muted overflow-hidden">
+              {form.about_image_url ? <img src={form.about_image_url} alt="About" className="w-full h-full object-cover" /> : <ImageIcon className="w-6 h-6 text-muted-foreground" />}
+            </div>
+            <div>
+              <Button variant="outline" size="sm" onClick={() => aboutFileRef.current.click()} disabled={uploadingAbout} className="gap-1.5">
+                <Upload className="w-3.5 h-3.5" />{uploadingAbout ? 'Uploading...' : 'Upload About Image'}
+              </Button>
+              <input ref={aboutFileRef} type="file" accept="image/*" className="hidden" onChange={handleAboutImageUpload} />
+            </div>
+          </div>
         </div>
-      </Card>
-      <Card title="Join Us Page">
-        <p className="text-xs text-muted-foreground mb-4">Uncheck items to hide them from the Join Us page.</p>
-        <div className="space-y-4">
+      </SettingsSection>
+
+      <SettingsSection title="Join Us Page" icon={Users}>
+        <div className="space-y-4 pt-2">
+          <p className="text-xs text-muted-foreground">Uncheck items to hide them from the Join Us page.</p>
           <div className="grid sm:grid-cols-2 gap-4">
             <Field label="Meeting Time" value={form.meeting_time} onChange={v => set('meeting_time', v)} />
             <label className="flex items-center gap-2 text-sm pt-5 cursor-pointer">
@@ -259,75 +293,48 @@ function SiteSettingsTab() {
             </label>
           </div>
         </div>
-      </Card>
-      <Card title="Footer">
-        <FooterSubSection form={form} set={set} />
-      </Card>
-      <Card title="Custom Pages">
-        <CustomPagesTab />
-      </Card>
-      <Card title="Home Page Hero Image">
-        <div className="space-y-3">
-          <div className="flex items-center gap-4">
-            <div className="w-32 h-20 rounded-xl border-2 border-dashed border-border flex items-center justify-center bg-muted overflow-hidden">
-              {form.hero_image_url ? <img src={form.hero_image_url} alt="Hero" className="w-full h-full object-cover" /> : <ImageIcon className="w-6 h-6 text-muted-foreground" />}
-            </div>
-            <div>
-              <Button variant="outline" size="sm" onClick={() => heroFileRef.current.click()} disabled={uploadingHero} className="gap-1.5">
-                <Upload className="w-3.5 h-3.5" />{uploadingHero ? 'Uploading...' : 'Upload Hero Image'}
-              </Button>
-              <p className="text-xs text-muted-foreground mt-1.5">Recommended: 1600×900px or wider</p>
-              <input ref={heroFileRef} type="file" accept="image/*" className="hidden" onChange={handleHeroImageUpload} />
-            </div>
+      </SettingsSection>
+
+      <SettingsSection title="Navigation" icon={Layout}>
+        <div className="pt-2">
+          <p className="text-xs text-muted-foreground mb-3">Check items to <strong>hide</strong> them from the top navigation bar.</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {[
+              { label: 'Home', path: '/' },
+              { label: 'About', path: '/about' },
+              { label: 'Projects', path: '/projects' },
+              { label: 'Events', path: '/events' },
+              { label: 'Officers', path: '/officers' },
+              { label: 'Gallery', path: '/gallery' },
+              { label: 'Log Hours', path: '/hours' },
+              { label: 'Join Us', path: '/join' },
+              { label: 'Contact', path: '/contact' },
+            ].map(({ label, path }) => {
+              const hidden = (form.hidden_nav_items || '').split(',').map(s => s.trim()).includes(path);
+              const toggle = () => {
+                const current = (form.hidden_nav_items || '').split(',').map(s => s.trim()).filter(Boolean);
+                const updated = hidden ? current.filter(p => p !== path) : [...current, path];
+                set('hidden_nav_items', updated.join(','));
+              };
+              return (
+                <label key={path} className="flex items-center gap-2 cursor-pointer text-sm">
+                  <input type="checkbox" checked={hidden} onChange={toggle} className="rounded" />
+                  <span className={hidden ? 'line-through text-muted-foreground' : ''}>{label}</span>
+                </label>
+              );
+            })}
           </div>
         </div>
-      </Card>
-      <Card title="About Page Image">
-        <div className="space-y-3">
-          <div className="flex items-center gap-4">
-            <div className="w-32 h-20 rounded-xl border-2 border-dashed border-border flex items-center justify-center bg-muted overflow-hidden">
-              {form.about_image_url ? <img src={form.about_image_url} alt="About" className="w-full h-full object-cover" /> : <ImageIcon className="w-6 h-6 text-muted-foreground" />}
-            </div>
-            <div>
-              <Button variant="outline" size="sm" onClick={() => aboutFileRef.current.click()} disabled={uploadingAbout} className="gap-1.5">
-                <Upload className="w-3.5 h-3.5" />{uploadingAbout ? 'Uploading...' : 'Upload About Image'}
-              </Button>
-              <input ref={aboutFileRef} type="file" accept="image/*" className="hidden" onChange={handleAboutImageUpload} />
-            </div>
-          </div>
+      </SettingsSection>
+
+      <SettingsSection title="Footer" icon={PanelBottom}>
+        <div className="pt-2">
+          <FooterSubSection form={form} set={set} />
         </div>
-      </Card>
-      <Card title="Navigation">
-        <p className="text-xs text-muted-foreground mb-3">Check items to <strong>hide</strong> them from the top navigation bar.</p>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          {[
-            { label: 'Home', path: '/' },
-            { label: 'About', path: '/about' },
-            { label: 'Projects', path: '/projects' },
-            { label: 'Events', path: '/events' },
-            { label: 'Officers', path: '/officers' },
-            { label: 'Gallery', path: '/gallery' },
-            { label: 'Log Hours', path: '/hours' },
-            { label: 'Join Us', path: '/join' },
-            { label: 'Contact', path: '/contact' },
-          ].map(({ label, path }) => {
-            const hidden = (form.hidden_nav_items || '').split(',').map(s => s.trim()).includes(path);
-            const toggle = () => {
-              const current = (form.hidden_nav_items || '').split(',').map(s => s.trim()).filter(Boolean);
-              const updated = hidden ? current.filter(p => p !== path) : [...current, path];
-              set('hidden_nav_items', updated.join(','));
-            };
-            return (
-              <label key={path} className="flex items-center gap-2 cursor-pointer text-sm">
-                <input type="checkbox" checked={hidden} onChange={toggle} className="rounded" />
-                <span className={hidden ? 'line-through text-muted-foreground' : ''}>{label}</span>
-              </label>
-            );
-          })}
-        </div>
-      </Card>
-      <Card title="Contact & Social">
-        <div className="grid sm:grid-cols-2 gap-4">
+      </SettingsSection>
+
+      <SettingsSection title="Contact & Social" icon={Mail}>
+        <div className="grid sm:grid-cols-2 gap-4 pt-2">
           <Field label="Contact Email" value={form.contact_email} onChange={v => set('contact_email', v)} />
           <Field label="Instagram URL" value={form.instagram_url} onChange={v => set('instagram_url', v)} />
           <Field label="Facebook URL" value={form.facebook_url} onChange={v => set('facebook_url', v)} />
@@ -345,7 +352,14 @@ function SiteSettingsTab() {
             Show Location block on Contact page
           </label>
         </div>
-      </Card>
+      </SettingsSection>
+
+      <SettingsSection title="Custom Pages" icon={FileText}>
+        <div className="pt-2">
+          <CustomPagesTab />
+        </div>
+      </SettingsSection>
+
       <Button onClick={save} disabled={saving} className="gap-2 rounded-full px-8">
         <Save className="w-4 h-4" />{saving ? 'Saving...' : 'Save All Settings'}
       </Button>
