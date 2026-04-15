@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import SectionHeading from '../components/shared/SectionHeading';
-import OfficerCard from '../components/shared/OfficerCard';
 import { base44 } from '@/api/base44Client';
 import { useSiteSettings } from '../hooks/useSiteSettings';
+import OfficerCard from '../components/shared/OfficerCard';
+import PageHeader from '../components/shared/PageHeader';
+import { Archive } from 'lucide-react';
 
 const FALLBACK_OFFICERS = [
   { id: 'f1', name: 'Alex Johnson', role: 'President', fun_fact: 'Can weave a plastic bag mat in under 3 hours' },
@@ -18,6 +19,7 @@ export default function Officers() {
   const { settings } = useSiteSettings();
   const [officers, setOfficers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showPast, setShowPast] = useState(false);
 
   useEffect(() => {
     base44.entities.Officer.list('order').then(list => {
@@ -26,19 +28,26 @@ export default function Officers() {
     });
   }, []);
 
-  const items = officers.length > 0 ? officers : FALLBACK_OFFICERS;
+  const hasData = officers.length > 0;
+  const active = hasData ? officers.filter(o => !o.archived) : FALLBACK_OFFICERS;
+  const past = hasData ? officers.filter(o => o.archived) : [];
+
+  // Group past by year
+  const pastByYear = past.reduce((acc, o) => {
+    const yr = o.year || 'Previous Years';
+    if (!acc[yr]) acc[yr] = [];
+    acc[yr].push(o);
+    return acc;
+  }, {});
 
   return (
     <div>
-      <section className="py-16 md:py-24 bg-muted/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            eyebrow={settings.officers_eyebrow || 'Our Team'}
-            title={settings.officers_heading || 'Meet the Officers'}
-            description={settings.officers_description || 'The dedicated students (and advisor) who keep Milford Key Club running strong.'}
-          />
-        </div>
-      </section>
+      <PageHeader
+        eyebrow={settings.officers_eyebrow || 'Our Team'}
+        title={settings.officers_heading || 'Meet the Officers'}
+        description={settings.officers_description || 'The dedicated students (and advisor) who keep Milford Key Club running strong.'}
+        imageUrl={settings.officers_header_image_url}
+      />
 
       <section className="py-16 md:py-24">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -48,14 +57,32 @@ export default function Officers() {
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-              {items.map((officer) => (
-                <OfficerCard
-                  key={officer.id}
-                  name={officer.name}
-                  role={officer.role}
-                  funFact={officer.fun_fact}
-                  photoUrl={officer.photo_url}
-                />
+              {active.map((officer) => (
+                <OfficerCard key={officer.id} name={officer.name} role={officer.role} funFact={officer.fun_fact} photoUrl={officer.photo_url} />
+              ))}
+            </div>
+          )}
+
+          {/* Past Officers */}
+          {past.length > 0 && (
+            <div className="mt-16">
+              <button
+                onClick={() => setShowPast(v => !v)}
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6 mx-auto"
+              >
+                <Archive className="w-4 h-4" />
+                <span className="text-sm font-medium">{showPast ? 'Hide' : 'View'} Past Officers</span>
+              </button>
+
+              {showPast && Object.entries(pastByYear).sort((a,b) => b[0].localeCompare(a[0])).map(([year, group]) => (
+                <div key={year} className="mb-10">
+                  <h3 className="text-center font-heading font-semibold text-lg mb-6 text-muted-foreground">{year}</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                    {group.map(officer => (
+                      <OfficerCard key={officer.id} name={officer.name} role={officer.role} funFact={officer.fun_fact} photoUrl={officer.photo_url} faded />
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
           )}

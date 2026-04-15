@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import SectionHeading from '../components/shared/SectionHeading';
+import PageHeader from '../components/shared/PageHeader';
 import { base44 } from '@/api/base44Client';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 
@@ -36,15 +36,12 @@ export default function Gallery() {
 
   return (
     <div>
-      <section className="py-16 md:py-24 bg-muted/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            eyebrow={settings.gallery_eyebrow || 'Photo Gallery'}
-            title={settings.gallery_heading || 'Moments That Matter'}
-            description={settings.gallery_description || "A look at our members in action — serving, leading, and having fun along the way."}
-          />
-        </div>
-      </section>
+      <PageHeader
+        eyebrow={settings.gallery_eyebrow || 'Photo Gallery'}
+        title={settings.gallery_heading || 'Moments That Matter'}
+        description={settings.gallery_description || "A look at our members in action — serving, leading, and having fun along the way."}
+        imageUrl={settings.gallery_header_image_url}
+      />
 
       <section className="py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

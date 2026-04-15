@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import SectionHeading from '../components/shared/SectionHeading';
+import PageHeader from '../components/shared/PageHeader';
 import ProjectCard from '../components/shared/ProjectCard';
 import { base44 } from '@/api/base44Client';
 import { useSiteSettings } from '../hooks/useSiteSettings';
@@ -26,15 +26,12 @@ export default function Projects() {
 
   return (
     <div>
-      <section className="py-16 md:py-24 bg-muted/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            eyebrow={settings.projects_eyebrow || 'Our Work'}
-            title={settings.projects_heading || 'Service Projects'}
-            description={settings.projects_description || "Every project is an opportunity to learn, grow, and give back. Here's a look at what we've been working on."}
-          />
-        </div>
-      </section>
+      <PageHeader
+        eyebrow={settings.projects_eyebrow || 'Our Work'}
+        title={settings.projects_heading || 'Service Projects'}
+        description={settings.projects_description || "Every project is an opportunity to learn, grow, and give back. Here's a look at what we've been working on."}
+        imageUrl={settings.projects_header_image_url}
+      />
 
       <section className="py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

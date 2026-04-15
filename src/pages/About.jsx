@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Users, Target, HeartHandshake, ArrowRight } from 'lucide-react';
 import SectionHeading from '../components/shared/SectionHeading';
+import PageHeader from '../components/shared/PageHeader';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 import ReactMarkdown from 'react-markdown';
 
@@ -19,14 +20,11 @@ export default function About() {
 
   return (
     <div>
-      <section className="py-16 md:py-24 bg-muted/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            eyebrow={settings.about_eyebrow || 'About Us'}
-            title={settings.about_heading || 'Who We Are'}
-          />
-        </div>
-      </section>
+      <PageHeader
+        eyebrow={settings.about_eyebrow || 'About Us'}
+        title={settings.about_heading || 'Who We Are'}
+        imageUrl={settings.about_header_image_url}
+      />
 
       <section className="py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -1,0 +1,243 @@
+{
+  "name": "SiteSettings",
+  "type": "object",
+  "properties": {
+    "logo_url": {
+      "type": "string",
+      "title": "Logo URL"
+    },
+    "site_name": {
+      "type": "string",
+      "title": "Site Name"
+    },
+    "tagline": {
+      "type": "string",
+      "title": "Tagline"
+    },
+    "hero_title": {
+      "type": "string",
+      "title": "Hero Title"
+    },
+    "hero_subtitle": {
+      "type": "string",
+      "title": "Hero Subtitle"
+    },
+    "hero_image_url": {
+      "type": "string",
+      "title": "Hero Image URL"
+    },
+    "about_image_url": {
+      "type": "string",
+      "title": "About Page Image URL"
+    },
+    "about_intro": {
+      "type": "string",
+      "title": "About Intro Paragraph",
+      "format": "textarea"
+    },
+    "about_chapter": {
+      "type": "string",
+      "title": "Our Chapter Text",
+      "format": "textarea"
+    },
+    "about_why": {
+      "type": "string",
+      "title": "Why It Matters Text",
+      "format": "textarea"
+    },
+    "about_eyebrow": {
+      "type": "string",
+      "title": "About Page - Eyebrow"
+    },
+    "about_heading": {
+      "type": "string",
+      "title": "About Page - Main Heading"
+    },
+    "about_header_image_url": {
+      "type": "string",
+      "title": "About Page - Header Image"
+    },
+    "projects_eyebrow": {
+      "type": "string",
+      "title": "Projects Page - Eyebrow"
+    },
+    "projects_heading": {
+      "type": "string",
+      "title": "Projects Page - Heading"
+    },
+    "projects_description": {
+      "type": "string",
+      "title": "Projects Page - Description"
+    },
+    "projects_header_image_url": {
+      "type": "string",
+      "title": "Projects Page - Header Image"
+    },
+    "events_eyebrow": {
+      "type": "string",
+      "title": "Events Page - Eyebrow"
+    },
+    "events_heading": {
+      "type": "string",
+      "title": "Events Page - Heading"
+    },
+    "events_description": {
+      "type": "string",
+      "title": "Events Page - Description"
+    },
+    "events_header_image_url": {
+      "type": "string",
+      "title": "Events Page - Header Image"
+    },
+    "officers_eyebrow": {
+      "type": "string",
+      "title": "Officers Page - Eyebrow"
+    },
+    "officers_heading": {
+      "type": "string",
+      "title": "Officers Page - Heading"
+    },
+    "officers_description": {
+      "type": "string",
+      "title": "Officers Page - Description"
+    },
+    "officers_header_image_url": {
+      "type": "string",
+      "title": "Officers Page - Header Image"
+    },
+    "gallery_eyebrow": {
+      "type": "string",
+      "title": "Gallery Page - Eyebrow"
+    },
+    "gallery_heading": {
+      "type": "string",
+      "title": "Gallery Page - Heading"
+    },
+    "gallery_description": {
+      "type": "string",
+      "title": "Gallery Page - Description"
+    },
+    "gallery_header_image_url": {
+      "type": "string",
+      "title": "Gallery Page - Header Image"
+    },
+    "join_eyebrow": {
+      "type": "string",
+      "title": "Join Page - Eyebrow"
+    },
+    "join_heading": {
+      "type": "string",
+      "title": "Join Page - Heading"
+    },
+    "join_description": {
+      "type": "string",
+      "title": "Join Page - Description"
+    },
+    "join_form_url": {
+      "type": "string",
+      "title": "Sign-Up Form URL"
+    },
+    "join_header_image_url": {
+      "type": "string",
+      "title": "Join Page - Header Image"
+    },
+    "contact_eyebrow": {
+      "type": "string",
+      "title": "Contact Page - Eyebrow"
+    },
+    "contact_heading": {
+      "type": "string",
+      "title": "Contact Page - Heading"
+    },
+    "contact_description": {
+      "type": "string",
+      "title": "Contact Page - Description"
+    },
+    "contact_email": {
+      "type": "string",
+      "title": "Contact Email"
+    },
+    "contact_header_image_url": {
+      "type": "string",
+      "title": "Contact Page - Header Image"
+    },
+    "instagram_url": {
+      "type": "string",
+      "title": "Instagram URL"
+    },
+    "twitter_url": {
+      "type": "string",
+      "title": "Twitter/X URL"
+    },
+    "show_twitter": {
+      "type": "boolean",
+      "title": "Show Twitter/X in Footer"
+    },
+    "facebook_url": {
+      "type": "string",
+      "title": "Facebook URL"
+    },
+    "show_facebook": {
+      "type": "boolean",
+      "title": "Show Facebook in Footer"
+    },
+    "footer_links": {
+      "type": "string",
+      "title": "Footer Quick Links (JSON)"
+    },
+    "footer_tagline": {
+      "type": "string",
+      "title": "Footer Tagline Text"
+    },
+    "hidden_nav_items": {
+      "type": "string",
+      "title": "Hidden Nav Items (comma-separated paths)"
+    },
+    "meeting_time": {
+      "type": "string",
+      "title": "Meeting Time"
+    },
+    "show_meeting_time": {
+      "type": "boolean",
+      "title": "Show Meeting Time on Join page"
+    },
+    "meeting_location": {
+      "type": "string",
+      "title": "Meeting Location"
+    },
+    "show_meeting_location": {
+      "type": "boolean",
+      "title": "Show Meeting Location on Join page"
+    },
+    "dues_info": {
+      "type": "string",
+      "title": "Dues Info"
+    },
+    "show_dues": {
+      "type": "boolean",
+      "title": "Show Dues on Join page"
+    },
+    "requirements_info": {
+      "type": "string",
+      "title": "Requirements Info"
+    },
+    "show_requirements": {
+      "type": "boolean",
+      "title": "Show Requirements on Join page"
+    },
+    "show_contact_location": {
+      "type": "boolean",
+      "title": "Show Location block on Contact page"
+    },
+    "site_closed": {
+      "type": "boolean",
+      "title": "Site Closed / Maintenance Mode"
+    },
+    "site_closed_message": {
+      "type": "string",
+      "title": "Site Closed Message",
+      "format": "textarea"
+    }
+  },
+  "required": []
+}

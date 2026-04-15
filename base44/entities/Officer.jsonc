@@ -1,0 +1,39 @@
+{
+  "name": "Officer",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Name"
+    },
+    "role": {
+      "type": "string",
+      "title": "Role"
+    },
+    "fun_fact": {
+      "type": "string",
+      "title": "Fun Fact / Bio"
+    },
+    "photo_url": {
+      "type": "string",
+      "title": "Photo URL"
+    },
+    "order": {
+      "type": "number",
+      "title": "Display Order"
+    },
+    "archived": {
+      "type": "boolean",
+      "title": "Past Officer (Archived)",
+      "default": false
+    },
+    "year": {
+      "type": "string",
+      "title": "Year (e.g. 2024-2025)"
+    }
+  },
+  "required": [
+    "name",
+    "role"
+  ]
+}
