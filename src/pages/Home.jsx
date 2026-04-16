@@ -8,11 +8,11 @@ import LatestUpdates from '../components/home/LatestUpdates';
 import { base44 } from '@/api/base44Client';
 
 const highlights = [
-  { icon: Trophy, title: 'Awards & Recognition', desc: 'District and state-level honors for outstanding service' },
-  { icon: Handshake, title: 'Service Projects', desc: 'Dozens of hands-on projects helping our community every year' },
-  { icon: Calendar, title: 'Upcoming Events', desc: 'Regular meetings, drives, and volunteer opportunities' },
-  { icon: Heart, title: 'Community Impact', desc: 'Thousands of service hours logged by our dedicated members' },
-];
+{ icon: Trophy, title: 'Awards & Recognition', desc: 'District and state-level honors for outstanding service' },
+{ icon: Handshake, title: 'Service Projects', desc: 'Dozens of hands-on projects helping our community every year' },
+{ icon: Calendar, title: 'Upcoming Events', desc: 'Regular meetings, drives, and volunteer opportunities' },
+{ icon: Heart, title: 'Community Impact', desc: 'Thousands of service hours logged by our dedicated members' }];
+
 
 const HERO_FALLBACK = 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/fed622b44_generated_8d496406.png';
 const PROJECT_FALLBACK = 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/966810261_generated_0f8cf771.png';
@@ -25,30 +25,30 @@ export default function Home() {
   const slideTimer = useRef(null);
 
   useEffect(() => {
-    base44.entities.Project.list('order', 1).then(list => {
+    base44.entities.Project.list('order', 1).then((list) => {
       if (list[0]) setFeaturedProject(list[0]);
     });
-    base44.entities.GalleryImage.list('order').then(imgs => {
-      if (imgs.length) setGalleryImages(imgs.map(i => i.image_url));
+    base44.entities.GalleryImage.list('order').then((imgs) => {
+      if (imgs.length) setGalleryImages(imgs.map((i) => i.image_url));
     });
   }, []);
 
   const heroImages = [
-    ...(settings.hero_image_url ? [settings.hero_image_url] : []),
-    ...galleryImages,
-  ].filter(Boolean);
+  ...(settings.hero_image_url ? [settings.hero_image_url] : []),
+  ...galleryImages].
+  filter(Boolean);
   const slides = heroImages.length ? heroImages : [HERO_FALLBACK];
 
   useEffect(() => {
     if (slides.length <= 1) return;
-    slideTimer.current = setInterval(() => setSlideIndex(i => (i + 1) % slides.length), 5000);
+    slideTimer.current = setInterval(() => setSlideIndex((i) => (i + 1) % slides.length), 5000);
     return () => clearInterval(slideTimer.current);
   }, [slides.length]);
 
   const goTo = (idx) => {
     clearInterval(slideTimer.current);
     setSlideIndex((idx + slides.length) % slides.length);
-    slideTimer.current = setInterval(() => setSlideIndex(i => (i + 1) % slides.length), 5000);
+    slideTimer.current = setInterval(() => setSlideIndex((i) => (i + 1) % slides.length), 5000);
   };
   const heroTitle = settings.hero_title || 'Milford\nKey Club';
   const heroSubtitle = settings.hero_subtitle || 'Building Leaders Through Service';
@@ -57,14 +57,14 @@ export default function Home() {
     <div>
       {/* Hero */}
       <section className="relative h-[70vh] min-h-[500px] max-h-[700px] flex items-center justify-center overflow-hidden">
-        {slides.map((src, i) => (
-          <img
-            key={src}
-            src={src}
-            alt=""
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${i === slideIndex ? 'opacity-100' : 'opacity-0'}`}
-          />
-        ))}
+        {slides.map((src, i) =>
+        <img
+          key={src}
+          src={src}
+          alt=""
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${i === slideIndex ? 'opacity-100' : 'opacity-0'}`} />
+
+        )}
         <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/45 to-black/75" />
         <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
           <span className="inline-block text-xs font-bold uppercase tracking-[0.2em] text-white/80 mb-4 border border-white/20 px-4 py-1.5 rounded-full backdrop-blur-sm">
@@ -78,15 +78,15 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button asChild size="lg" className="text-base px-8 h-12 rounded-full font-semibold">
-              <Link to="/pages/join">Join Us</Link>
+              <Link to="/join">Join Us</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="text-base px-8 h-12 rounded-full font-semibold bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white">
               <Link to="/projects">See Our Impact</Link>
             </Button>
           </div>
         </div>
-        {slides.length > 1 && (
-          <>
+        {slides.length > 1 &&
+        <>
             <button onClick={() => goTo(slideIndex - 1)} className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center text-white transition-colors">
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -94,12 +94,12 @@ export default function Home() {
               <ChevronRight className="w-5 h-5" />
             </button>
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
-              {slides.map((_, i) => (
-                <button key={i} onClick={() => goTo(i)} className={`w-2 h-2 rounded-full transition-all ${i === slideIndex ? 'bg-white scale-125' : 'bg-white/50'}`} />
-              ))}
+              {slides.map((_, i) =>
+            <button key={i} onClick={() => goTo(i)} className={`w-2 h-2 rounded-full transition-all ${i === slideIndex ? 'bg-white scale-125' : 'bg-white/50'}`} />
+            )}
             </div>
           </>
-        )}
+        }
       </section>
 
       {/* Highlights */}
@@ -108,11 +108,11 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
             {highlights.map(({ icon: Icon, title, desc }, i) => {
               const colors = [
-                'from-blue-500/10 to-blue-600/5 border-blue-100 text-blue-600 bg-blue-50',
-                'from-rose-500/10 to-rose-600/5 border-rose-100 text-rose-600 bg-rose-50',
-                'from-violet-500/10 to-violet-600/5 border-violet-100 text-violet-600 bg-violet-50',
-                'from-emerald-500/10 to-emerald-600/5 border-emerald-100 text-emerald-600 bg-emerald-50',
-              ];
+              'from-blue-500/10 to-blue-600/5 border-blue-100 text-blue-600 bg-blue-50',
+              'from-rose-500/10 to-rose-600/5 border-rose-100 text-rose-600 bg-rose-50',
+              'from-violet-500/10 to-violet-600/5 border-violet-100 text-violet-600 bg-violet-50',
+              'from-emerald-500/10 to-emerald-600/5 border-emerald-100 text-emerald-600 bg-emerald-50'];
+
               const [gradFrom, gradTo, borderC, iconColor, iconBg] = colors[i].split(' ');
               return (
                 <div key={title} className={`rounded-2xl p-6 border bg-gradient-to-br ${gradFrom} ${gradTo} ${borderC} hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group`}>
@@ -121,8 +121,8 @@ export default function Home() {
                   </div>
                   <h3 className="font-heading font-bold text-base mb-1.5 text-foreground">{title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
-                </div>
-              );
+                </div>);
+
             })}
           </div>
         </div>
@@ -138,8 +138,8 @@ export default function Home() {
             <SectionHeading
               eyebrow="Who We Are"
               title="Student-Led. Community-Driven."
-              description={settings.about_intro || "Milford Key Club is a student-led organization dedicated to serving our school and community while building leadership skills. We believe every student has the power to make a positive difference."}
-            />
+              description={settings.about_intro || "Milford Key Club is a student-led organization dedicated to serving our school and community while building leadership skills. We believe every student has the power to make a positive difference."} />
+            
             <Button asChild className="rounded-full px-8 shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-shadow">
               <Link to="/about">
                 Learn More <ArrowRight className="ml-2 w-4 h-4" />
@@ -157,8 +157,8 @@ export default function Home() {
               <img
                 src={featuredProject?.image_url || PROJECT_FALLBACK}
                 alt={featuredProject?.title || 'Featured Project'}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-              />
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+              
             </div>
             <div>
               <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-secondary bg-secondary/8 border border-secondary/20 px-3 py-1 rounded-full mb-4">
@@ -203,14 +203,14 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button asChild size="lg" className="rounded-full px-10 h-12 text-base font-bold bg-white text-primary hover:bg-white/90 shadow-2xl shadow-black/20">
-              <Link to="/pages/join">Sign Up Now</Link>
+              <Link to="/join">Sign Up Now</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="rounded-full px-8 h-12 text-base font-semibold border-white/30 text-white hover:bg-white/10 hover:text-white">
-              <Link to="/contact">Contact Us</Link>
+              <Link to="/contact" className="bg-background text-[hsl(var(--primary))] px-8 text-base font-semibold rounded-full inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border shadow-sm h-12 border-white/30 hover:bg-white/10 hover:text-white">Contact Us</Link>
             </Button>
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>);
+
 }
