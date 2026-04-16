@@ -10,7 +10,7 @@ const DEFAULT_LINKS = [
   { label: 'Events', path: '/events' },
   { label: 'Officers', path: '/officers' },
   { label: 'Gallery', path: '/gallery' },
-  { label: 'Join Us', path: '/join' },
+  { label: 'Join Us', path: '/pages/join' },
 ];
 
 export default function Footer() {

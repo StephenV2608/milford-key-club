@@ -72,6 +72,7 @@ export default function About() {
           />
           <Button asChild className="rounded-full px-6">
             <Link to="/pages/join">
+
               Join Our Mission <ArrowRight className="ml-2 w-4 h-4" />
             </Link>
           </Button>

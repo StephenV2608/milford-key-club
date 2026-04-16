@@ -1,0 +1,50 @@
+{
+  "name": "ProjectSubmission",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Project Title"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "photo_url": {
+      "type": "string",
+      "title": "Photo URL"
+    },
+    "member_name": {
+      "type": "string",
+      "title": "Submitted By"
+    },
+    "member_email": {
+      "type": "string",
+      "title": "Member Email"
+    },
+    "date": {
+      "type": "string",
+      "title": "Date of Project"
+    },
+    "organization": {
+      "type": "string",
+      "title": "Organization / Event"
+    },
+    "status": {
+      "type": "string",
+      "title": "Status",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    }
+  },
+  "required": [
+    "title",
+    "description",
+    "member_name",
+    "date"
+  ]
+}

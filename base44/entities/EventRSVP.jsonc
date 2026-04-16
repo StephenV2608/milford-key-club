@@ -1,0 +1,22 @@
+{
+  "name": "EventRSVP",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "title": "Event ID"
+    },
+    "member_email": {
+      "type": "string",
+      "title": "Member Email"
+    },
+    "member_name": {
+      "type": "string",
+      "title": "Member Name"
+    }
+  },
+  "required": [
+    "event_id",
+    "member_email"
+  ]
+}

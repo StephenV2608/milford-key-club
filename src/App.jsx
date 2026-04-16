@@ -21,6 +21,8 @@ import CustomPageView from './pages/CustomPageView';
 import Resources from './pages/Resources';
 import Portal from './pages/Portal';
 import Register from './pages/Register';
+import Showcase from './pages/Showcase';
+import AttendanceScan from './pages/AttendanceScan';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -63,7 +65,9 @@ const AuthenticatedApp = () => {
         <Route path="/pages/:slug" element={<CustomPageView />} />
         <Route path="/resources" element={<Resources />} />
         <Route path="/portal" element={<Portal />} />
+        <Route path="/showcase" element={<Showcase />} />
       </Route>
+      <Route path="/attend" element={<AttendanceScan />} />
       <Route path="/register" element={<Register />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>

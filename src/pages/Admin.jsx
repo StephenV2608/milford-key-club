@@ -18,11 +18,13 @@ import SettingsTabContent from '../components/admin/SettingsTabContent';
 import OfficersTab from '../components/admin/OfficersTab';
 import AnalyticsTab from '../components/admin/AnalyticsTab';
 import GamificationTab from '../components/admin/GamificationTab';
+import EventsTab from '../components/admin/EventsTab';
+import ShowcaseTab from '../components/admin/ShowcaseTab';
 
 import {
   Settings, Users, Image, Clock, Newspaper, FileText, BookOpen,
   Mail, HelpCircle, Link, FileStack, Sparkles, PowerOff, LogOut, Shield, UserCheck,
-  BarChart2, Trophy
+  BarChart2, Trophy, CalendarDays, Star
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
@@ -39,6 +41,8 @@ const ALL_TABS = [
   { id: 'help',       label: 'Help Requests',    icon: HelpCircle, perm: null },
   { id: 'footer',     label: 'Footer',           icon: Link,       perm: 'settings' },
   { id: 'pages',      label: 'Custom Pages',     icon: FileStack,  perm: 'settings' },
+  { id: 'events',     label: 'Events',           icon: CalendarDays, perm: 'events' },
+  { id: 'showcase',  label: 'Showcase',         icon: Star,       perm: null },
   { id: 'analytics',  label: 'Analytics',        icon: BarChart2,  perm: null },
   { id: 'gamify',     label: 'Leaderboard',      icon: Trophy,     perm: null },
   { id: 'ai',         label: 'AI Content',       icon: Sparkles,   perm: null },
@@ -81,6 +85,8 @@ export default function Admin() {
       case 'help':       return <HelpRequestsTab />;
       case 'footer':     return <FooterTab />;
       case 'pages':      return <CustomPagesTab />;
+      case 'events':     return <EventsTab />;
+      case 'showcase':   return <ShowcaseTab />;
       case 'analytics':  return <AnalyticsTab />;
       case 'gamify':     return <GamificationTab />;
       case 'ai':         return <AIContentTab />;

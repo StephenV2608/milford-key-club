@@ -129,7 +129,7 @@ export default function SettingsTabContent() {
               { label: 'Officers', path: '/officers' },
               { label: 'Gallery', path: '/gallery' },
               { label: 'Log Hours', path: '/hours' },
-              { label: 'Join Us', path: '/join' },
+              { label: 'Showcase', path: '/showcase' },
               { label: 'Contact', path: '/contact' },
               { label: 'Resources', path: '/resources' },
             ].map(({ label, path }) => {

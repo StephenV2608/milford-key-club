@@ -1,0 +1,54 @@
+{
+  "name": "ClubEvent",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Title"
+    },
+    "date": {
+      "type": "string",
+      "title": "Date"
+    },
+    "time": {
+      "type": "string",
+      "title": "Time"
+    },
+    "location": {
+      "type": "string",
+      "title": "Location"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description",
+      "format": "textarea"
+    },
+    "type": {
+      "type": "string",
+      "title": "Event Type",
+      "enum": [
+        "meeting",
+        "project",
+        "volunteer",
+        "social"
+      ]
+    },
+    "max_rsvps": {
+      "type": "number",
+      "title": "Max Sign-Ups (0 = unlimited)"
+    },
+    "hours_credit": {
+      "type": "number",
+      "title": "Hours Credit for Attendance (QR scan)"
+    },
+    "qr_enabled": {
+      "type": "boolean",
+      "title": "Enable QR Attendance",
+      "default": false
+    }
+  },
+  "required": [
+    "title",
+    "date"
+  ]
+}

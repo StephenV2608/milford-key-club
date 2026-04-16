@@ -1,0 +1,34 @@
+{
+  "name": "AttendanceLog",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "title": "Event ID"
+    },
+    "event_title": {
+      "type": "string",
+      "title": "Event Title"
+    },
+    "member_email": {
+      "type": "string",
+      "title": "Member Email"
+    },
+    "member_name": {
+      "type": "string",
+      "title": "Member Name"
+    },
+    "scanned_at": {
+      "type": "string",
+      "title": "Scanned At"
+    },
+    "hours_credited": {
+      "type": "number",
+      "title": "Hours Credited"
+    }
+  },
+  "required": [
+    "event_id",
+    "member_email"
+  ]
+}

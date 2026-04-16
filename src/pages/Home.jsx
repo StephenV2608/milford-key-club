@@ -203,7 +203,7 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button asChild size="lg" className="rounded-full px-10 h-12 text-base font-bold bg-white text-primary hover:bg-white/90 shadow-2xl shadow-black/20">
-              <Link to="/join">Sign Up Now</Link>
+              <Link to="/pages/join">Sign Up Now</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="rounded-full px-8 h-12 text-base font-semibold border-white/30 text-white hover:bg-white/10 hover:text-white">
               <Link to="/contact" className="bg-background text-[hsl(var(--primary))] px-8 text-base font-semibold rounded-full inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border shadow-sm h-12 border-white/30 hover:bg-white/10 hover:text-white">Contact Us</Link>

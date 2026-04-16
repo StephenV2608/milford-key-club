@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Clock, CheckCircle, LogOut, User, AlertCircle, Edit2, X, Check, Trash2, TrendingUp } from 'lucide-react';
+import { Clock, CheckCircle, LogOut, User, AlertCircle, Edit2, X, Check, Trash2, TrendingUp, Star } from 'lucide-react';
+import ProjectSubmitForm from './ProjectSubmitForm';
 import { toast } from "sonner";
 import { base44 } from '@/api/base44Client';
 
@@ -108,6 +109,7 @@ export default function MemberDashboard({ memberAuth }) {
             { id: 'hours', label: 'Log Hours', icon: Clock },
             { id: 'history', label: 'History', icon: CheckCircle },
             { id: 'progress', label: 'Progress', icon: TrendingUp },
+            { id: 'projects', label: 'Projects', icon: Star },
             { id: 'profile', label: 'Profile', icon: User },
           ].map(({ id, label, icon: Icon }) => (
             <button
@@ -130,6 +132,13 @@ export default function MemberDashboard({ memberAuth }) {
         )}
         {tab === 'progress' && (
           <ProgressTab approvedHours={approvedHours} pendingHours={pendingHours} progress={progress} goal={GOAL} myHours={myHours} />
+        )}
+        {tab === 'projects' && (
+          <div className="bg-card rounded-xl border border-border p-5">
+            <h3 className="font-heading font-semibold text-base mb-1 flex items-center gap-2"><Star className="w-4 h-4 text-primary" /> Submit a Project</h3>
+            <p className="text-xs text-muted-foreground mb-5">Share your service work for the Community Showcase. Approved submissions are publicly displayed.</p>
+            <ProjectSubmitForm memberUser={memberUser} />
+          </div>
         )}
         {tab === 'profile' && (
           <ProfileTab memberUser={memberUser} memberAuth={memberAuth} onDeleteRequest={() => setShowDeleteConfirm(true)} />
