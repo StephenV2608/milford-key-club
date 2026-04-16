@@ -65,7 +65,7 @@ function Toggle({ label, checked, onChange }) {
         className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${checked ? 'bg-primary' : 'bg-muted'}`}
         onClick={() => onChange(!checked)}
       >
-        <span className={`inline-block h-3.5 w-3.5 rounded-full bg-white shadow transition-transform ${checked ? 'translate-x-4.5' : 'translate-x-0.5'}`} />
+        <span className={`inline-block h-3.5 w-3.5 rounded-full bg-white shadow transition-transform ${checked ? 'translate-x-5' : 'translate-x-0.5'}`} />
       </div>
       <span className="text-sm">{label}</span>
     </label>
@@ -159,7 +159,7 @@ export default function SettingsTabContent() {
       </SettingsSection>
 
       {/* Officers Page */}
-      <SettingsSection title="Officers Page" icon={Users}>
+      <SettingsSection title="Officers Page" icon={Users} defaultOpen>
         <div className="space-y-4 mt-2">
           <Field label="Eyebrow" value={form.officers_eyebrow} onChange={v => set('officers_eyebrow', v)} placeholder="Our Team" />
           <Field label="Heading" value={form.officers_heading} onChange={v => set('officers_heading', v)} placeholder="Meet the Officers" />
@@ -216,6 +216,23 @@ export default function SettingsTabContent() {
           <Field label="Contact Email" value={form.contact_email} onChange={v => set('contact_email', v)} type="email" placeholder="keyclub@milford.edu" />
           <ImageUploadField label="Header Image" value={form.contact_header_image_url} onChange={v => set('contact_header_image_url', v)} />
           <Toggle label="Show location block" checked={!!form.show_contact_location} onChange={v => set('show_contact_location', v)} />
+        </div>
+      </SettingsSection>
+
+      {/* Footer */}
+      <SettingsSection title="Footer" icon={Globe}>
+        <div className="space-y-4 mt-2">
+          <Field label="Footer Tagline" value={form.footer_tagline} onChange={v => set('footer_tagline', v)} placeholder="A student-led organization dedicated to serving our community..." />
+          <div className="space-y-1.5">
+            <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Footer Quick Links (JSON)</Label>
+            <Textarea
+              value={form.footer_links || ''}
+              onChange={e => set('footer_links', e.target.value)}
+              rows={4}
+              placeholder={`[{"label":"About","path":"/about"},{"label":"Join Us","path":"/join"}]`}
+            />
+            <p className="text-xs text-muted-foreground">Paste a JSON array of link objects with "label" and "path" keys.</p>
+          </div>
         </div>
       </SettingsSection>
 
