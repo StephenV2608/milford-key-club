@@ -22,11 +22,12 @@ import EventsTab from '../components/admin/EventsTab';
 import ShowcaseTab from '../components/admin/ShowcaseTab';
 import AnnouncementsTab from '../components/admin/AnnouncementsTab';
 import OfficerMessagesTab from '../components/admin/OfficerMessagesTab';
+import AttendanceSheet from '../components/admin/AttendanceSheet';
 
 import {
   Settings, Users, Image, Clock, Newspaper, FileText, BookOpen,
   Mail, HelpCircle, Link, FileStack, Sparkles, PowerOff, LogOut, Shield, UserCheck,
-  BarChart2, Trophy, CalendarDays, Star, Megaphone, MessageCircle
+  BarChart2, Trophy, CalendarDays, Star, Megaphone, MessageCircle, ClipboardList
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
@@ -43,10 +44,11 @@ const TAB_GROUPS = [
   {
     label: 'Members',
     tabs: [
-      { id: 'people',   label: 'Members',       icon: Users,       perm: 'people' },
-      { id: 'hours',    label: 'Service Hours', icon: Clock,       perm: 'hours' },
-      { id: 'events',   label: 'Events',        icon: CalendarDays,perm: 'events' },
-      { id: 'gamify',   label: 'Leaderboard',   icon: Trophy,      perm: null },
+      { id: 'people',      label: 'Members',       icon: Users,          perm: 'people' },
+      { id: 'attendance',  label: 'Attendance',    icon: ClipboardList,  perm: 'hours' },
+      { id: 'hours',       label: 'Service Hours', icon: Clock,          perm: 'hours' },
+      { id: 'events',      label: 'Events',        icon: CalendarDays,   perm: 'events' },
+      { id: 'gamify',      label: 'Leaderboard',   icon: Trophy,         perm: null },
     ],
   },
   {
@@ -103,6 +105,7 @@ export default function Admin() {
       case 'people':     return <PeopleTab isSuperAdmin={isSuperAdmin} hasPermission={hasPermission} />;
       case 'officers':   return <OfficersTab />;
       case 'gallery':    return <GalleryTab />;
+      case 'attendance': return <AttendanceSheet />;
       case 'hours':      return <HoursTab />;
       case 'news':       return <NewsTab />;
       case 'forms':      return <FormsTab />;
