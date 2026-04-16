@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,34 +7,34 @@
 
 @layer base {
   :root {
-    --font-heading: 'Inter', sans-serif;
+    --font-heading: 'Plus Jakarta Sans', 'Inter', sans-serif;
     --font-body: 'Inter', sans-serif;
 
     --background: 0 0% 100%;
-    --foreground: 220 20% 10%;
+    --foreground: 224 25% 8%;
     --card: 0 0% 100%;
-    --card-foreground: 220 20% 10%;
+    --card-foreground: 224 25% 8%;
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 10%;
-    --primary: 215 79% 43%;
+    --popover-foreground: 224 25% 8%;
+    --primary: 221 83% 53%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 355 80% 55%;
+    --secondary: 348 83% 57%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 10% 45%;
-    --accent: 215 80% 96%;
-    --accent-foreground: 215 80% 30%;
+    --muted: 220 16% 96%;
+    --muted-foreground: 220 12% 46%;
+    --accent: 221 86% 96%;
+    --accent-foreground: 221 83% 35%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 215 80% 50%;
-    --chart-1: 215 80% 50%;
-    --chart-2: 355 80% 55%;
-    --chart-3: 220 20% 20%;
-    --chart-4: 43 74% 66%;
+    --border: 220 16% 90%;
+    --input: 220 16% 90%;
+    --ring: 221 83% 53%;
+    --chart-1: 221 83% 53%;
+    --chart-2: 348 83% 57%;
+    --chart-3: 142 71% 45%;
+    --chart-4: 43 96% 56%;
     --chart-5: 27 87% 67%;
-    --radius: 0.75rem;
+    --radius: 0.875rem;
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 215 80% 50%;

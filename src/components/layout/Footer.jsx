@@ -48,8 +48,8 @@ export default function Footer() {
   const allFooterLinks = [...footerLinks, ...customPages.map(p => ({ label: p.title, path: `/pages/${p.slug}` }))];
 
   return (
-    <footer className="bg-foreground text-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <footer className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-18">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
           <div>
             <div className="flex items-center gap-2.5 mb-4">
@@ -62,16 +62,16 @@ export default function Footer() {
               )}
               <span className="font-heading font-bold text-lg">{settings.site_name || 'Milford Key Club'}</span>
             </div>
-            <p className="text-sm opacity-70 leading-relaxed max-w-xs">
+            <p className="text-sm text-white/60 leading-relaxed max-w-xs">
               {settings.footer_tagline || 'A student-led organization at Milford High School dedicated to serving our community and developing future leaders.'}
             </p>
           </div>
 
           <div>
-            <h4 className="font-heading font-semibold text-sm uppercase tracking-wider mb-4 opacity-60">Quick Links</h4>
-            <div className="grid grid-cols-2 gap-2">
+            <h4 className="font-heading font-semibold text-xs uppercase tracking-wider mb-4 text-white/40">Quick Links</h4>
+            <div className="grid grid-cols-2 gap-1">
               {allFooterLinks.map((link) => (
-                <Link key={link.path} to={link.path} className="text-sm opacity-70 hover:opacity-100 transition-opacity py-1">
+                <Link key={link.path} to={link.path} className="text-sm text-white/60 hover:text-white transition-colors py-1 hover:translate-x-0.5 transition-transform">
                   {link.label}
                 </Link>
               ))}
@@ -79,8 +79,8 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-heading font-semibold text-sm uppercase tracking-wider mb-4 opacity-60">Get In Touch</h4>
-            <div className="space-y-2 text-sm opacity-70">
+            <h4 className="font-heading font-semibold text-xs uppercase tracking-wider mb-4 text-white/40">Get In Touch</h4>
+            <div className="space-y-2 text-sm text-white/60">
               <p>Milford High School</p>
               <p>{settings.contact_email || 'milfordkeyclub@gmail.com'}</p>
               <div className="flex gap-4 pt-3">
@@ -103,10 +103,10 @@ export default function Footer() {
         </div>
 
         {/* Newsletter */}
-        <div className="mt-10 pt-10 border-t border-background/10">
+        <div className="mt-10 pt-10 border-t border-white/8">
           <div className="max-w-md">
-            <h4 className="font-heading font-semibold text-sm uppercase tracking-wider mb-1 opacity-60">Stay in the Loop</h4>
-            <p className="text-xs opacity-60 mb-3">Get updates on events, projects, and club news.</p>
+            <h4 className="font-heading font-semibold text-sm uppercase tracking-wider mb-1 text-white/50">Stay in the Loop</h4>
+            <p className="text-xs text-white/40 mb-3">Get updates on events, projects, and club news.</p>
             {subscribed ? (
               <p className="text-sm opacity-80">✓ You're subscribed! Thanks for joining.</p>
             ) : (
@@ -138,9 +138,9 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-background/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs opacity-50">© {new Date().getFullYear()} {settings.site_name || 'Milford Key Club'}. All rights reserved.</p>
-          <p className="text-xs opacity-50 font-medium">Powered by Students 💙</p>
+        <div className="mt-8 pt-8 border-t border-white/8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-white/30">© {new Date().getFullYear()} {settings.site_name || 'Milford Key Club'}. All rights reserved.</p>
+          <p className="text-xs text-white/30 font-medium">Powered by Students 💙</p>
         </div>
       </div>
     </footer>

@@ -12,7 +12,7 @@ module.exports = {
   theme: {
   	extend: {
   		fontFamily: {
-  			heading: ['var(--font-heading)'],
+  			heading: ['Plus Jakarta Sans', 'var(--font-heading)', 'sans-serif'],
   			body: ['var(--font-body)'],
   		},
   		borderRadius: {

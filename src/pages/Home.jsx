@@ -65,7 +65,7 @@ export default function Home() {
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${i === slideIndex ? 'opacity-100' : 'opacity-0'}`}
           />
         ))}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/45 to-black/75" />
         <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
           <span className="inline-block text-xs font-bold uppercase tracking-[0.2em] text-white/80 mb-4 border border-white/20 px-4 py-1.5 rounded-full backdrop-blur-sm">
             Key Club International
@@ -103,35 +103,44 @@ export default function Home() {
       </section>
 
       {/* Highlights */}
-      <section className="py-16 md:py-24 bg-muted/50">
+      <section className="py-16 md:py-20 bg-gradient-to-b from-muted/60 to-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {highlights.map(({ icon: Icon, title, desc }) => (
-              <div
-                key={title}
-                className="bg-card rounded-xl p-6 border border-border hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-              >
-                <div className="w-11 h-11 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                  <Icon className="w-5 h-5 text-primary" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+            {highlights.map(({ icon: Icon, title, desc }, i) => {
+              const colors = [
+                'from-blue-500/10 to-blue-600/5 border-blue-100 text-blue-600 bg-blue-50',
+                'from-rose-500/10 to-rose-600/5 border-rose-100 text-rose-600 bg-rose-50',
+                'from-violet-500/10 to-violet-600/5 border-violet-100 text-violet-600 bg-violet-50',
+                'from-emerald-500/10 to-emerald-600/5 border-emerald-100 text-emerald-600 bg-emerald-50',
+              ];
+              const [gradFrom, gradTo, borderC, iconColor, iconBg] = colors[i].split(' ');
+              return (
+                <div key={title} className={`rounded-2xl p-6 border bg-gradient-to-br ${gradFrom} ${gradTo} ${borderC} hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group`}>
+                  <div className={`w-11 h-11 rounded-xl ${iconBg} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                    <Icon className={`w-5 h-5 ${iconColor}`} />
+                  </div>
+                  <h3 className="font-heading font-bold text-base mb-1.5 text-foreground">{title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
                 </div>
-                <h3 className="font-heading font-semibold text-base mb-1.5">{title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* About Preview */}
-      <section className="py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/4 blur-3xl" />
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="max-w-3xl mx-auto text-center">
             <SectionHeading
               eyebrow="Who We Are"
               title="Student-Led. Community-Driven."
               description={settings.about_intro || "Milford Key Club is a student-led organization dedicated to serving our school and community while building leadership skills. We believe every student has the power to make a positive difference."}
             />
-            <Button asChild variant="outline" className="rounded-full px-6">
+            <Button asChild className="rounded-full px-8 shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-shadow">
               <Link to="/about">
                 Learn More <ArrowRight className="ml-2 w-4 h-4" />
               </Link>
@@ -141,25 +150,27 @@ export default function Home() {
       </section>
 
       {/* Featured Project */}
-      <section className="py-16 md:py-24 bg-muted/50">
+      <section className="py-16 md:py-24 bg-gradient-to-br from-slate-50 to-blue-50/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-            <div className="rounded-2xl overflow-hidden aspect-[3/2]">
+          <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+            <div className="rounded-3xl overflow-hidden aspect-[3/2] shadow-2xl shadow-slate-200 ring-1 ring-border/40">
               <img
                 src={featuredProject?.image_url || PROJECT_FALLBACK}
                 alt={featuredProject?.title || 'Featured Project'}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
               />
             </div>
             <div>
-              <span className="inline-block text-xs font-bold uppercase tracking-widest text-secondary mb-3">Featured Project</span>
-              <h3 className="font-heading font-bold text-2xl sm:text-3xl mb-4">
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-secondary bg-secondary/8 border border-secondary/20 px-3 py-1 rounded-full mb-4">
+                ✦ Featured Project
+              </span>
+              <h3 className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl mb-4 leading-tight">
                 {featuredProject?.title || 'Got Bags? Initiative'}
               </h3>
-              <p className="text-muted-foreground leading-relaxed mb-6">
+              <p className="text-muted-foreground leading-relaxed mb-8 text-base">
                 {featuredProject?.description || 'Our flagship project transforms plastic bags into durable sleeping mats for those experiencing homelessness. It takes approximately 700 bags to create 1 mat.'}
               </p>
-              <Button asChild className="rounded-full px-6">
+              <Button asChild className="rounded-full px-8 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all">
                 <Link to="/projects">
                   View All Projects <ArrowRight className="ml-2 w-4 h-4" />
                 </Link>
@@ -173,21 +184,31 @@ export default function Home() {
       <LatestUpdates />
 
       {/* CTA */}
-      <section className="py-20 md:py-28 bg-primary relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
+      <section className="py-20 md:py-28 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary via-blue-600 to-violet-600" />
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 left-1/4 w-80 h-80 bg-white rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-yellow-300 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-3/4 w-64 h-64 bg-rose-300 rounded-full blur-3xl" />
         </div>
         <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
-          <h2 className="font-heading font-bold text-3xl sm:text-4xl md:text-5xl text-primary-foreground mb-4">
-            Want to make a difference?
+          <span className="inline-block text-xs font-bold uppercase tracking-[0.2em] text-white/70 mb-5 border border-white/20 px-4 py-1.5 rounded-full">
+            Get Involved
+          </span>
+          <h2 className="font-heading font-black text-4xl sm:text-5xl md:text-6xl text-white mb-5 leading-[1.05]">
+            Want to make<br />a difference?
           </h2>
-          <p className="text-primary-foreground/80 text-lg mb-8">
-            Join Key Club today and start building your legacy of service.
+          <p className="text-white/80 text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+            Join Key Club today and start building your legacy of service and leadership.
           </p>
-          <Button asChild size="lg" variant="secondary" className="rounded-full px-10 h-12 text-base font-semibold">
-            <Link to="/join">Sign Up Now</Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button asChild size="lg" className="rounded-full px-10 h-12 text-base font-bold bg-white text-primary hover:bg-white/90 shadow-2xl shadow-black/20">
+              <Link to="/join">Sign Up Now</Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="rounded-full px-8 h-12 text-base font-semibold border-white/30 text-white hover:bg-white/10 hover:text-white">
+              <Link to="/contact">Contact Us</Link>
+            </Button>
+          </div>
         </div>
       </section>
     </div>

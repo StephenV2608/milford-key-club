@@ -36,34 +36,34 @@ export default function Header() {
   const visibleLinks = [...builtInVisible, ...customNav];
 
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
+    <header className="sticky top-0 z-50 bg-background/98 backdrop-blur-lg border-b border-border/60 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-between h-16 md:h-18">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0">
             {settings.logo_url ? (
-              <img src={settings.logo_url} alt={siteName} className="h-10 w-10 rounded-lg object-contain" />
+              <img src={settings.logo_url} alt={siteName} className="h-9 w-9 rounded-xl object-contain" />
             ) : (
-              <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-heading font-black text-sm">KC</span>
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-blue-700 flex items-center justify-center shadow-sm">
+                <span className="text-white font-heading font-black text-sm">KC</span>
               </div>
             )}
             <div className="leading-tight">
-              <span className="font-heading font-bold text-foreground text-sm sm:text-base block">{siteName}</span>
-              <span className="text-[10px] sm:text-xs text-muted-foreground font-medium tracking-wide uppercase">{tagline}</span>
+              <span className="font-heading font-bold text-foreground text-sm sm:text-base block tracking-tight">{siteName}</span>
+              <span className="text-[10px] sm:text-xs text-muted-foreground font-medium tracking-widest uppercase">{tagline}</span>
             </div>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-0.5">
             {visibleLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                className={`px-3.5 py-2 text-sm font-medium rounded-lg transition-all ${
                   location.pathname === link.path
-                    ? 'text-primary bg-accent'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                    ? 'text-primary bg-primary/8 font-semibold'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/70'
                 }`}
               >
                 {link.label}
@@ -71,12 +71,12 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Super Admin + Mobile Toggle */}
-          <div className="flex items-center gap-1">
-            <Link to="/portal" className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm">
+          {/* Portal + Mobile Toggle */}
+          <div className="flex items-center gap-2">
+            <Link to="/portal" className="hidden sm:flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-primary to-blue-600 text-white hover:opacity-90 transition-opacity shadow-md shadow-primary/20">
               <ShieldCheck className="w-3.5 h-3.5" /> Portal
             </Link>
-            <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
+            <Button variant="ghost" size="icon" className="lg:hidden text-foreground" onClick={() => setMobileOpen(!mobileOpen)}>
               {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
           </div>
@@ -85,22 +85,25 @@ export default function Header() {
 
       {/* Mobile Nav */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-border bg-background">
+        <div className="lg:hidden border-t border-border/60 bg-background/98 backdrop-blur-lg">
           <nav className="max-w-7xl mx-auto px-4 py-3 flex flex-col gap-1">
             {visibleLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
                 onClick={() => setMobileOpen(false)}
-                className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
+                className={`px-4 py-2.5 text-sm font-medium rounded-xl transition-colors ${
                   location.pathname === link.path
-                    ? 'text-primary bg-accent'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                    ? 'text-primary bg-primary/8 font-semibold'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/70'
                 }`}
               >
                 {link.label}
               </Link>
             ))}
+            <Link to="/portal" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 px-4 py-2.5 mt-1 rounded-xl text-sm font-semibold bg-gradient-to-r from-primary to-blue-600 text-white">
+              <ShieldCheck className="w-4 h-4" /> Member Portal
+            </Link>
           </nav>
         </div>
       )}
