@@ -206,7 +206,7 @@ export default function Home() {
               <Link to="/pages/join">Sign Up Now</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="rounded-full px-8 h-12 text-base font-semibold border-white/30 text-white hover:bg-white/10 hover:text-white">
-              <Link to="/contact" className="bg-background text-[hsl(var(--primary))] px-8 text-base font-semibold rounded-full inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border shadow-sm h-12 border-white/30 hover:bg-white/10 hover:text-white">Contact Us</Link>
+              <Link to="/contact" className="bg-background text-[hsl(var(--primary))] px-8 text-base font-semibold rounded-full inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border shadow-sm h-12 border-white/30 hover:bg-white/10 hover:text-white text-blue-600">Contact Us</Link>
             </Button>
           </div>
         </div>
