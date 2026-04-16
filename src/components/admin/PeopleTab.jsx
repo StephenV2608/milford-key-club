@@ -51,6 +51,7 @@ export default function PeopleTab({ isSuperAdmin }) {
           <TabsTrigger value="members">Members</TabsTrigger>
           {isSuperAdmin && <TabsTrigger value="admins">Admin Accounts</TabsTrigger>}
         </TabsList>
+
         <TabsContent value="members"><MembersSection isSuperAdmin={isSuperAdmin} /></TabsContent>
         {isSuperAdmin && <TabsContent value="admins"><AdminsSection /></TabsContent>}
       </Tabs>

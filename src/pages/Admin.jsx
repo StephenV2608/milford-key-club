@@ -71,7 +71,7 @@ const TAB_GROUPS = [
       { id: 'footer',   label: 'Footer',       icon: Link,      perm: 'settings' },
       { id: 'analytics',label: 'Analytics',    icon: BarChart2, perm: null },
       { id: 'ai',       label: 'AI Content',   icon: Sparkles,  perm: null },
-      { id: 'help',     label: 'Help Requests',icon: HelpCircle,perm: null },
+      { id: 'help',     label: 'Help Requests',icon: HelpCircle,perm: null, superOnly: true },
       { id: 'shutdown', label: 'Shutdown',     icon: PowerOff,  perm: null, superOnly: true },
     ],
   },
