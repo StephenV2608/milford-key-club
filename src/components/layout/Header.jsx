@@ -15,6 +15,7 @@ const BUILT_IN_NAV = [
   { label: 'Log Hours', path: '/hours' },
   { label: 'Join Us', path: '/join' },
   { label: 'Contact', path: '/contact' },
+  { label: 'Resources', path: '/resources' },
 ];
 
 export default function Header() {

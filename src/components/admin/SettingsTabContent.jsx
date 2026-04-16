@@ -122,6 +122,7 @@ export default function SettingsTabContent() {
           <p className="text-xs text-muted-foreground mb-3">Check the pages you want visible in the navigation bar.</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {[
+              { label: 'Home', path: '/' },
               { label: 'About', path: '/about' },
               { label: 'Projects', path: '/projects' },
               { label: 'Events', path: '/events' },
@@ -130,6 +131,7 @@ export default function SettingsTabContent() {
               { label: 'Log Hours', path: '/hours' },
               { label: 'Join Us', path: '/join' },
               { label: 'Contact', path: '/contact' },
+              { label: 'Resources', path: '/resources' },
             ].map(({ label, path }) => {
               const hidden = (form.hidden_nav_items || '').split(',').map(s => s.trim()).filter(Boolean);
               const isVisible = !hidden.includes(path);
