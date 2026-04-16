@@ -87,7 +87,8 @@ export default function PortalLogin({ adminAuth, memberAuth }) {
 
         {mode === 'member' && (
           <p className="text-center text-xs text-muted-foreground mt-4">
-            Don't have an account? Contact an admin to be added as a member.
+            Don't have an account?{' '}
+            <a href="/register" className="text-primary hover:underline font-medium">Register here</a>
           </p>
         )}
       </div>

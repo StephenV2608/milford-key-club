@@ -20,6 +20,7 @@ import ServiceHours from './pages/ServiceHours';
 import CustomPageView from './pages/CustomPageView';
 import Resources from './pages/Resources';
 import Portal from './pages/Portal';
+import Register from './pages/Register';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -58,6 +59,7 @@ const AuthenticatedApp = () => {
         <Route path="/pages/:slug" element={<CustomPageView />} />
         <Route path="/resources" element={<Resources />} />
         <Route path="/portal" element={<Portal />} />
+        <Route path="/register" element={<Register />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

@@ -57,7 +57,11 @@ function MembersSection({ isSuperAdmin }) {
   const [showNewPw, setShowNewPw] = useState(false);
 
   useEffect(() => { load(); }, []);
-  const load = () => base44.entities.Member.list('name').then(setMembers);
+  const [pending, setPending] = useState([]);
+  const load = () => {
+    base44.entities.Member.list('name').then(setMembers);
+    base44.entities.Member.filter({ status: 'pending' }).then(setPending);
+  };
 
   const startNew = () => { setEditing('new'); setForm({ active: true, grade: '9' }); };
   const startEdit = (m) => { setEditing(m.id); setForm(m); };
@@ -99,8 +103,48 @@ function MembersSection({ isSuperAdmin }) {
 
   const activeCount = members.filter(m => m.active !== false).length;
 
+  const approve = async (m) => {
+    await base44.entities.Member.update(m.id, { active: true, status: 'approved' });
+    toast.success(`${m.name} approved!`);
+    load();
+  };
+
+  const deny = async (m) => {
+    await base44.entities.Member.delete(m.id);
+    toast.success(`${m.name} removed.`);
+    load();
+  };
+
   return (
     <div className="space-y-6">
+      {/* Pending Approvals */}
+      {pending.length > 0 && (
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
+          <h3 className="font-heading font-semibold text-base mb-3 flex items-center gap-2 text-amber-800">
+            <span className="w-5 h-5 rounded-full bg-amber-500 text-white text-xs flex items-center justify-center font-bold">{pending.length}</span>
+            Pending Approvals
+          </h3>
+          <div className="space-y-2">
+            {pending.map(m => (
+              <div key={m.id} className="flex items-center gap-3 bg-white rounded-lg px-4 py-3 border border-amber-100">
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-sm">{m.name}</p>
+                  <p className="text-xs text-muted-foreground">{m.email} {m.grade ? `· Grade ${m.grade}` : ''} {m.class_year ? `· Class of ${m.class_year}` : ''}</p>
+                </div>
+                <div className="flex gap-2 shrink-0">
+                  <Button size="sm" className="gap-1 bg-green-600 hover:bg-green-700 text-white" onClick={() => approve(m)}>
+                    <Check className="w-3.5 h-3.5" /> Approve
+                  </Button>
+                  <Button size="sm" variant="destructive" className="gap-1" onClick={() => deny(m)}>
+                    <X className="w-3.5 h-3.5" /> Deny
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="bg-card rounded-xl border border-border p-5">
         <div className="flex items-center justify-between mb-4">
           <div>
