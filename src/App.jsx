@@ -37,8 +37,12 @@ const AuthenticatedApp = () => {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
-      navigateToLogin();
-      return null;
+      // Allow /register and /portal to be accessed without auth
+      const path = window.location.pathname;
+      if (path !== '/register' && path !== '/portal') {
+        navigateToLogin();
+        return null;
+      }
     }
   }
 
@@ -59,8 +63,8 @@ const AuthenticatedApp = () => {
         <Route path="/pages/:slug" element={<CustomPageView />} />
         <Route path="/resources" element={<Resources />} />
         <Route path="/portal" element={<Portal />} />
-        <Route path="/register" element={<Register />} />
       </Route>
+      <Route path="/register" element={<Register />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
