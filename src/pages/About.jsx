@@ -71,7 +71,7 @@ export default function About() {
             description={settings.about_why || "When students come together to serve, the ripple effect is enormous. Our projects don't just help individuals — they strengthen the fabric of our entire community."}
           />
           <Button asChild className="rounded-full px-6">
-            <Link to="/join">
+            <Link to="/pages/join">
               Join Our Mission <ArrowRight className="ml-2 w-4 h-4" />
             </Link>
           </Button>
