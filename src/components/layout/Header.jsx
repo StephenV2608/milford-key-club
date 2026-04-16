@@ -36,7 +36,7 @@ export default function Header() {
   const visibleLinks = [...builtInVisible, ...customNav];
 
   return (
-    <header className="sticky top-0 z-50 bg-background/98 backdrop-blur-lg border-b border-border/60 shadow-sm">
+    <header className="sticky top-0 z-50 bg-white/90 dark:bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-18">
           {/* Logo */}
@@ -49,8 +49,8 @@ export default function Header() {
               </div>
             )}
             <div className="leading-tight">
-              <span className="font-heading font-bold text-foreground text-sm sm:text-base block tracking-tight">{siteName}</span>
-              <span className="text-[10px] sm:text-xs text-muted-foreground font-medium tracking-widest uppercase">{tagline}</span>
+              <span className="font-heading font-bold text-slate-900 text-sm sm:text-base block tracking-tight">{siteName}</span>
+              <span className="text-[10px] sm:text-xs text-slate-500 font-medium tracking-widest uppercase">{tagline}</span>
             </div>
           </Link>
 
@@ -62,8 +62,8 @@ export default function Header() {
                 to={link.path}
                 className={`px-3.5 py-2 text-sm font-medium rounded-lg transition-all ${
                   location.pathname === link.path
-                    ? 'text-primary bg-primary/8 font-semibold'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/70'
+                    ? 'text-primary bg-primary/10 font-semibold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
                 {link.label}
@@ -85,7 +85,7 @@ export default function Header() {
 
       {/* Mobile Nav */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-border/60 bg-background/98 backdrop-blur-lg">
+        <div className="lg:hidden border-t border-border/50 bg-white/95 backdrop-blur-xl">
           <nav className="max-w-7xl mx-auto px-4 py-3 flex flex-col gap-1">
             {visibleLinks.map((link) => (
               <Link
@@ -94,8 +94,8 @@ export default function Header() {
                 onClick={() => setMobileOpen(false)}
                 className={`px-4 py-2.5 text-sm font-medium rounded-xl transition-colors ${
                   location.pathname === link.path
-                    ? 'text-primary bg-primary/8 font-semibold'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/70'
+                    ? 'text-primary bg-primary/10 font-semibold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
                 {link.label}
