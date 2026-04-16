@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
+import BottomTabNav from './BottomTabNav';
 import { useSiteSettings } from '../../hooks/useSiteSettings';
 
 export default function SiteLayout() {
@@ -37,10 +38,11 @@ export default function SiteLayout() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1">
+      <main className="flex-1 pb-14 lg:pb-0">
         <Outlet />
       </main>
       <Footer />
+      <BottomTabNav />
     </div>
   );
 }
