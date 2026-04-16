@@ -72,8 +72,8 @@ export default function Header() {
 
           {/* Super Admin + Mobile Toggle */}
           <div className="flex items-center gap-1">
-            <Link to="/portal" className="hidden sm:flex items-center gap-1 px-2 py-1 rounded text-[11px] font-medium text-muted-foreground/40 hover:text-muted-foreground/70 transition-colors">
-              <ShieldCheck className="w-3 h-3" /> Portal
+            <Link to="/portal" className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm">
+              <ShieldCheck className="w-3.5 h-3.5" /> Portal
             </Link>
             <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
               {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
