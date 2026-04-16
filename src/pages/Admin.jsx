@@ -15,16 +15,18 @@ import FooterTab from '../components/admin/FooterTab';
 import CustomPagesTab from '../components/admin/CustomPagesTab';
 
 import SettingsTabContent from '../components/admin/SettingsTabContent';
+import OfficersTab from '../components/admin/OfficersTab';
 
 import {
   Settings, Users, Image, Clock, Newspaper, FileText, BookOpen,
-  Mail, HelpCircle, Link, FileStack, Sparkles, PowerOff, LogOut, Shield
+  Mail, HelpCircle, Link, FileStack, Sparkles, PowerOff, LogOut, Shield, UserCheck
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 const ALL_TABS = [
   { id: 'settings',   label: 'Site Settings',   icon: Settings,   perm: 'settings' },
   { id: 'people',     label: 'People',           icon: Users,      perm: null },
+  { id: 'officers',   label: 'Officers',         icon: UserCheck,  perm: 'officers' },
   { id: 'gallery',    label: 'Gallery',          icon: Image,      perm: 'gallery' },
   { id: 'hours',      label: 'Service Hours',    icon: Clock,      perm: 'hours' },
   { id: 'news',       label: 'News',             icon: Newspaper,  perm: 'news' },
@@ -64,6 +66,7 @@ export default function Admin() {
     switch (activeTab) {
       case 'settings':   return <SettingsTabContent />;
       case 'people':     return <PeopleTab isSuperAdmin={isSuperAdmin} />;
+      case 'officers':   return <OfficersTab />;
       case 'gallery':    return <GalleryTab />;
       case 'hours':      return <HoursTab />;
       case 'news':       return <NewsTab />;
