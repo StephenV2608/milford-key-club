@@ -9,7 +9,7 @@ import { invalidateSettings } from '../../hooks/useSiteSettings';
 import SettingsSection from './SettingsSection';
 import {
   Globe, Image, Info, Briefcase, Calendar, Users, Camera, UserPlus,
-  Mail, Instagram, Twitter, Facebook, Upload, Eye, EyeOff
+  Mail, Instagram, Twitter, Facebook, Upload, Eye, EyeOff, Navigation
 } from 'lucide-react';
 
 function ImageUploadField({ label, value, onChange }) {
@@ -113,6 +113,40 @@ export default function SettingsTabContent() {
           <Field label="Site Name" value={form.site_name} onChange={v => set('site_name', v)} placeholder="Milford Key Club" />
           <Field label="Tagline" value={form.tagline} onChange={v => set('tagline', v)} placeholder="Leadership · Character · Service" />
           <ImageUploadField label="Logo" value={form.logo_url} onChange={v => set('logo_url', v)} />
+        </div>
+      </SettingsSection>
+
+      {/* Navigation */}
+      <SettingsSection title="Navigation" icon={Navigation}>
+        <div className="mt-2">
+          <p className="text-xs text-muted-foreground mb-3">Check the pages you want visible in the navigation bar.</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {[
+              { label: 'About', path: '/about' },
+              { label: 'Projects', path: '/projects' },
+              { label: 'Events', path: '/events' },
+              { label: 'Officers', path: '/officers' },
+              { label: 'Gallery', path: '/gallery' },
+              { label: 'Log Hours', path: '/hours' },
+              { label: 'Join Us', path: '/join' },
+              { label: 'Contact', path: '/contact' },
+            ].map(({ label, path }) => {
+              const hidden = (form.hidden_nav_items || '').split(',').map(s => s.trim()).filter(Boolean);
+              const isVisible = !hidden.includes(path);
+              const toggle = () => {
+                const newHidden = isVisible
+                  ? [...hidden, path]
+                  : hidden.filter(p => p !== path);
+                set('hidden_nav_items', newHidden.join(','));
+              };
+              return (
+                <label key={path} className="flex items-center gap-2 cursor-pointer text-sm bg-muted/40 rounded-lg px-3 py-2">
+                  <input type="checkbox" checked={isVisible} onChange={toggle} className="rounded" />
+                  {label}
+                </label>
+              );
+            })}
+          </div>
         </div>
       </SettingsSection>
 
