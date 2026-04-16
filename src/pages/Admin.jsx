@@ -30,28 +30,50 @@ import {
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
-const ALL_TABS = [
-  { id: 'announcements', label: 'Announcements',  icon: Megaphone,    perm: 'announcements' },
-  { id: 'messages',      label: 'Messages',       icon: MessageCircle,perm: 'messages' },
-  { id: 'events',        label: 'Events',         icon: CalendarDays, perm: 'events' },
-  { id: 'people',        label: 'Members',        icon: Users,        perm: 'people' },
-  { id: 'hours',         label: 'Service Hours',  icon: Clock,        perm: 'hours' },
-  { id: 'forms',         label: 'Docs / Minutes', icon: FileText,     perm: 'forms' },
-  { id: 'resources',     label: 'Resources',      icon: BookOpen,     perm: 'resources' },
-  { id: 'news',          label: 'Newsletter/Blog', icon: Newspaper,   perm: 'news' },
-  { id: 'gallery',       label: 'Gallery',        icon: Image,        perm: 'gallery' },
-  { id: 'showcase',      label: 'Showcase',       icon: Star,         perm: 'showcase' },
-  { id: 'officers',      label: 'Officers Page',  icon: UserCheck,    perm: 'officers' },
-  { id: 'pages',         label: 'Custom Pages',   icon: FileStack,    perm: 'pages' },
-  { id: 'settings',      label: 'Site Settings',  icon: Settings,     perm: 'settings' },
-  { id: 'footer',        label: 'Footer',         icon: Link,         perm: 'settings' },
-  { id: 'help',          label: 'Help Requests',  icon: HelpCircle,   perm: null },
-  { id: 'newsletter',    label: 'Subscribers',    icon: Mail,         perm: 'news' },
-  { id: 'analytics',     label: 'Analytics',      icon: BarChart2,    perm: null },
-  { id: 'gamify',        label: 'Leaderboard',    icon: Trophy,       perm: null },
-  { id: 'ai',            label: 'AI Content',     icon: Sparkles,     perm: null },
-  { id: 'shutdown',      label: 'Site Shutdown',  icon: PowerOff,     perm: null, superOnly: true },
+const TAB_GROUPS = [
+  {
+    label: 'Communication',
+    tabs: [
+      { id: 'announcements', label: 'Announcements', icon: Megaphone,     perm: 'announcements' },
+      { id: 'messages',      label: 'Messages',      icon: MessageCircle, perm: 'messages' },
+      { id: 'news',          label: 'Newsletter',    icon: Newspaper,     perm: 'news' },
+      { id: 'newsletter',    label: 'Subscribers',   icon: Mail,          perm: 'news' },
+    ],
+  },
+  {
+    label: 'Members',
+    tabs: [
+      { id: 'people',   label: 'Members',       icon: Users,       perm: 'people' },
+      { id: 'hours',    label: 'Service Hours', icon: Clock,       perm: 'hours' },
+      { id: 'events',   label: 'Events',        icon: CalendarDays,perm: 'events' },
+      { id: 'gamify',   label: 'Leaderboard',   icon: Trophy,      perm: null },
+    ],
+  },
+  {
+    label: 'Content',
+    tabs: [
+      { id: 'gallery',  label: 'Gallery',      icon: Image,     perm: 'gallery' },
+      { id: 'showcase', label: 'Showcase',     icon: Star,      perm: 'showcase' },
+      { id: 'officers', label: 'Officers',     icon: UserCheck, perm: 'officers' },
+      { id: 'forms',    label: 'Documents',    icon: FileText,  perm: 'forms' },
+      { id: 'resources',label: 'Resources',    icon: BookOpen,  perm: 'resources' },
+    ],
+  },
+  {
+    label: 'Site',
+    tabs: [
+      { id: 'settings', label: 'Settings',     icon: Settings,  perm: 'settings' },
+      { id: 'pages',    label: 'Custom Pages', icon: FileStack, perm: 'pages' },
+      { id: 'footer',   label: 'Footer',       icon: Link,      perm: 'settings' },
+      { id: 'analytics',label: 'Analytics',    icon: BarChart2, perm: null },
+      { id: 'ai',       label: 'AI Content',   icon: Sparkles,  perm: null },
+      { id: 'help',     label: 'Help Requests',icon: HelpCircle,perm: null },
+      { id: 'shutdown', label: 'Shutdown',     icon: PowerOff,  perm: null, superOnly: true },
+    ],
+  },
 ];
+
+const ALL_TABS = TAB_GROUPS.flatMap(g => g.tabs);
 
 export default function Admin() {
   const { adminUser, checking, login, logout, isSuperAdmin, hasPermission } = useAdminAuth();
@@ -122,23 +144,38 @@ export default function Admin() {
 
       <div className="flex">
         {/* Sidebar */}
-        <aside className="w-52 shrink-0 border-r border-border bg-card min-h-[calc(100vh-61px)] hidden md:block">
-          <nav className="p-3 space-y-0.5">
-            {visibleTabs.map(tab => {
-              const Icon = tab.icon;
+        <aside className="w-48 shrink-0 border-r border-border bg-card min-h-[calc(100vh-61px)] hidden md:block">
+          <nav className="p-2 space-y-4 py-3">
+            {TAB_GROUPS.map(group => {
+              const groupTabs = group.tabs.filter(t => {
+                if (t.superOnly && !isSuperAdmin) return false;
+                if (t.perm && !isSuperAdmin && !hasPermission(t.perm)) return false;
+                return true;
+              });
+              if (groupTabs.length === 0) return null;
               return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors text-left ${
-                    activeTab === tab.id
-                      ? 'bg-primary/10 text-primary font-semibold'
-                      : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                  }`}
-                >
-                  <Icon className="w-4 h-4 shrink-0" />
-                  {tab.label}
-                </button>
+                <div key={group.label}>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 px-3 mb-1">{group.label}</p>
+                  <div className="space-y-0.5">
+                    {groupTabs.map(tab => {
+                      const Icon = tab.icon;
+                      return (
+                        <button
+                          key={tab.id}
+                          onClick={() => setActiveTab(tab.id)}
+                          className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors text-left ${
+                            activeTab === tab.id
+                              ? 'bg-primary/10 text-primary font-semibold'
+                              : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                          }`}
+                        >
+                          <Icon className="w-4 h-4 shrink-0" />
+                          {tab.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               );
             })}
           </nav>
