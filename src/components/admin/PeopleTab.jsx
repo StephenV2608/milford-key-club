@@ -10,18 +10,32 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 const GRADES = ['9', '10', '11', '12'];
 
 const ALL_PERMISSIONS = [
-  { key: 'settings', label: 'Site Settings' },
-  { key: 'projects', label: 'Projects' },
-  { key: 'events', label: 'Events' },
-  { key: 'officers', label: 'Officers' },
-  { key: 'gallery', label: 'Gallery' },
-  { key: 'hours', label: 'Service Hours' },
-  { key: 'news', label: 'News' },
-  { key: 'members', label: 'Members' },
-  { key: 'newsletter', label: 'Newsletter' },
-  { key: 'forms', label: 'Forms' },
-  { key: 'resources', label: 'Resources' },
+  { key: 'announcements', label: 'Announcements' },
+  { key: 'events', label: 'Events / Calendar' },
+  { key: 'settings', label: 'Site Settings / Approval' },
+  { key: 'pages', label: 'Custom Pages' },
+  { key: 'people', label: 'Member Roster' },
+  { key: 'hours', label: 'Attendance / Hours' },
+  { key: 'forms', label: 'Meeting Minutes / Docs' },
+  { key: 'resources', label: 'Reports / Resources' },
+  { key: 'news', label: 'Newsletter / Blog / Posts' },
+  { key: 'gallery', label: 'Photo Gallery / Media' },
+  { key: 'showcase', label: 'Showcase' },
+  { key: 'officers', label: 'Officers Page' },
+  { key: 'messages', label: 'Member Messages' },
 ];
+
+// Preset permission sets per officer role
+const OFFICER_ROLE_PRESETS = {
+  President:   ['announcements', 'events', 'settings', 'pages', 'people', 'hours', 'forms', 'resources', 'news', 'gallery', 'showcase', 'officers', 'messages'],
+  'Vice President': ['people', 'events', 'announcements', 'pages', 'messages'],
+  Secretary:   ['people', 'hours', 'forms', 'resources'],
+  Treasurer:   ['forms', 'resources'],
+  Editor:      ['news', 'gallery', 'showcase'],
+  Webmaster:   ['settings', 'pages', 'officers', 'forms', 'resources', 'news', 'gallery', 'showcase', 'announcements', 'events', 'people', 'hours', 'messages'],
+};
+
+const OFFICER_ROLES = ['President', 'Vice President', 'Secretary', 'Treasurer', 'Editor', 'Webmaster'];
 
 function generateCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -263,7 +277,7 @@ function MemberForm({ form, set, onSave, onCancel, isSuperAdmin }) {
 function AdminsSection() {
   const [admins, setAdmins] = useState([]);
   const [adding, setAdding] = useState(false);
-  const [form, setForm] = useState({ username: '', email: '', id_code: generateCode(), role: 'admin', permissions: [] });
+  const [form, setForm] = useState({ username: '', email: '', id_code: generateCode(), role: 'admin', officer_role: '', permissions: [] });
 
   useEffect(() => { base44.entities.AdminUser.list().then(setAdmins); }, []);
 
@@ -273,9 +287,9 @@ function AdminsSection() {
   const save = async () => {
     if (!form.username || !form.id_code) { toast.error('Username and ID code required'); return; }
     await base44.entities.AdminUser.create(form);
-    toast.success(`Admin "${form.username}" created`);
+    toast.success(`"${form.username}" added as ${form.officer_role || 'Admin'}`);
     setAdding(false);
-    setForm({ username: '', email: '', id_code: generateCode(), role: 'admin', permissions: [] });
+    setForm({ username: '', email: '', id_code: generateCode(), role: 'admin', officer_role: '', permissions: [] });
     base44.entities.AdminUser.list().then(setAdmins);
   };
 
@@ -312,32 +326,39 @@ function AdminsSection() {
                 </div>
               </div>
               <div>
-                <Label className="text-xs uppercase tracking-wide text-muted-foreground">Role</Label>
-                <select value={form.role} onChange={e => set('role', e.target.value)} className="mt-1 w-full border border-input rounded-md h-9 px-3 text-sm bg-background">
-                  <option value="admin">Admin</option>
-                  <option value="super_admin">Super Admin</option>
+                <Label className="text-xs uppercase tracking-wide text-muted-foreground">Officer Position</Label>
+                <select
+                  value={form.officer_role}
+                  onChange={e => {
+                    const r = e.target.value;
+                    set('officer_role', r);
+                    if (r && OFFICER_ROLE_PRESETS[r]) setForm(p => ({ ...p, officer_role: r, permissions: OFFICER_ROLE_PRESETS[r], role: r === 'Webmaster' ? 'super_admin' : 'admin' }));
+                    else set('officer_role', r);
+                  }}
+                  className="mt-1 w-full border border-input rounded-md h-9 px-3 text-sm bg-background"
+                >
+                  <option value="">— Select Position —</option>
+                  {OFFICER_ROLES.map(r => <option key={r} value={r}>{r}</option>)}
                 </select>
               </div>
             </div>
-            {form.role === 'admin' && (
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <Label className="text-xs uppercase tracking-wide text-muted-foreground">Permissions</Label>
-                  <div className="flex gap-2">
-                    <button onClick={() => setForm(p => ({ ...p, permissions: ALL_PERMISSIONS.map(x => x.key) }))} className="text-xs text-primary hover:underline">All</button>
-                    <span className="text-muted-foreground text-xs">·</span>
-                    <button onClick={() => setForm(p => ({ ...p, permissions: [] }))} className="text-xs text-muted-foreground hover:underline">None</button>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {ALL_PERMISSIONS.map(({ key, label }) => (
-                    <label key={key} className="flex items-center gap-2 cursor-pointer text-sm">
-                      <input type="checkbox" checked={form.permissions.includes(key)} onChange={() => togglePerm(key)} className="rounded" />{label}
-                    </label>
-                  ))}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <Label className="text-xs uppercase tracking-wide text-muted-foreground">Permissions (auto-set by position)</Label>
+                <div className="flex gap-2">
+                  <button onClick={() => setForm(p => ({ ...p, permissions: ALL_PERMISSIONS.map(x => x.key) }))} className="text-xs text-primary hover:underline">All</button>
+                  <span className="text-muted-foreground text-xs">·</span>
+                  <button onClick={() => setForm(p => ({ ...p, permissions: [] }))} className="text-xs text-muted-foreground hover:underline">None</button>
                 </div>
               </div>
-            )}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {ALL_PERMISSIONS.map(({ key, label }) => (
+                  <label key={key} className="flex items-center gap-2 cursor-pointer text-sm">
+                    <input type="checkbox" checked={form.permissions.includes(key)} onChange={() => togglePerm(key)} className="rounded" />{label}
+                  </label>
+                ))}
+              </div>
+            </div>
             <div className="flex gap-2">
               <Button size="sm" onClick={save} className="gap-1.5"><Check className="w-3.5 h-3.5" />Create</Button>
               <Button size="sm" variant="ghost" onClick={() => setAdding(false)} className="gap-1.5"><X className="w-3.5 h-3.5" />Cancel</Button>
@@ -354,7 +375,8 @@ function AdminsSection() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
                   <p className="font-semibold text-sm">{admin.username}</p>
-                  <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${admin.role === 'super_admin' ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}>{admin.role === 'super_admin' ? 'Super Admin' : 'Admin'}</span>
+                  {admin.officer_role && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-primary/10 text-primary">{admin.officer_role}</span>}
+                  {!admin.officer_role && <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${admin.role === 'super_admin' ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}>{admin.role === 'super_admin' ? 'Super Admin' : 'Admin'}</span>}
                 </div>
                 <div className="flex items-center gap-2">
                   <code className="text-xs bg-muted px-2 py-0.5 rounded font-mono">{admin.id_code}</code>

@@ -1,0 +1,42 @@
+{
+  "name": "Announcement",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Title"
+    },
+    "content": {
+      "type": "string",
+      "title": "Content",
+      "format": "textarea"
+    },
+    "priority": {
+      "type": "string",
+      "title": "Priority",
+      "enum": [
+        "normal",
+        "important",
+        "urgent"
+      ],
+      "default": "normal"
+    },
+    "published": {
+      "type": "boolean",
+      "title": "Published",
+      "default": true
+    },
+    "posted_by": {
+      "type": "string",
+      "title": "Posted By"
+    },
+    "expires_at": {
+      "type": "string",
+      "title": "Expires At (optional)"
+    }
+  },
+  "required": [
+    "title",
+    "content"
+  ]
+}

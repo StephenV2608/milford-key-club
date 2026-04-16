@@ -20,38 +20,42 @@ import AnalyticsTab from '../components/admin/AnalyticsTab';
 import GamificationTab from '../components/admin/GamificationTab';
 import EventsTab from '../components/admin/EventsTab';
 import ShowcaseTab from '../components/admin/ShowcaseTab';
+import AnnouncementsTab from '../components/admin/AnnouncementsTab';
+import OfficerMessagesTab from '../components/admin/OfficerMessagesTab';
 
 import {
   Settings, Users, Image, Clock, Newspaper, FileText, BookOpen,
   Mail, HelpCircle, Link, FileStack, Sparkles, PowerOff, LogOut, Shield, UserCheck,
-  BarChart2, Trophy, CalendarDays, Star
+  BarChart2, Trophy, CalendarDays, Star, Megaphone, MessageCircle
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 const ALL_TABS = [
-  { id: 'settings',   label: 'Site Settings',   icon: Settings,   perm: 'settings' },
-  { id: 'people',     label: 'People',           icon: Users,      perm: null },
-  { id: 'officers',   label: 'Officers',         icon: UserCheck,  perm: 'officers' },
-  { id: 'gallery',    label: 'Gallery',          icon: Image,      perm: 'gallery' },
-  { id: 'hours',      label: 'Service Hours',    icon: Clock,      perm: 'hours' },
-  { id: 'news',       label: 'News',             icon: Newspaper,  perm: 'news' },
-  { id: 'forms',      label: 'Forms',            icon: FileText,   perm: 'forms' },
-  { id: 'resources',  label: 'Resources',        icon: BookOpen,   perm: 'resources' },
-  { id: 'newsletter', label: 'Newsletter',       icon: Mail,       perm: 'newsletter' },
-  { id: 'help',       label: 'Help Requests',    icon: HelpCircle, perm: null },
-  { id: 'footer',     label: 'Footer',           icon: Link,       perm: 'settings' },
-  { id: 'pages',      label: 'Custom Pages',     icon: FileStack,  perm: 'settings' },
-  { id: 'events',     label: 'Events',           icon: CalendarDays, perm: 'events' },
-  { id: 'showcase',  label: 'Showcase',         icon: Star,       perm: null },
-  { id: 'analytics',  label: 'Analytics',        icon: BarChart2,  perm: null },
-  { id: 'gamify',     label: 'Leaderboard',      icon: Trophy,     perm: null },
-  { id: 'ai',         label: 'AI Content',       icon: Sparkles,   perm: null },
-  { id: 'shutdown',   label: 'Site Shutdown',    icon: PowerOff,   perm: null, superOnly: true },
+  { id: 'announcements', label: 'Announcements',  icon: Megaphone,    perm: 'announcements' },
+  { id: 'messages',      label: 'Messages',       icon: MessageCircle,perm: 'messages' },
+  { id: 'events',        label: 'Events',         icon: CalendarDays, perm: 'events' },
+  { id: 'people',        label: 'Members',        icon: Users,        perm: 'people' },
+  { id: 'hours',         label: 'Service Hours',  icon: Clock,        perm: 'hours' },
+  { id: 'forms',         label: 'Docs / Minutes', icon: FileText,     perm: 'forms' },
+  { id: 'resources',     label: 'Resources',      icon: BookOpen,     perm: 'resources' },
+  { id: 'news',          label: 'Newsletter/Blog', icon: Newspaper,   perm: 'news' },
+  { id: 'gallery',       label: 'Gallery',        icon: Image,        perm: 'gallery' },
+  { id: 'showcase',      label: 'Showcase',       icon: Star,         perm: 'showcase' },
+  { id: 'officers',      label: 'Officers Page',  icon: UserCheck,    perm: 'officers' },
+  { id: 'pages',         label: 'Custom Pages',   icon: FileStack,    perm: 'pages' },
+  { id: 'settings',      label: 'Site Settings',  icon: Settings,     perm: 'settings' },
+  { id: 'footer',        label: 'Footer',         icon: Link,         perm: 'settings' },
+  { id: 'help',          label: 'Help Requests',  icon: HelpCircle,   perm: null },
+  { id: 'newsletter',    label: 'Subscribers',    icon: Mail,         perm: 'news' },
+  { id: 'analytics',     label: 'Analytics',      icon: BarChart2,    perm: null },
+  { id: 'gamify',        label: 'Leaderboard',    icon: Trophy,       perm: null },
+  { id: 'ai',            label: 'AI Content',     icon: Sparkles,     perm: null },
+  { id: 'shutdown',      label: 'Site Shutdown',  icon: PowerOff,     perm: null, superOnly: true },
 ];
 
 export default function Admin() {
   const { adminUser, checking, login, logout, isSuperAdmin, hasPermission } = useAdminAuth();
-  const [activeTab, setActiveTab] = useState('settings');
+  const [activeTab, setActiveTab] = useState('announcements');
 
   if (checking) {
     return (
@@ -67,14 +71,14 @@ export default function Admin() {
 
   const visibleTabs = ALL_TABS.filter(t => {
     if (t.superOnly && !isSuperAdmin) return false;
-    if (t.perm && !hasPermission(t.perm)) return false;
+    if (t.perm && !isSuperAdmin && !hasPermission(t.perm)) return false;
     return true;
   });
 
   const renderContent = () => {
     switch (activeTab) {
       case 'settings':   return <SettingsTabContent />;
-      case 'people':     return <PeopleTab isSuperAdmin={isSuperAdmin} />;
+      case 'people':     return <PeopleTab isSuperAdmin={isSuperAdmin} hasPermission={hasPermission} />;
       case 'officers':   return <OfficersTab />;
       case 'gallery':    return <GalleryTab />;
       case 'hours':      return <HoursTab />;
@@ -85,6 +89,8 @@ export default function Admin() {
       case 'help':       return <HelpRequestsTab />;
       case 'footer':     return <FooterTab />;
       case 'pages':      return <CustomPagesTab />;
+      case 'announcements': return <AnnouncementsTab />;
+      case 'messages':   return <OfficerMessagesTab />;
       case 'events':     return <EventsTab />;
       case 'showcase':   return <ShowcaseTab />;
       case 'analytics':  return <AnalyticsTab />;

@@ -1,0 +1,43 @@
+{
+  "name": "OfficerMessage",
+  "type": "object",
+  "properties": {
+    "member_name": {
+      "type": "string",
+      "title": "Member Name"
+    },
+    "member_email": {
+      "type": "string",
+      "title": "Member Email"
+    },
+    "subject": {
+      "type": "string",
+      "title": "Subject"
+    },
+    "message": {
+      "type": "string",
+      "title": "Message",
+      "format": "textarea"
+    },
+    "status": {
+      "type": "string",
+      "title": "Status",
+      "enum": [
+        "unread",
+        "read",
+        "replied"
+      ],
+      "default": "unread"
+    },
+    "reply": {
+      "type": "string",
+      "title": "Officer Reply"
+    }
+  },
+  "required": [
+    "member_name",
+    "member_email",
+    "subject",
+    "message"
+  ]
+}

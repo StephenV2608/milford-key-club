@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Clock, CheckCircle, LogOut, User, AlertCircle, Edit2, X, Check, Trash2, TrendingUp, Star } from 'lucide-react';
+import { Clock, CheckCircle, LogOut, User, AlertCircle, Edit2, X, Check, Trash2, TrendingUp, Star, Megaphone, MessageCircle, Send, Info, AlertTriangle } from 'lucide-react';
 import ProjectSubmitForm from './ProjectSubmitForm';
 import { toast } from "sonner";
 import { base44 } from '@/api/base44Client';
@@ -106,10 +106,12 @@ export default function MemberDashboard({ memberAuth }) {
         {/* Tab Nav */}
         <div className="flex bg-muted rounded-xl p-1 mb-6 select-none">
           {[
+            { id: 'announcements', label: 'News', icon: Megaphone },
             { id: 'hours', label: 'Log Hours', icon: Clock },
             { id: 'history', label: 'History', icon: CheckCircle },
             { id: 'progress', label: 'Progress', icon: TrendingUp },
             { id: 'projects', label: 'Projects', icon: Star },
+            { id: 'contact', label: 'Contact', icon: MessageCircle },
             { id: 'profile', label: 'Profile', icon: User },
           ].map(({ id, label, icon: Icon }) => (
             <button
@@ -124,6 +126,9 @@ export default function MemberDashboard({ memberAuth }) {
         </div>
 
         {/* Tab Content */}
+        {tab === 'announcements' && (
+          <AnnouncementsBoard />
+        )}
         {tab === 'hours' && (
           <LogHoursTab form={form} setF={setF} computedHours={computedHours} submitting={submitting} handleSubmit={handleSubmit} />
         )}
@@ -139,6 +144,9 @@ export default function MemberDashboard({ memberAuth }) {
             <p className="text-xs text-muted-foreground mb-5">Share your service work for the Community Showcase. Approved submissions are publicly displayed.</p>
             <ProjectSubmitForm memberUser={memberUser} />
           </div>
+        )}
+        {tab === 'contact' && (
+          <ContactOfficersForm memberUser={memberUser} />
         )}
         {tab === 'profile' && (
           <ProfileTab memberUser={memberUser} memberAuth={memberAuth} onDeleteRequest={() => setShowDeleteConfirm(true)} />
@@ -305,6 +313,133 @@ function ProgressTab({ approvedHours, pendingHours, progress, goal, myHours }) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function AnnouncementsBoard() {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    base44.entities.Announcement.filter({ published: true }, '-created_date').then(list => {
+      const now = new Date();
+      setItems(list.filter(a => !a.expires_at || new Date(a.expires_at) >= now));
+      setLoading(false);
+    });
+  }, []);
+
+  const priorityConfig = {
+    normal:    { label: 'Normal',    color: 'bg-blue-100 text-blue-700',   icon: Info },
+    important: { label: 'Important', color: 'bg-amber-100 text-amber-700', icon: AlertTriangle },
+    urgent:    { label: 'Urgent',    color: 'bg-red-100 text-red-700',     icon: AlertTriangle },
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        <Megaphone className="w-5 h-5 text-primary" />
+        <h3 className="font-heading font-semibold text-base">Club Announcements</h3>
+      </div>
+      {loading ? (
+        <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-20 bg-muted rounded-xl animate-pulse" />)}</div>
+      ) : items.length === 0 ? (
+        <div className="bg-card rounded-xl border border-border p-8 text-center">
+          <Megaphone className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+          <p className="text-sm text-muted-foreground">No announcements right now. Check back soon!</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {items.map(a => {
+            const cfg = priorityConfig[a.priority] || priorityConfig.normal;
+            const Icon = cfg.icon;
+            return (
+              <div key={a.id} className={`bg-card rounded-xl border p-4 ${a.priority === 'urgent' ? 'border-red-200' : a.priority === 'important' ? 'border-amber-200' : 'border-border'}`}>
+                <div className="flex items-start gap-3">
+                  <div className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 ${cfg.color}`}>
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-1">
+                      <p className="font-semibold text-sm">{a.title}</p>
+                      <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${cfg.color}`}>{cfg.label}</span>
+                    </div>
+                    <p className="text-sm text-foreground/80 leading-relaxed whitespace-pre-wrap">{a.content}</p>
+                    <p className="text-[10px] text-muted-foreground mt-2">
+                      {a.posted_by && `Posted by ${a.posted_by}`}
+                      {a.posted_by && a.created_date && ' · '}
+                      {a.created_date && new Date(a.created_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ContactOfficersForm({ memberUser }) {
+  const [form, setForm] = useState({ subject: '', message: '' });
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    if (!form.subject || !form.message) { toast.error('Please fill in all fields.'); return; }
+    setSending(true);
+    await base44.entities.OfficerMessage.create({
+      member_name: memberUser.name,
+      member_email: memberUser.email,
+      subject: form.subject,
+      message: form.message,
+      status: 'unread',
+    });
+    toast.success('Message sent to officers!');
+    setForm({ subject: '', message: '' });
+    setSending(false);
+    setSent(true);
+    setTimeout(() => setSent(false), 5000);
+  };
+
+  return (
+    <div className="bg-card rounded-xl border border-border p-5">
+      <h3 className="font-heading font-semibold text-base mb-1 flex items-center gap-2">
+        <MessageCircle className="w-4 h-4 text-primary" /> Contact Officers
+      </h3>
+      <p className="text-xs text-muted-foreground mb-5">Send a message directly to the club officers. They'll reply to your email.</p>
+      {sent && (
+        <div className="bg-green-50 border border-green-200 rounded-lg px-4 py-3 mb-4 text-sm text-green-700 flex items-center gap-2">
+          <Check className="w-4 h-4 shrink-0" /> Message sent! Officers will reply to {memberUser.email}.
+        </div>
+      )}
+      <form onSubmit={submit} className="space-y-4">
+        <div className="space-y-1.5">
+          <label className="text-sm font-medium">Subject *</label>
+          <input
+            className="w-full border border-input rounded-md h-9 px-3 text-sm bg-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            value={form.subject}
+            onChange={e => setForm(p => ({ ...p, subject: e.target.value }))}
+            placeholder="What's this about?"
+            required
+          />
+        </div>
+        <div className="space-y-1.5">
+          <label className="text-sm font-medium">Message *</label>
+          <textarea
+            className="w-full border border-input rounded-md px-3 py-2 text-sm bg-background min-h-[120px] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            value={form.message}
+            onChange={e => setForm(p => ({ ...p, message: e.target.value }))}
+            placeholder="Write your message here..."
+            required
+          />
+        </div>
+        <Button type="submit" disabled={sending} className="rounded-full gap-1.5 select-none">
+          <Send className="w-4 h-4" />{sending ? 'Sending...' : 'Send Message'}
+        </Button>
+      </form>
     </div>
   );
 }

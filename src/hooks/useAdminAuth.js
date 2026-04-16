@@ -26,7 +26,7 @@ export function useAdminAuth() {
       username.trim() === SUPER_ADMIN_SEED.username &&
       idCode.trim() === SUPER_ADMIN_SEED.id_code
     ) {
-      const user = { ...SUPER_ADMIN_SEED, permissions: ['settings','projects','events','officers','gallery','hours','news'] };
+      const user = { ...SUPER_ADMIN_SEED, permissions: ['announcements','messages','events','people','hours','forms','resources','news','gallery','showcase','officers','pages','settings'] };
       sessionStorage.setItem('mkc_admin', JSON.stringify(user));
       setAdminUser(user);
       return { success: true };

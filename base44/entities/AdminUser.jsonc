@@ -1,0 +1,66 @@
+{
+  "name": "AdminUser",
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string",
+      "title": "Username"
+    },
+    "email": {
+      "type": "string",
+      "title": "Email"
+    },
+    "id_code": {
+      "type": "string",
+      "title": "ID Code"
+    },
+    "officer_role": {
+      "type": "string",
+      "title": "Officer Position",
+      "enum": [
+        "President",
+        "Vice President",
+        "Secretary",
+        "Treasurer",
+        "Editor",
+        "Webmaster"
+      ]
+    },
+    "role": {
+      "type": "string",
+      "title": "System Role",
+      "enum": [
+        "super_admin",
+        "admin"
+      ],
+      "default": "admin"
+    },
+    "permissions": {
+      "type": "array",
+      "title": "Permissions",
+      "items": {
+        "type": "string",
+        "enum": [
+          "announcements",
+          "messages",
+          "events",
+          "people",
+          "hours",
+          "forms",
+          "resources",
+          "news",
+          "gallery",
+          "showcase",
+          "officers",
+          "pages",
+          "settings"
+        ]
+      }
+    }
+  },
+  "required": [
+    "username",
+    "id_code",
+    "role"
+  ]
+}
