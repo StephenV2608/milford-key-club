@@ -16,8 +16,8 @@ const highlights = [
 { icon: Heart, title: 'Community Impact', desc: 'Thousands of service hours logged by our dedicated members' }];
 
 
-const HERO_FALLBACK = 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/fed622b44_generated_8d496406.png';
-const PROJECT_FALLBACK = 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/966810261_generated_0f8cf771.png';
+const HERO_FALLBACK = 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&q=80';
+const PROJECT_FALLBACK = 'https://images.unsplash.com/photo-1560252829-804f1aedf1be?w=800&q=80';
 
 export default function Home() {
   const { settings } = useSiteSettings();
