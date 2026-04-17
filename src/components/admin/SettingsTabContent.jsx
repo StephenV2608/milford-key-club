@@ -9,8 +9,58 @@ import { invalidateSettings } from '../../hooks/useSiteSettings';
 import SettingsSection from './SettingsSection';
 import {
   Globe, Image, Info, Briefcase, Calendar, Users, Camera, UserPlus,
-  Mail, Instagram, Twitter, Facebook, Upload, Eye, EyeOff, Navigation
+  Mail, Instagram, Twitter, Facebook, Upload, Eye, EyeOff, Navigation, Link2, Copy, Check
 } from 'lucide-react';
+import { useState as useLocalState } from 'react';
+
+function DriveConverter() {
+  const [input, setInput] = useLocalState('');
+  const [result, setResult] = useLocalState('');
+  const [copied, setCopied] = useLocalState(false);
+
+  const convert = () => {
+    const match = input.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (!match) { setResult('❌ Could not find a file ID. Make sure you paste a full Google Drive link.'); return; }
+    setResult(`https://drive.google.com/uc?export=view&id=${match[1]}`);
+  };
+
+  const copy = () => {
+    navigator.clipboard.writeText(result);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-3">
+      <div className="flex items-center gap-2 mb-1">
+        <Link2 className="w-4 h-4 text-blue-600" />
+        <p className="font-semibold text-sm text-blue-800">Google Drive Image Converter</p>
+      </div>
+      <p className="text-xs text-blue-700">Paste a Google Drive sharing link to get an embeddable image URL you can use anywhere in settings.</p>
+      <div className="flex gap-2">
+        <input
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          placeholder="https://drive.google.com/file/d/..."
+          className="flex-1 border border-blue-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-1 focus:ring-blue-400"
+        />
+        <button onClick={convert} className="bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+          Convert
+        </button>
+      </div>
+      {result && (
+        <div className="flex items-center gap-2 bg-white border border-blue-200 rounded-lg px-3 py-2">
+          <p className="flex-1 text-xs font-mono text-blue-900 truncate">{result}</p>
+          {!result.startsWith('❌') && (
+            <button onClick={copy} className="shrink-0 text-blue-600 hover:text-blue-800">
+              {copied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function ImageUploadField({ label, value, onChange }) {
   const ref = useRef();
@@ -106,6 +156,8 @@ export default function SettingsTabContent() {
           {saving ? 'Saving...' : 'Save All'}
         </Button>
       </div>
+
+      <DriveConverter />
 
       {/* Branding */}
       <SettingsSection title="Branding & Identity" icon={Globe} defaultOpen>
