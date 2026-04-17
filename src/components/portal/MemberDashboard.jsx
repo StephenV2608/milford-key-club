@@ -55,6 +55,14 @@ export default function MemberDashboard({ memberAuth }) {
       description: form.description,
       status: 'pending',
     });
+    base44.analytics.track({
+      eventName: 'service_hours_submitted',
+      properties: {
+        hours: computedHours,
+        organization: form.organization,
+        member_grade: memberUser.grade || null,
+      },
+    });
     toast.success('Hours submitted for review!');
     setForm({ date: '', start_time: '', end_time: '', organization: '', description: '' });
     setSubmitting(false);
