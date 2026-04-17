@@ -25,6 +25,7 @@ import OfficerMessagesTab from '../components/admin/OfficerMessagesTab';
 import AttendanceSheet from '../components/admin/AttendanceSheet';
 import MeetingQRDisplay from '../components/admin/MeetingQRDisplay';
 import HoursReportTab from '../components/admin/HoursReportTab';
+import OfficerRolesTab from '../components/admin/OfficerRolesTab';
 
 import {
   Settings, Users, Image, Clock, Newspaper, FileText, BookOpen,
@@ -61,6 +62,7 @@ const TAB_GROUPS = [
       { id: 'gallery',  label: 'Gallery',      icon: Image,     perm: 'gallery' },
       { id: 'showcase', label: 'Showcase',     icon: Star,      perm: 'showcase' },
       { id: 'officers', label: 'Officers',     icon: UserCheck, perm: 'officers' },
+      { id: 'officerRoles', label: 'Officer Roles', icon: Shield, perm: 'officers' },
       { id: 'forms',    label: 'Documents',    icon: FileText,  perm: 'forms' },
       { id: 'resources',label: 'Resources',    icon: BookOpen,  perm: 'resources' },
     ],
@@ -108,6 +110,7 @@ export default function Admin() {
       case 'settings':   return <SettingsTabContent />;
       case 'people':     return <PeopleTab isSuperAdmin={isSuperAdmin} hasPermission={hasPermission} />;
       case 'officers':   return <OfficersTab />;
+      case 'officerRoles': return <OfficerRolesTab />;
       case 'gallery':    return <GalleryTab />;
       case 'attendance': return <AttendanceSheet />;
       case 'qr':         return <MeetingQRDisplay />;

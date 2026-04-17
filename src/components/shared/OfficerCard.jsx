@@ -1,6 +1,6 @@
-import { User } from 'lucide-react';
+import { User, Mail } from 'lucide-react';
 
-export default function OfficerCard({ name, role, funFact, photoUrl, faded }) {
+export default function OfficerCard({ name, role, funFact, photoUrl, email, faded }) {
   return (
     <div className={`bg-card rounded-xl border border-border p-6 text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300 ${faded ? 'opacity-70' : ''}`}>
       <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 overflow-hidden">
@@ -12,7 +12,13 @@ export default function OfficerCard({ name, role, funFact, photoUrl, faded }) {
       <h3 className="font-heading font-semibold text-base mb-0.5">{name}</h3>
       <p className="text-sm text-primary font-medium mb-3">{role}</p>
       {funFact && (
-        <p className="text-xs text-muted-foreground italic">"{funFact}"</p>
+        <p className="text-xs text-muted-foreground italic mb-2">"{funFact}"</p>
+      )}
+      {email && (
+        <a href={`mailto:${email}`} className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors mt-1">
+          <Mail className="w-3 h-3" />
+          {email}
+        </a>
       )}
     </div>
   );

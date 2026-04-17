@@ -1,0 +1,79 @@
+{
+  "name": "OfficerRole",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Role Title",
+      "enum": [
+        "President",
+        "Vice President",
+        "Secretary",
+        "Treasurer",
+        "Editor",
+        "Webmaster",
+        "Lieutenant Governor",
+        "Faculty Advisor",
+        "Other"
+      ]
+    },
+    "custom_title": {
+      "type": "string",
+      "title": "Custom Title (if Other)"
+    },
+    "member_id": {
+      "type": "string",
+      "title": "Linked Member ID"
+    },
+    "member_name": {
+      "type": "string",
+      "title": "Member Name"
+    },
+    "member_email": {
+      "type": "string",
+      "title": "Contact Email"
+    },
+    "show_email": {
+      "type": "boolean",
+      "title": "Show Email Publicly",
+      "default": false
+    },
+    "photo_url": {
+      "type": "string",
+      "title": "Photo URL"
+    },
+    "bio": {
+      "type": "string",
+      "title": "Bio / Fun Fact"
+    },
+    "permissions": {
+      "type": "array",
+      "title": "Permissions",
+      "items": {
+        "type": "string",
+        "enum": [
+          "approve_hours",
+          "post_announcements",
+          "manage_events",
+          "manage_members",
+          "manage_gallery",
+          "manage_showcase",
+          "view_messages"
+        ]
+      }
+    },
+    "order": {
+      "type": "number",
+      "title": "Display Order"
+    },
+    "active": {
+      "type": "boolean",
+      "title": "Currently Active",
+      "default": true
+    }
+  },
+  "required": [
+    "title",
+    "member_name"
+  ]
+}
