@@ -27,21 +27,21 @@ export default function Home() {
 
   const loadData = useCallback(async () => {
     const [projects, imgs] = await Promise.all([
-      base44.entities.Project.list('order', 1),
-      base44.entities.GalleryImage.list('order'),
-    ]);
+    base44.entities.Project.list('order', 1),
+    base44.entities.GalleryImage.list('order')]
+    );
     if (projects[0]) setFeaturedProject(projects[0]);
     if (imgs.length) setGalleryImages(imgs.map((i) => i.image_url));
   }, []);
 
-  useEffect(() => { loadData(); }, [loadData]);
+  useEffect(() => {loadData();}, [loadData]);
 
   const { pulling, pullY, refreshing, ready } = usePullToRefresh(loadData);
 
   const heroImages = [
-    ...(settings.hero_image_url ? [settings.hero_image_url] : []),
-    ...galleryImages
-  ].filter(Boolean);
+  ...(settings.hero_image_url ? [settings.hero_image_url] : []),
+  ...galleryImages].
+  filter(Boolean);
   const slides = heroImages.filter(Boolean);
 
   useEffect(() => {
@@ -87,7 +87,7 @@ export default function Home() {
               <Link to="/join">Join Us</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="text-base px-8 h-12 rounded-full font-semibold bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white">
-              <Link to="/portal">See Our Impact</Link>
+              <Link to="/projects" className="inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border shadow-sm text-base px-8 h-12 rounded-full font-semibold bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white">Member Login</Link>
             </Button>
           </div>
         </div>
