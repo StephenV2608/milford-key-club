@@ -24,11 +24,12 @@ import AnnouncementsTab from '../components/admin/AnnouncementsTab';
 import OfficerMessagesTab from '../components/admin/OfficerMessagesTab';
 import AttendanceSheet from '../components/admin/AttendanceSheet';
 import MeetingQRDisplay from '../components/admin/MeetingQRDisplay';
+import HoursReportTab from '../components/admin/HoursReportTab';
 
 import {
   Settings, Users, Image, Clock, Newspaper, FileText, BookOpen,
   Mail, HelpCircle, Link, FileStack, Sparkles, PowerOff, LogOut, Shield, UserCheck,
-  BarChart2, Trophy, CalendarDays, Star, Megaphone, MessageCircle, ClipboardList, QrCode
+  BarChart2, Trophy, CalendarDays, Star, Megaphone, MessageCircle, ClipboardList, QrCode, FileBarChart
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
@@ -49,6 +50,7 @@ const TAB_GROUPS = [
       { id: 'attendance',  label: 'Attendance',    icon: ClipboardList,  perm: 'hours' },
       { id: 'qr',          label: 'Meeting QR',    icon: QrCode,         perm: 'hours' },
       { id: 'hours',       label: 'Service Hours', icon: Clock,          perm: 'hours' },
+      { id: 'hoursreport', label: 'Hours Report',  icon: FileBarChart,   perm: 'hours' },
       { id: 'events',      label: 'Events',        icon: CalendarDays,   perm: 'events' },
       { id: 'gamify',      label: 'Leaderboard',   icon: Trophy,         perm: null },
     ],
@@ -110,6 +112,7 @@ export default function Admin() {
       case 'attendance': return <AttendanceSheet />;
       case 'qr':         return <MeetingQRDisplay />;
       case 'hours':      return <HoursTab />;
+      case 'hoursreport': return <HoursReportTab />;
       case 'news':       return <NewsTab />;
       case 'forms':      return <FormsTab />;
       case 'resources':  return <ResourcesTab />;
