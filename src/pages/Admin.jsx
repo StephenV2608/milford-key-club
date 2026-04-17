@@ -30,55 +30,50 @@ import OfficerRolesTab from '../components/admin/OfficerRolesTab';
 
 import {
   Settings, Users, Image, Clock, Newspaper, FileText, BookOpen,
-  Mail, HelpCircle, Link, FileStack, Sparkles, PowerOff, LogOut, Shield, UserCheck,
-  BarChart2, Trophy, CalendarDays, Star, Megaphone, MessageCircle, ClipboardList, QrCode, FileBarChart, Download
+  Mail, FileStack, Sparkles, PowerOff, LogOut, Shield, UserCheck,
+  BarChart2, CalendarDays, Star, Megaphone, MessageCircle, ClipboardList, QrCode, FileBarChart
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 const TAB_GROUPS = [
   {
-    label: 'Communication',
+    label: 'Communicate',
     tabs: [
       { id: 'announcements', label: 'Announcements', icon: Megaphone,     perm: 'announcements' },
       { id: 'messages',      label: 'Messages',      icon: MessageCircle, perm: 'messages' },
-      { id: 'news',          label: 'Newsletter',    icon: Newspaper,     perm: 'news' },
-      { id: 'newsletter',    label: 'Subscribers',   icon: Mail,          perm: 'news' },
+      { id: 'newsletter',    label: 'Newsletter',    icon: Mail,          perm: 'news' },
+      { id: 'news',          label: 'News Posts',    icon: Newspaper,     perm: 'news' },
     ],
   },
   {
     label: 'Members',
     tabs: [
-      { id: 'people',      label: 'Members',       icon: Users,          perm: 'people' },
-      { id: 'attendance',  label: 'Attendance',    icon: ClipboardList,  perm: 'hours' },
-      { id: 'qr',          label: 'Meeting QR',    icon: QrCode,         perm: 'hours' },
-      { id: 'hours',       label: 'Service Hours', icon: Clock,          perm: 'hours' },
-      { id: 'hoursreport', label: 'Hours Report',  icon: FileBarChart,   perm: 'hours' },
-      { id: 'events',      label: 'Events',        icon: CalendarDays,   perm: 'events' },
-      { id: 'gamify',      label: 'Leaderboard',   icon: Trophy,         perm: null },
+      { id: 'people',      label: 'Members',       icon: Users,         perm: 'people' },
+      { id: 'hours',       label: 'Service Hours', icon: Clock,         perm: 'hours' },
+      { id: 'hoursreport', label: 'Hours Report',  icon: FileBarChart,  perm: 'hours' },
+      { id: 'events',      label: 'Events',        icon: CalendarDays,  perm: 'events' },
+      { id: 'attendance',  label: 'Attendance',    icon: ClipboardList, perm: 'hours' },
+      { id: 'qr',          label: 'Meeting QR',    icon: QrCode,        perm: 'hours' },
     ],
   },
   {
     label: 'Content',
     tabs: [
-      { id: 'gallery',  label: 'Gallery',      icon: Image,     perm: 'gallery' },
-      { id: 'downloads', label: 'Downloads',   icon: Download,  perm: 'gallery' },
-      { id: 'showcase', label: 'Showcase',     icon: Star,      perm: 'showcase' },
-      { id: 'officers', label: 'Officers',     icon: UserCheck, perm: 'officers' },
-      { id: 'officerRoles', label: 'Officer Roles', icon: Shield, perm: 'officers' },
-      { id: 'forms',    label: 'Documents',    icon: FileText,  perm: 'forms' },
-      { id: 'resources',label: 'Resources',    icon: BookOpen,  perm: 'resources' },
+      { id: 'gallery',      label: 'Gallery',       icon: Image,     perm: 'gallery' },
+      { id: 'showcase',     label: 'Showcase',      icon: Star,      perm: 'showcase' },
+      { id: 'officers',     label: 'Officers',      icon: UserCheck, perm: 'officers' },
+      { id: 'forms',        label: 'Documents',     icon: FileText,  perm: 'forms' },
+      { id: 'resources',    label: 'Resources',     icon: BookOpen,  perm: 'resources' },
     ],
   },
   {
     label: 'Site',
     tabs: [
-      { id: 'settings', label: 'Settings',     icon: Settings,  perm: 'settings' },
-      { id: 'pages',    label: 'Custom Pages', icon: FileStack, perm: 'pages' },
-      { id: 'footer',   label: 'Footer',       icon: Link,      perm: 'settings' },
-      { id: 'analytics',label: 'Analytics',    icon: BarChart2, perm: null },
-      { id: 'ai',       label: 'AI Content',   icon: Sparkles,  perm: null },
-      { id: 'help',     label: 'Help Requests',icon: HelpCircle,perm: null, superOnly: true },
-      { id: 'shutdown', label: 'Shutdown',     icon: PowerOff,  perm: null, superOnly: true },
+      { id: 'settings',  label: 'Settings',     icon: Settings,  perm: 'settings' },
+      { id: 'pages',     label: 'Pages',        icon: FileStack, perm: 'pages' },
+      { id: 'analytics', label: 'Analytics',    icon: BarChart2, perm: null },
+      { id: 'ai',        label: 'AI Content',   icon: Sparkles,  perm: null },
+      { id: 'shutdown',  label: 'Shutdown',     icon: PowerOff,  perm: null, superOnly: true },
     ],
   },
 ];
