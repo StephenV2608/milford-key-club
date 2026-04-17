@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,36 +9,12 @@ import { invalidateSettings } from '../../hooks/useSiteSettings';
 import SettingsSection from './SettingsSection';
 import {
   Globe, Image, Info, Briefcase, Calendar, Users, Camera, UserPlus,
-  Mail, Instagram, Twitter, Facebook, Upload, Eye, EyeOff, Navigation
+  Mail, Instagram, Twitter, Facebook, Navigation
 } from 'lucide-react';
+import ImageInput from '../shared/ImageInput';
 
 function ImageUploadField({ label, value, onChange }) {
-  const ref = useRef();
-  const [uploading, setUploading] = useState(false);
-  const handleUpload = async (e) => {
-    const file = e.target.files[0]; if (!file) return;
-    setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    onChange(file_url);
-    setUploading(false);
-    toast.success('Image uploaded!');
-    e.target.value = '';
-  };
-  return (
-    <div className="space-y-1.5">
-      <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{label}</Label>
-      <div className="flex items-center gap-2">
-        {value && <img src={value} alt="" className="w-12 h-12 rounded-lg object-cover border border-border shrink-0" />}
-        <div className="flex-1 min-w-0">
-          <Input value={value || ''} onChange={e => onChange(e.target.value)} placeholder="https://..." className="mb-1.5" />
-          <Button variant="outline" size="sm" onClick={() => ref.current.click()} disabled={uploading} className="gap-1.5 h-7 text-xs">
-            <Upload className="w-3 h-3" />{uploading ? 'Uploading...' : 'Upload'}
-          </Button>
-          <input ref={ref} type="file" accept="image/*" className="hidden" onChange={handleUpload} />
-        </div>
-      </div>
-    </div>
-  );
+  return <ImageInput label={label} value={value} onChange={onChange} />;
 }
 
 function Field({ label, value, onChange, type = 'text', placeholder = '' }) {

@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Plus, Trash2, Edit2, Check, X, Upload, Images } from 'lucide-react';
+import ImageInput from '../shared/ImageInput';
 
 const CATEGORIES = ['Service', 'Projects', 'Meetings', 'Events'];
 
@@ -12,11 +13,9 @@ export default function GalleryTab() {
   const [items, setItems] = useState([]);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({});
-  const [uploading, setUploading] = useState(false);
   const [massUploading, setMassUploading] = useState(false);
   const [massCategory, setMassCategory] = useState('Service');
   const [massProgress, setMassProgress] = useState('');
-  const fileRef = useRef();
   const massFileRef = useRef();
 
   useEffect(() => { load(); }, []);
@@ -25,16 +24,6 @@ export default function GalleryTab() {
   const startNew = () => { setEditing('new'); setForm({ category: 'Service', order: items.length + 1 }); };
   const cancel = () => { setEditing(null); setForm({}); };
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
-
-  const handleSingleUpload = async (e) => {
-    const file = e.target.files[0]; if (!file) return;
-    setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    setForm(p => ({ ...p, image_url: file_url }));
-    setUploading(false);
-    toast.success('Image uploaded!');
-    e.target.value = '';
-  };
 
   const handleMassUpload = async (e) => {
     const files = Array.from(e.target.files);
@@ -93,15 +82,7 @@ export default function GalleryTab() {
 
         {editing === 'new' && (
           <div className="bg-accent/30 rounded-xl border border-primary/20 p-4 space-y-3 mb-4">
-            <div className="flex items-center gap-3">
-              {form.image_url && <img src={form.image_url} alt="" className="w-16 h-16 rounded-lg object-cover border border-border" />}
-              <div>
-                <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleSingleUpload} />
-                <Button variant="outline" size="sm" onClick={() => fileRef.current.click()} disabled={uploading} className="gap-1.5">
-                  <Upload className="w-3 h-3" />{uploading ? 'Uploading...' : 'Upload Image'}
-                </Button>
-              </div>
-            </div>
+            <ImageInput value={form.image_url} onChange={v => set('image_url', v)} />
             <div className="grid sm:grid-cols-2 gap-3">
               <div><Label className="text-xs uppercase tracking-wide text-muted-foreground">Caption</Label><Input value={form.alt_text || ''} onChange={e => set('alt_text', e.target.value)} className="mt-1" placeholder="Caption..." /></div>
               <div>
@@ -123,11 +104,7 @@ export default function GalleryTab() {
             <div key={item.id} className="relative group rounded-xl overflow-hidden aspect-square border border-border">
               {editing === item.id ? (
                 <div className="bg-card p-3 h-full overflow-auto space-y-2">
-                  <div className="flex items-center gap-2">
-                    {form.image_url && <img src={form.image_url} alt="" className="w-12 h-12 rounded object-cover border" />}
-                    <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleSingleUpload} />
-                    <Button variant="outline" size="sm" onClick={() => fileRef.current.click()} disabled={uploading} className="gap-1 text-xs h-7"><Upload className="w-3 h-3" />{uploading ? '...' : 'Change'}</Button>
-                  </div>
+                  <ImageInput value={form.image_url} onChange={v => set('image_url', v)} size="sm" />
                   <Input value={form.alt_text || ''} onChange={e => set('alt_text', e.target.value)} placeholder="Caption" className="h-7 text-xs" />
                   <select value={form.category || 'Service'} onChange={e => set('category', e.target.value)} className="w-full border border-input rounded h-7 px-2 text-xs bg-background">
                     {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}

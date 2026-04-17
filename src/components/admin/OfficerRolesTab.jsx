@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { Plus, Pencil, Trash2, X, Check, ChevronDown, Shield } from 'lucide-react';
+import ImageInput from '../shared/ImageInput';
 
 const ROLE_TITLES = [
   'President', 'Vice President', 'Secretary', 'Treasurer',
@@ -153,8 +154,7 @@ export default function OfficerRolesTab() {
               <Input type="email" value={form.member_email} onChange={e => setForm(f => ({ ...f, member_email: e.target.value }))} placeholder="officer@email.com" className="h-9 text-sm" />
             </div>
             <div>
-              <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">Photo URL</label>
-              <Input value={form.photo_url} onChange={e => setForm(f => ({ ...f, photo_url: e.target.value }))} placeholder="https://..." className="h-9 text-sm" />
+              <ImageInput label="Photo" value={form.photo_url} onChange={v => setForm(f => ({ ...f, photo_url: v }))} size="sm" />
             </div>
             <div className="sm:col-span-2">
               <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">Bio / Fun Fact</label>

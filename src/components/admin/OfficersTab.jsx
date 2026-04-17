@@ -1,18 +1,16 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Plus, Trash2, Edit2, Check, X, Upload, Archive } from 'lucide-react';
+import { Plus, Trash2, Edit2, Check, X, Archive } from 'lucide-react';
+import ImageInput from '../shared/ImageInput';
 
 export default function OfficersTab() {
   const [officers, setOfficers] = useState([]);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({});
-  const [uploading, setUploading] = useState(false);
-  const fileRef = useRef();
-
   useEffect(() => { load(); }, []);
   const load = () => base44.entities.Officer.list('order').then(setOfficers);
 
@@ -30,16 +28,6 @@ export default function OfficersTab() {
 
   const del = async (id) => { await base44.entities.Officer.delete(id); toast.success('Deleted'); load(); };
 
-  const handlePhotoUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    set('photo_url', file_url);
-    setUploading(false);
-    e.target.value = '';
-  };
-
   const active = officers.filter(o => !o.archived);
   const past = officers.filter(o => o.archived);
 
@@ -55,14 +43,14 @@ export default function OfficersTab() {
         </div>
 
         {editing === 'new' && (
-          <OfficerForm form={form} set={set} onSave={save} onCancel={cancel} uploading={uploading} fileRef={fileRef} onUpload={handlePhotoUpload} />
+          <OfficerForm form={form} set={set} onSave={save} onCancel={cancel} />
         )}
 
         <div className="space-y-2 mt-2">
           {active.map(o => (
             <div key={o.id}>
               {editing === o.id ? (
-                <OfficerForm form={form} set={set} onSave={save} onCancel={cancel} uploading={uploading} fileRef={fileRef} onUpload={handlePhotoUpload} />
+                <OfficerForm form={form} set={set} onSave={save} onCancel={cancel} />
               ) : (
                 <OfficerRow officer={o} onEdit={startEdit} onDelete={del} />
               )}
@@ -81,7 +69,7 @@ export default function OfficersTab() {
             {past.map(o => (
               <div key={o.id}>
                 {editing === o.id ? (
-                  <OfficerForm form={form} set={set} onSave={save} onCancel={cancel} uploading={uploading} fileRef={fileRef} onUpload={handlePhotoUpload} />
+                  <OfficerForm form={form} set={set} onSave={save} onCancel={cancel} />
                 ) : (
                   <OfficerRow officer={o} onEdit={startEdit} onDelete={del} faded />
                 )}
@@ -122,22 +110,16 @@ function OfficerRow({ officer, onEdit, onDelete, faded }) {
   );
 }
 
-function OfficerForm({ form, set, onSave, onCancel, uploading, fileRef, onUpload }) {
+function OfficerForm({ form, set, onSave, onCancel }) {
   return (
     <div className="bg-accent/30 rounded-xl border border-primary/20 p-4 space-y-3 mb-3">
-      <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onUpload} />
       <div className="grid sm:grid-cols-2 gap-3">
         <div><Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Name *</Label><Input className="mt-1" value={form.name || ''} onChange={e => set('name', e.target.value)} placeholder="Jane Doe" /></div>
         <div><Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Role *</Label><Input className="mt-1" value={form.role || ''} onChange={e => set('role', e.target.value)} placeholder="President" /></div>
         <div><Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Fun Fact / Bio</Label><Input className="mt-1" value={form.fun_fact || ''} onChange={e => set('fun_fact', e.target.value)} placeholder="Loves hiking..." /></div>
         <div><Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Display Order</Label><Input className="mt-1" type="number" value={form.order || ''} onChange={e => set('order', Number(e.target.value))} placeholder="1" /></div>
       </div>
-      <div className="flex items-center gap-3">
-        <Button type="button" variant="outline" size="sm" className="gap-1.5" onClick={() => fileRef.current.click()} disabled={uploading}>
-          <Upload className="w-3.5 h-3.5" />{uploading ? 'Uploading...' : 'Upload Photo'}
-        </Button>
-        {form.photo_url && <img src={form.photo_url} alt="Preview" className="w-10 h-10 rounded-full object-cover border border-border" />}
-      </div>
+      <ImageInput label="Photo" value={form.photo_url} onChange={v => set('photo_url', v)} size="sm" />
       <div className="flex items-center gap-4">
         <label className="flex items-center gap-2 text-sm cursor-pointer">
           <input type="checkbox" checked={!!form.archived} onChange={e => set('archived', e.target.checked)} />
