@@ -4,25 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Upload, CheckCircle2, Image } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function ProjectSubmitForm({ memberUser }) {
   const [form, setForm] = useState({ title: '', description: '', organization: '', date: '', photo_url: '' });
-  const [uploading, setUploading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
-
-  const handlePhoto = async (e) => {
-    const file = e.target.files[0]; if (!file) return;
-    setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    set('photo_url', file_url);
-    setUploading(false);
-    toast.success('Photo uploaded!');
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -70,21 +60,13 @@ export default function ProjectSubmitForm({ memberUser }) {
         <Textarea required value={form.description} onChange={e => set('description', e.target.value)} placeholder="Describe what you did and the impact it had..." rows={4} />
       </div>
       <div className="space-y-1.5">
-        <Label>Photo</Label>
-        {form.photo_url ? (
-          <div className="flex items-center gap-3">
-            <img src={form.photo_url} alt="Preview" className="w-20 h-20 rounded-xl object-cover border border-border" />
-            <Button type="button" variant="outline" size="sm" onClick={() => set('photo_url', '')}>Remove</Button>
-          </div>
-        ) : (
-          <label className="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-border rounded-xl cursor-pointer hover:bg-muted/40 transition-colors">
-            <Image className="w-6 h-6 text-muted-foreground mb-1.5" />
-            <span className="text-sm text-muted-foreground">{uploading ? 'Uploading...' : 'Click to upload a photo'}</span>
-            <input type="file" accept="image/*" className="hidden" onChange={handlePhoto} disabled={uploading} />
-          </label>
+        <Label>Photo URL</Label>
+        <Input value={form.photo_url} onChange={e => set('photo_url', e.target.value)} placeholder="https://drive.google.com/uc?export=view&id=..." />
+        {form.photo_url && (
+          <img src={form.photo_url} alt="Preview" className="w-24 h-24 rounded-xl object-cover border border-border mt-2" />
         )}
       </div>
-      <Button type="submit" className="w-full rounded-full h-11 font-bold" disabled={saving || uploading}>
+      <Button type="submit" className="w-full rounded-full h-11 font-bold" disabled={saving}>
         {saving ? 'Submitting...' : 'Submit Project'}
       </Button>
     </form>
