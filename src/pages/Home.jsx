@@ -87,7 +87,7 @@ export default function Home() {
               <Link to="/join">Join Us</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="text-base px-8 h-12 rounded-full font-semibold bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white">
-              <Link to="/projects">See Our Impact</Link>
+              <Link to="/portal">See Our Impact</Link>
             </Button>
           </div>
         </div>
