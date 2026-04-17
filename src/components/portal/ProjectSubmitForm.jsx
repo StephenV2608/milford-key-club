@@ -27,15 +27,16 @@ export default function ProjectSubmitForm({ memberUser }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
-    await base44.entities.ProjectSubmission.create({
+    // Optimistic: show success immediately
+    setSubmitted(true);
+    toast.success('Project submitted for review!');
+    // Fire-and-forget real save
+    base44.entities.ProjectSubmission.create({
       ...form,
       member_name: memberUser.name,
       member_email: memberUser.email,
       status: 'pending',
-    });
-    setSaving(false);
-    setSubmitted(true);
-    toast.success('Project submitted for review!');
+    }).finally(() => setSaving(false));
   };
 
   if (submitted) return (

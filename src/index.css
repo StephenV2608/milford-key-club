@@ -96,4 +96,14 @@
     @apply bg-background text-foreground font-body;
     overscroll-behavior: none;
   }
+
+  button,
+  a,
+  nav,
+  nav *,
+  [role="button"],
+  svg {
+    -webkit-user-select: none;
+    user-select: none;
+  }
 }

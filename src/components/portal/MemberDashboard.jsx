@@ -46,7 +46,9 @@ export default function MemberDashboard({ memberAuth }) {
     e.preventDefault();
     if (!computedHours || computedHours <= 0) { toast.error('End time must be after start time.'); return; }
     setSubmitting(true);
-    await base44.entities.ServiceHour.create({
+    // Optimistic update — add entry immediately
+    const optimisticEntry = {
+      id: `optimistic-${Date.now()}`,
       member_name: memberUser.name,
       member_email: memberUser.email,
       date: form.date,
@@ -54,19 +56,19 @@ export default function MemberDashboard({ memberAuth }) {
       organization: form.organization,
       description: form.description,
       status: 'pending',
-    });
-    base44.analytics.track({
-      eventName: 'service_hours_submitted',
-      properties: {
-        hours: computedHours,
-        organization: form.organization,
-        member_grade: memberUser.grade || null,
-      },
-    });
-    toast.success('Hours submitted for review!');
+    };
+    setMyHours(prev => [optimisticEntry, ...prev]);
     setForm({ date: '', start_time: '', end_time: '', organization: '', description: '' });
     setSubmitting(false);
-    loadHours();
+    toast.success('Hours submitted for review!');
+    // Fire-and-forget real create + analytics, then reconcile
+    base44.entities.ServiceHour.create(optimisticEntry).then(() => {
+      base44.analytics.track({
+        eventName: 'service_hours_submitted',
+        properties: { hours: computedHours, organization: optimisticEntry.organization, member_grade: memberUser.grade || null },
+      });
+      loadHours();
+    });
   };
 
   const handleDeleteAccount = async () => {
@@ -500,7 +502,7 @@ function ProfileTab({ memberUser, memberAuth, onDeleteRequest }) {
               <div className="space-y-1.5"><Label>Email</Label><Input type="email" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} /></div>
               <div className="space-y-1.5">
                 <Label>Grade</Label>
-                <select className="w-full border border-input rounded-md h-9 px-3 text-sm bg-background" value={form.grade} onChange={e => setForm(p => ({ ...p, grade: e.target.value }))}>
+                <select className="w-full border border-input rounded-md h-9 px-3 text-sm bg-background select-none" value={form.grade} onChange={e => setForm(p => ({ ...p, grade: e.target.value }))}>
                   <option value="">— Select —</option>
                   {['9','10','11','12'].map(g => <option key={g} value={g}>Grade {g}</option>)}
                 </select>
