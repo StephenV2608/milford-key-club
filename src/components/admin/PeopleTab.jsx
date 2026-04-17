@@ -103,15 +103,16 @@ function MembersSection({ isSuperAdmin }) {
 
   const sendMassEmail = async () => {
     if (!massEmail.subject || !massEmail.body) { toast.error('Fill in subject and body.'); return; }
+    const activeMembers = members.filter(m => m.active !== false && m.email);
+    if (!activeMembers.length) { toast.error('No active members with emails.'); return; }
+    if (!confirm(`Send to ${activeMembers.length} active member(s)?`)) return;
     setSending(true);
-    const appUsers = await base44.entities.User.list();
-    const memberEmails = new Set(members.filter(m => m.active !== false && m.email).map(m => m.email.toLowerCase()));
-    const recipients = appUsers.filter(u => u.email && memberEmails.has(u.email.toLowerCase()));
-    const targets = recipients.length ? recipients : appUsers.filter(u => u.email);
-    for (const u of targets) {
-      await base44.integrations.Core.SendEmail({ to: u.email, subject: massEmail.subject, body: `Hi ${u.full_name || 'there'},\n\n${massEmail.body}\n\n— Milford Key Club` });
-    }
-    toast.success(`Sent to ${targets.length} member(s)!`);
+    const res = await base44.functions.invoke('sendMassEmail', {
+      subject: massEmail.subject,
+      body: `Hi [Name],\n\n${massEmail.body}\n\n— Milford Key Club`,
+      recipients: activeMembers.map(m => ({ email: m.email, name: m.name || '' })),
+    });
+    toast.success(`Sent to ${res.data.sent} member(s)!`);
     setMassEmail({ subject: '', body: '' });
     setSending(false);
   };
