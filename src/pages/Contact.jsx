@@ -7,6 +7,7 @@ import { Mail, MapPin } from 'lucide-react';
 import { toast } from "sonner";
 import SectionHeading from '../components/shared/SectionHeading';
 import { useSiteSettings } from '../hooks/useSiteSettings';
+import { base44 } from '@/api/base44Client';
 
 export default function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -16,7 +17,12 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSending(true);
-    await new Promise(r => setTimeout(r, 1000));
+    const to = settings.contact_email || 'milfordkeyclub@gmail.com';
+    await base44.integrations.Core.SendEmail({
+      to,
+      subject: `Contact Form: ${formData.name}`,
+      body: `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`,
+    });
     toast.success("Message sent! We'll get back to you soon.");
     setFormData({ name: '', email: '', message: '' });
     setSending(false);
