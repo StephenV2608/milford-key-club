@@ -36,7 +36,7 @@ export default function Header() {
   const visibleLinks = [...builtInVisible, ...customNav];
 
   return (
-    <header className="sticky top-0 z-50 bg-white/90 dark:bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-sm">
+    <header className="sticky top-0 z-50 bg-white/90 dark:bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-sm safe-top">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-18">
           {/* Logo */}

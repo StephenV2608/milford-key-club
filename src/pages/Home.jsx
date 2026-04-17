@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,8 @@ import { Trophy, Handshake, Calendar, Heart, ArrowRight, ChevronLeft, ChevronRig
 import SectionHeading from '../components/shared/SectionHeading';
 import LatestUpdates from '../components/home/LatestUpdates';
 import { base44 } from '@/api/base44Client';
+import usePullToRefresh from '../hooks/usePullToRefresh';
+import PullToRefreshIndicator from '../components/layout/PullToRefreshIndicator';
 
 const highlights = [
 { icon: Trophy, title: 'Awards & Recognition', desc: 'District and state-level honors for outstanding service' },
@@ -24,14 +26,18 @@ export default function Home() {
   const [slideIndex, setSlideIndex] = useState(0);
   const slideTimer = useRef(null);
 
-  useEffect(() => {
-    base44.entities.Project.list('order', 1).then((list) => {
-      if (list[0]) setFeaturedProject(list[0]);
-    });
-    base44.entities.GalleryImage.list('order').then((imgs) => {
-      if (imgs.length) setGalleryImages(imgs.map((i) => i.image_url));
-    });
+  const loadData = useCallback(async () => {
+    const [projects, imgs] = await Promise.all([
+      base44.entities.Project.list('order', 1),
+      base44.entities.GalleryImage.list('order'),
+    ]);
+    if (projects[0]) setFeaturedProject(projects[0]);
+    if (imgs.length) setGalleryImages(imgs.map((i) => i.image_url));
   }, []);
+
+  useEffect(() => { loadData(); }, [loadData]);
+
+  const { pulling, pullY, refreshing, ready } = usePullToRefresh(loadData);
 
   const heroImages = [
   ...(settings.hero_image_url ? [settings.hero_image_url] : []),
@@ -55,6 +61,7 @@ export default function Home() {
 
   return (
     <div>
+      <PullToRefreshIndicator pullY={pullY} refreshing={refreshing} ready={ready} />
       {/* Hero */}
       <section className="relative h-[70vh] min-h-[500px] max-h-[700px] flex items-center justify-center overflow-hidden">
         {slides.map((src, i) =>
@@ -87,10 +94,10 @@ export default function Home() {
         </div>
         {slides.length > 1 &&
         <>
-            <button onClick={() => goTo(slideIndex - 1)} className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center text-white transition-colors">
+            <button onClick={() => goTo(slideIndex - 1)} className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center text-white transition-colors select-none">
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <button onClick={() => goTo(slideIndex + 1)} className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center text-white transition-colors">
+            <button onClick={() => goTo(slideIndex + 1)} className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center text-white transition-colors select-none">
               <ChevronRight className="w-5 h-5" />
             </button>
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">

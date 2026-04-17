@@ -3,6 +3,7 @@ import PageHeader from '../components/shared/PageHeader';
 import ProjectCard from '../components/shared/ProjectCard';
 import { base44 } from '@/api/base44Client';
 import { useSiteSettings } from '../hooks/useSiteSettings';
+import MobileBackButton from '../components/layout/MobileBackButton';
 
 const FALLBACK_PROJECTS = [
   { id: 'f1', image_url: 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/966810261_generated_0f8cf771.png', title: 'Got Bags? Initiative', description: 'We collect plastic bags from the community and weave them into durable sleeping mats for those experiencing homelessness. It takes about 700 bags to make a single mat.' },
@@ -26,6 +27,7 @@ export default function Projects() {
 
   return (
     <div>
+      <MobileBackButton />
       <PageHeader
         eyebrow={settings.projects_eyebrow || 'Our Work'}
         title={settings.projects_heading || 'Service Projects'}

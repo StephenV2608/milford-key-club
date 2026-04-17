@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, MapPin, Clock, CheckCircle2, Users, QrCode, ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import PageHeader from '../components/shared/PageHeader';
@@ -7,6 +7,9 @@ import { useSiteSettings } from '../hooks/useSiteSettings';
 import { useMemberAuth } from '../hooks/useMemberAuth';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import usePullToRefresh from '../hooks/usePullToRefresh';
+import PullToRefreshIndicator from '../components/layout/PullToRefreshIndicator';
+import MobileBackButton from '../components/layout/MobileBackButton';
 
 const typeColors = {
   meeting:   { badge: 'bg-primary/10 text-primary border-primary/20', dot: 'bg-primary' },
@@ -31,12 +34,20 @@ export default function Events() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [rsvpLoading, setRsvpLoading] = useState(false);
 
-  useEffect(() => {
-    base44.entities.ClubEvent.list('date').then(list => { setEvents(list); setLoading(false); });
+  const loadEvents = useCallback(async () => {
+    setLoading(true);
+    const list = await base44.entities.ClubEvent.list('date');
+    setEvents(list);
+    setLoading(false);
     if (memberUser) {
-      base44.entities.EventRSVP.filter({ member_email: memberUser.email }).then(setRsvps);
+      const rsvpList = await base44.entities.EventRSVP.filter({ member_email: memberUser.email });
+      setRsvps(rsvpList);
     }
   }, [memberUser?.email]);
+
+  useEffect(() => { loadEvents(); }, [loadEvents]);
+
+  const { pullY, refreshing, ready } = usePullToRefresh(loadEvents);
 
   const loadRsvpCount = async (eventId) => {
     const list = await base44.entities.EventRSVP.filter({ event_id: eventId });
@@ -79,6 +90,8 @@ export default function Events() {
 
   return (
     <div>
+      <PullToRefreshIndicator pullY={pullY} refreshing={refreshing} ready={ready} />
+      <MobileBackButton />
       <PageHeader
         eyebrow={settings.events_eyebrow || "What's Happening"}
         title={settings.events_heading || 'Events Calendar'}
@@ -95,13 +108,13 @@ export default function Events() {
               {/* Month Nav */}
               <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-muted/30">
                 <button onClick={() => { const d = new Date(viewYear, viewMonth - 1); setViewMonth(d.getMonth()); setViewYear(d.getFullYear()); }}
-                  className="w-8 h-8 rounded-full hover:bg-muted flex items-center justify-center transition-colors">
-                  <ChevronLeft className="w-4 h-4" />
+                 className="w-8 h-8 rounded-full hover:bg-muted flex items-center justify-center transition-colors select-none">
+                 <ChevronLeft className="w-4 h-4" />
                 </button>
-                <h3 className="font-heading font-bold text-base">{MONTHS[viewMonth]} {viewYear}</h3>
+                <h3 className="font-heading font-bold text-base select-none">{MONTHS[viewMonth]} {viewYear}</h3>
                 <button onClick={() => { const d = new Date(viewYear, viewMonth + 1); setViewMonth(d.getMonth()); setViewYear(d.getFullYear()); }}
-                  className="w-8 h-8 rounded-full hover:bg-muted flex items-center justify-center transition-colors">
-                  <ChevronRight className="w-4 h-4" />
+                 className="w-8 h-8 rounded-full hover:bg-muted flex items-center justify-center transition-colors select-none">
+                 <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
 

@@ -5,6 +5,7 @@ import SectionHeading from '../components/shared/SectionHeading';
 import PageHeader from '../components/shared/PageHeader';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 import ReactMarkdown from 'react-markdown';
+import MobileBackButton from '../components/layout/MobileBackButton';
 
 const MEETING_IMG = 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/cd49e8311_generated_b0a84d9f.png';
 
@@ -20,6 +21,7 @@ export default function About() {
 
   return (
     <div>
+      <MobileBackButton />
       <PageHeader
         eyebrow={settings.about_eyebrow || 'About Us'}
         title={settings.about_heading || 'Who We Are'}
