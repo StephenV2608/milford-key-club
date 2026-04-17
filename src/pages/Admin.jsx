@@ -20,6 +20,7 @@ import AnalyticsTab from '../components/admin/AnalyticsTab';
 import GamificationTab from '../components/admin/GamificationTab';
 import EventsTab from '../components/admin/EventsTab';
 import ShowcaseTab from '../components/admin/ShowcaseTab';
+import ImageDownloadTab from '../components/admin/ImageDownloadTab';
 import AnnouncementsTab from '../components/admin/AnnouncementsTab';
 import OfficerMessagesTab from '../components/admin/OfficerMessagesTab';
 import AttendanceSheet from '../components/admin/AttendanceSheet';
@@ -30,7 +31,7 @@ import OfficerRolesTab from '../components/admin/OfficerRolesTab';
 import {
   Settings, Users, Image, Clock, Newspaper, FileText, BookOpen,
   Mail, HelpCircle, Link, FileStack, Sparkles, PowerOff, LogOut, Shield, UserCheck,
-  BarChart2, Trophy, CalendarDays, Star, Megaphone, MessageCircle, ClipboardList, QrCode, FileBarChart
+  BarChart2, Trophy, CalendarDays, Star, Megaphone, MessageCircle, ClipboardList, QrCode, FileBarChart, Download
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
@@ -60,6 +61,7 @@ const TAB_GROUPS = [
     label: 'Content',
     tabs: [
       { id: 'gallery',  label: 'Gallery',      icon: Image,     perm: 'gallery' },
+      { id: 'downloads', label: 'Downloads',   icon: Download,  perm: 'gallery' },
       { id: 'showcase', label: 'Showcase',     icon: Star,      perm: 'showcase' },
       { id: 'officers', label: 'Officers',     icon: UserCheck, perm: 'officers' },
       { id: 'officerRoles', label: 'Officer Roles', icon: Shield, perm: 'officers' },
@@ -112,6 +114,7 @@ export default function Admin() {
       case 'officers':   return <OfficersTab />;
       case 'officerRoles': return <OfficerRolesTab />;
       case 'gallery':    return <GalleryTab />;
+      case 'downloads':  return <ImageDownloadTab />;
       case 'attendance': return <AttendanceSheet />;
       case 'qr':         return <MeetingQRDisplay />;
       case 'hours':      return <HoursTab />;
