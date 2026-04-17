@@ -10,10 +10,10 @@ function parseDriveLink(url) {
   if (!url) return url;
   // Handle: https://drive.google.com/file/d/FILE_ID/view?...
   const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-  if (match) return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+  if (match) return `https://lh3.googleusercontent.com/d/${match[1]}`;
   // Handle: https://drive.google.com/open?id=FILE_ID
   const match2 = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-  if (match2) return `https://drive.google.com/uc?export=view&id=${match2[1]}`;
+  if (match2) return `https://lh3.googleusercontent.com/d/${match2[1]}`;
   return url;
 }
 
