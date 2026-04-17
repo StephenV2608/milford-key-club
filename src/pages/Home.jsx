@@ -22,27 +22,19 @@ const PROJECT_FALLBACK = 'https://media.base44.com/images/public/69c2a0f26438a6d
 export default function Home() {
   const { settings } = useSiteSettings();
   const [featuredProject, setFeaturedProject] = useState(null);
-  const [galleryImages, setGalleryImages] = useState([]);
   const [slideIndex, setSlideIndex] = useState(0);
   const slideTimer = useRef(null);
 
   const loadData = useCallback(async () => {
-    const [projects, imgs] = await Promise.all([
-      base44.entities.Project.list('order', 1),
-      base44.entities.GalleryImage.list('order'),
-    ]);
+    const projects = await base44.entities.Project.list('order', 1);
     if (projects[0]) setFeaturedProject(projects[0]);
-    if (imgs.length) setGalleryImages(imgs.map((i) => i.image_url));
   }, []);
 
   useEffect(() => { loadData(); }, [loadData]);
 
   const { pulling, pullY, refreshing, ready } = usePullToRefresh(loadData);
 
-  const heroImages = [
-  ...(settings.hero_image_url ? [settings.hero_image_url] : []),
-  ...galleryImages].
-  filter(Boolean);
+  const heroImages = (settings.hero_image_url ? [settings.hero_image_url] : []).filter(Boolean);
   const slides = heroImages.length ? heroImages : [HERO_FALLBACK];
 
   useEffect(() => {
