@@ -47,8 +47,7 @@ export default function Register() {
       grade: form.grade,
       class_year: form.class_year.trim(),
       password: form.password,
-      active: false, // pending approval
-      status: 'pending',
+      active: false, // will be auto-approved by automation
     });
 
     setDone(true);
@@ -62,9 +61,9 @@ export default function Register() {
           <div className="w-16 h-16 rounded-2xl bg-green-100 flex items-center justify-center mx-auto mb-4">
             <CheckCircle2 className="w-8 h-8 text-green-600" />
           </div>
-          <h1 className="font-heading font-bold text-2xl mb-2">Registration Submitted!</h1>
+          <h1 className="font-heading font-bold text-2xl mb-2">Welcome to Key Club!</h1>
           <p className="text-muted-foreground text-sm mb-6">
-            Your account request has been sent to an admin for approval. You'll be able to log in once you're approved.
+            Your account is ready. Check your email for a welcome message, then sign in to the portal.
           </p>
           <Link to="/portal">
             <Button variant="outline" className="rounded-full px-6">Go to Portal Login</Button>
