@@ -16,26 +16,33 @@ const highlights = [
 { icon: Heart, title: 'Community Impact', desc: 'Thousands of service hours logged by our dedicated members' }];
 
 
-const HERO_FALLBACK = 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/fed622b44_generated_8d496406.png';
-const PROJECT_FALLBACK = 'https://media.base44.com/images/public/69c2a0f26438a6d865c0f034/966810261_generated_0f8cf771.png';
+
 
 export default function Home() {
   const { settings } = useSiteSettings();
   const [featuredProject, setFeaturedProject] = useState(null);
+  const [galleryImages, setGalleryImages] = useState([]);
   const [slideIndex, setSlideIndex] = useState(0);
   const slideTimer = useRef(null);
 
   const loadData = useCallback(async () => {
-    const projects = await base44.entities.Project.list('order', 1);
+    const [projects, imgs] = await Promise.all([
+      base44.entities.Project.list('order', 1),
+      base44.entities.GalleryImage.list('order'),
+    ]);
     if (projects[0]) setFeaturedProject(projects[0]);
+    if (imgs.length) setGalleryImages(imgs.map((i) => i.image_url));
   }, []);
 
   useEffect(() => { loadData(); }, [loadData]);
 
   const { pulling, pullY, refreshing, ready } = usePullToRefresh(loadData);
 
-  const heroImages = (settings.hero_image_url ? [settings.hero_image_url] : []).filter(Boolean);
-  const slides = heroImages.length ? heroImages : [HERO_FALLBACK];
+  const heroImages = [
+    ...(settings.hero_image_url ? [settings.hero_image_url] : []),
+    ...galleryImages
+  ].filter(Boolean);
+  const slides = heroImages.filter(Boolean);
 
   useEffect(() => {
     if (slides.length <= 1) return;
@@ -154,7 +161,7 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div className="rounded-3xl overflow-hidden aspect-[3/2] shadow-2xl shadow-slate-200 ring-1 ring-border/40">
               <img
-                src={featuredProject?.image_url || PROJECT_FALLBACK}
+                src={featuredProject?.image_url}
                 alt={featuredProject?.title || 'Featured Project'}
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
               
