@@ -9,7 +9,7 @@ import { invalidateSettings } from '../../hooks/useSiteSettings';
 import SettingsSection from './SettingsSection';
 import {
   Globe, Image, Info, Briefcase, Calendar, Users, Camera, UserPlus,
-  Mail, Instagram, Twitter, Facebook, Navigation
+  Mail, Instagram, Twitter, Facebook, Navigation, Star
 } from 'lucide-react';
 import ImageInput from '../shared/ImageInput';
 
@@ -52,6 +52,7 @@ export default function SettingsTabContent() {
   const [form, setForm] = useState(null);
   const [settingsId, setSettingsId] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [projects, setProjects] = useState([]);
 
   useEffect(() => {
     base44.entities.SiteSettings.list().then(list => {
@@ -59,6 +60,7 @@ export default function SettingsTabContent() {
       if (s) { setForm(s); setSettingsId(s.id); }
       else setForm({});
     });
+    base44.entities.Project.list('order').then(setProjects);
   }, []);
 
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
@@ -134,6 +136,30 @@ export default function SettingsTabContent() {
           <Field label="Hero Title" value={form.hero_title} onChange={v => set('hero_title', v)} placeholder="Serve. Lead. Inspire." />
           <Field label="Hero Subtitle" value={form.hero_subtitle} onChange={v => set('hero_subtitle', v)} type="textarea" placeholder="Join us in making a difference..." />
           <ImageUploadField label="Hero Background Image" value={form.hero_image_url} onChange={v => set('hero_image_url', v)} />
+        </div>
+      </SettingsSection>
+
+      {/* Featured Project */}
+      <SettingsSection title="Featured Project" icon={Star}>
+        <div className="mt-2 space-y-2">
+          <p className="text-xs text-muted-foreground">Choose which project is highlighted on the home page.</p>
+          <select
+            className="w-full border border-input rounded-md h-9 px-3 text-sm bg-background"
+            value={form.featured_project_id || ''}
+            onChange={e => set('featured_project_id', e.target.value)}
+          >
+            <option value="">— First project (default) —</option>
+            {projects.map(p => (
+              <option key={p.id} value={p.id}>{p.title}</option>
+            ))}
+          </select>
+          {form.featured_project_id && projects.find(p => p.id === form.featured_project_id)?.image_url && (
+            <img
+              src={projects.find(p => p.id === form.featured_project_id).image_url}
+              alt="preview"
+              className="w-full h-32 object-cover rounded-lg border border-border mt-2"
+            />
+          )}
         </div>
       </SettingsSection>
 

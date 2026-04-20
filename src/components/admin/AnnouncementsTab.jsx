@@ -4,11 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus, Pencil, Trash2, Check, X, Megaphone, AlertTriangle, Info } from 'lucide-react';
+import { Plus, Pencil, Trash2, Check, X, Megaphone, AlertTriangle, Info, Pin, Send, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 
-const EMPTY = { title: '', content: '', priority: 'normal', published: true, posted_by: '', expires_at: '' };
+const EMPTY = { title: '', content: '', priority: 'normal', published: true, posted_by: '', expires_at: '', pinned: false };
 
 const priorityConfig = {
   normal:    { label: 'Normal',    color: 'bg-blue-100 text-blue-700',   icon: Info },
@@ -22,13 +22,15 @@ export default function AnnouncementsTab() {
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
+  const [sendingEmail, setSendingEmail] = useState(null);
 
   useEffect(() => { load(); }, []);
 
   const load = async () => {
     setLoading(true);
     const list = await base44.entities.Announcement.list('-created_date');
-    setItems(list);
+    // Pinned first
+    setItems([...list.filter(a => a.pinned), ...list.filter(a => !a.pinned)]);
     setLoading(false);
   };
 
@@ -57,6 +59,32 @@ export default function AnnouncementsTab() {
     await base44.entities.Announcement.delete(id);
     toast.success('Deleted.');
     load();
+  };
+
+  const togglePin = async (a) => {
+    await base44.entities.Announcement.update(a.id, { pinned: !a.pinned });
+    toast.success(a.pinned ? 'Unpinned.' : 'Pinned to top!');
+    load();
+  };
+
+  const togglePublished = async (a) => {
+    await base44.entities.Announcement.update(a.id, { published: !a.published });
+    toast.success(a.published ? 'Unpublished.' : 'Published!');
+    load();
+  };
+
+  const emailToMembers = async (a) => {
+    setSendingEmail(a.id);
+    const members = await base44.entities.Member.filter({});
+    const active = members.filter(m => m.active !== false && m.email);
+    if (!active.length) { toast.error('No active members with emails.'); setSendingEmail(null); return; }
+    const res = await base44.functions.invoke('sendMassEmail', {
+      subject: `📢 ${a.title}`,
+      body: a.content,
+      recipients: active.map(m => ({ email: m.email, name: m.name || '' })),
+    });
+    toast.success(`Sent to ${res.data.sent} member(s)!`);
+    setSendingEmail(null);
   };
 
   return (
@@ -98,7 +126,7 @@ export default function AnnouncementsTab() {
               <Label>Expires At (optional)</Label>
               <Input type="date" value={form.expires_at} onChange={e => set('expires_at', e.target.value)} />
             </div>
-            <div className="flex items-center gap-2 pt-4">
+            <div className="flex items-center gap-4 pt-4">
               <label className="flex items-center gap-2 cursor-pointer">
                 <div
                   className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${form.published ? 'bg-primary' : 'bg-muted'}`}
@@ -106,7 +134,16 @@ export default function AnnouncementsTab() {
                 >
                   <span className={`inline-block h-3.5 w-3.5 rounded-full bg-white shadow transition-transform ${form.published ? 'translate-x-5' : 'translate-x-0.5'}`} />
                 </div>
-                <span className="text-sm">Published (visible to members)</span>
+                <span className="text-sm">Published</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <div
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${form.pinned ? 'bg-amber-500' : 'bg-muted'}`}
+                  onClick={() => set('pinned', !form.pinned)}
+                >
+                  <span className={`inline-block h-3.5 w-3.5 rounded-full bg-white shadow transition-transform ${form.pinned ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                </div>
+                <span className="text-sm">Pin to top</span>
               </label>
             </div>
           </div>
@@ -131,12 +168,13 @@ export default function AnnouncementsTab() {
             const cfg = priorityConfig[a.priority] || priorityConfig.normal;
             const Icon = cfg.icon;
             return (
-              <div key={a.id} className={`bg-card rounded-xl border p-4 flex gap-4 items-start ${!a.published ? 'opacity-60' : ''}`}>
+              <div key={a.id} className={`bg-card rounded-xl border p-4 flex gap-4 items-start transition-opacity ${!a.published ? 'opacity-60' : ''} ${a.pinned ? 'border-amber-300 bg-amber-50/40' : ''}`}>
                 <div className={`shrink-0 w-9 h-9 rounded-xl flex items-center justify-center ${cfg.color}`}>
                   <Icon className="w-4 h-4" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2 mb-1">
+                    {a.pinned && <Pin className="w-3.5 h-3.5 text-amber-500 shrink-0" />}
                     <p className="font-semibold text-sm">{a.title}</p>
                     <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${cfg.color}`}>{cfg.label}</span>
                     {!a.published && <span className="text-[10px] bg-muted text-muted-foreground font-bold px-2 py-0.5 rounded-full">Draft</span>}
@@ -145,9 +183,31 @@ export default function AnnouncementsTab() {
                   <p className="text-[10px] text-muted-foreground mt-1">
                     {a.posted_by && `By ${a.posted_by} · `}
                     {a.created_date && format(new Date(a.created_date), 'MMM d, yyyy')}
+                    {a.expires_at && ` · Expires ${format(new Date(a.expires_at), 'MMM d')}`}
                   </p>
                 </div>
-                <div className="flex items-center gap-1.5 shrink-0">
+                <div className="flex items-center gap-1 shrink-0 flex-wrap justify-end">
+                  <Button
+                    size="sm" variant="outline" className={`h-8 gap-1 text-xs ${a.pinned ? 'text-amber-600 border-amber-300' : ''}`}
+                    onClick={() => togglePin(a)} title={a.pinned ? 'Unpin' : 'Pin to top'}
+                  >
+                    <Pin className="w-3.5 h-3.5" />
+                  </Button>
+                  <Button
+                    size="sm" variant="outline" className="h-8 gap-1 text-xs"
+                    onClick={() => togglePublished(a)} title={a.published ? 'Unpublish' : 'Publish'}
+                  >
+                    {a.published ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                  </Button>
+                  <Button
+                    size="sm" variant="outline" className="h-8 gap-1 text-xs text-primary"
+                    onClick={() => emailToMembers(a)}
+                    disabled={sendingEmail === a.id}
+                    title="Email to all members"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                    {sendingEmail === a.id ? 'Sending…' : 'Email'}
+                  </Button>
                   <Button size="icon" variant="outline" className="w-8 h-8" onClick={() => startEdit(a)}><Pencil className="w-3.5 h-3.5" /></Button>
                   <Button size="icon" variant="outline" className="w-8 h-8 text-destructive hover:bg-destructive/10" onClick={() => del(a.id)}><Trash2 className="w-3.5 h-3.5" /></Button>
                 </div>

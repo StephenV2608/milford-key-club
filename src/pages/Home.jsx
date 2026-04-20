@@ -26,11 +26,16 @@ export default function Home() {
   const slideTimer = useRef(null);
 
   const loadData = useCallback(async () => {
-    const [projects, imgs] = await Promise.all([
-      base44.entities.Project.list('order', 1),
+    const [projects, imgs, settingsList] = await Promise.all([
+      base44.entities.Project.list('order'),
       base44.entities.GalleryImage.list('order'),
+      base44.entities.SiteSettings.list(),
     ]);
-    if (projects[0]) setFeaturedProject(projects[0]);
+    const featuredId = settingsList[0]?.featured_project_id;
+    const featured = featuredId
+      ? projects.find(p => p.id === featuredId) || projects[0]
+      : projects[0];
+    if (featured) setFeaturedProject(featured);
     if (imgs.length) setGalleryImages(imgs.map((i) => i.image_url));
   }, []);
 

@@ -21,7 +21,7 @@ import GamificationTab from '../components/admin/GamificationTab';
 import EventsTab from '../components/admin/EventsTab';
 import ShowcaseTab from '../components/admin/ShowcaseTab';
 import ImageDownloadTab from '../components/admin/ImageDownloadTab';
-import AnnouncementsTab from '../components/admin/AnnouncementsTab';
+import AnnouncementsTab from '../components/admin/AnnouncementsTab.jsx';
 import OfficerMessagesTab from '../components/admin/OfficerMessagesTab';
 import AttendanceSheet from '../components/admin/AttendanceSheet';
 import MeetingQRDisplay from '../components/admin/MeetingQRDisplay';

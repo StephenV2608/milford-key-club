@@ -26,6 +26,10 @@
       "type": "string",
       "title": "Hero Image URL"
     },
+    "featured_project_id": {
+      "type": "string",
+      "title": "Featured Project ID"
+    },
     "about_image_url": {
       "type": "string",
       "title": "About Page Image URL"

@@ -26,6 +26,11 @@
       "title": "Published",
       "default": true
     },
+    "pinned": {
+      "type": "boolean",
+      "title": "Pinned to Top",
+      "default": false
+    },
     "posted_by": {
       "type": "string",
       "title": "Posted By"
