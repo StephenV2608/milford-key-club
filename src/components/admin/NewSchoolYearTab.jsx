@@ -8,8 +8,9 @@ export default function NewSchoolYearTab() {
   const [officers, setOfficers] = useState([]);
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [step, setStep] = useState('intro'); // intro | review | confirm | done
+  const [step, setStep] = useState('intro'); // intro | review | promote | confirm | done
   const [membersToArchive, setMembersToArchive] = useState(new Set());
+  const [promoteGrades, setPromoteGrades] = useState(true);
   const [running, setRunning] = useState(false);
 
   useEffect(() => { loadData(); }, []);
@@ -61,10 +62,21 @@ export default function NewSchoolYearTab() {
     });
   };
 
+  // Members eligible for grade bump: active, not being archived, grade 9/10/11
+  const membersToPromote = activeMembers.filter(m =>
+    !membersToArchive.has(m.id) && ['9', '10', '11'].includes(m.grade)
+  );
+  const promoteCountByGrade = {
+    '9': membersToPromote.filter(m => m.grade === '9').length,
+    '10': membersToPromote.filter(m => m.grade === '10').length,
+    '11': membersToPromote.filter(m => m.grade === '11').length,
+  };
+
   const runNewYear = async () => {
     setRunning(true);
     let officerCount = 0;
     let memberCount = 0;
+    let promotedCount = 0;
 
     // Archive officers (except advisors)
     for (const o of officersToArchive) {
@@ -81,7 +93,19 @@ export default function NewSchoolYearTab() {
       memberCount++;
     }
 
-    toast.success(`New school year started! Archived ${officerCount} officer(s) and ${memberCount} member(s).`);
+    // Bump grades for remaining members
+    if (promoteGrades) {
+      for (const m of membersToPromote) {
+        const newGrade = String(Number(m.grade) + 1);
+        await base44.entities.Member.update(m.id, { grade: newGrade });
+        promotedCount++;
+      }
+    }
+
+    toast.success(
+      `New school year started! Archived ${officerCount} officer(s), ${memberCount} member(s)` +
+      (promotedCount ? `, promoted ${promotedCount} member(s) up a grade.` : '.')
+    );
     setRunning(false);
     setStep('done');
     loadData();
@@ -210,6 +234,63 @@ export default function NewSchoolYearTab() {
             <Button variant="outline" onClick={() => setStep('intro')} className="rounded-full gap-1.5">
               <X className="w-4 h-4" /> Back
             </Button>
+            <Button onClick={() => setStep('promote')} className="gap-2 rounded-full px-8">
+              Next: Grade Bump <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {step === 'promote' && (
+        <div className="space-y-4">
+          <div className="bg-card rounded-xl border border-border p-5">
+            <h3 className="font-heading font-semibold text-sm mb-1 flex items-center gap-2">
+              <GraduationCap className="w-4 h-4 text-primary" /> Bump everyone up a grade?
+            </h3>
+            <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+              Remaining active members (not being archived) will move up one grade: 9→10, 10→11, 11→12.
+              Seniors (Grade 12) are not changed — archive them above if they're graduating.
+              "Class of…" stays the same.
+            </p>
+
+            <label className={`flex items-start gap-3 rounded-lg px-3 py-3 cursor-pointer border transition-colors ${promoteGrades ? 'bg-primary/5 border-primary/30' : 'bg-muted/40 border-border'}`}>
+              <input type="checkbox" checked={promoteGrades} onChange={e => setPromoteGrades(e.target.checked)} className="rounded shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm font-medium">Yes, bump grades up by one</p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Affects {membersToPromote.length} member{membersToPromote.length !== 1 ? 's' : ''}
+                </p>
+              </div>
+            </label>
+
+            {promoteGrades && membersToPromote.length > 0 && (
+              <div className="mt-4 space-y-1.5">
+                {promoteCountByGrade['9'] > 0 && (
+                  <div className="flex items-center gap-2 text-xs bg-muted/40 rounded-lg px-3 py-2">
+                    <span className="font-semibold">Grade 9 → 10</span>
+                    <span className="text-muted-foreground ml-auto">{promoteCountByGrade['9']} member{promoteCountByGrade['9'] !== 1 ? 's' : ''}</span>
+                  </div>
+                )}
+                {promoteCountByGrade['10'] > 0 && (
+                  <div className="flex items-center gap-2 text-xs bg-muted/40 rounded-lg px-3 py-2">
+                    <span className="font-semibold">Grade 10 → 11</span>
+                    <span className="text-muted-foreground ml-auto">{promoteCountByGrade['10']} member{promoteCountByGrade['10'] !== 1 ? 's' : ''}</span>
+                  </div>
+                )}
+                {promoteCountByGrade['11'] > 0 && (
+                  <div className="flex items-center gap-2 text-xs bg-muted/40 rounded-lg px-3 py-2">
+                    <span className="font-semibold">Grade 11 → 12</span>
+                    <span className="text-muted-foreground ml-auto">{promoteCountByGrade['11']} member{promoteCountByGrade['11'] !== 1 ? 's' : ''}</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="flex gap-3">
+            <Button variant="outline" onClick={() => setStep('review')} className="rounded-full gap-1.5">
+              <X className="w-4 h-4" /> Back
+            </Button>
             <Button onClick={() => setStep('confirm')} className="gap-2 rounded-full px-8">
               Review & Confirm <ChevronRight className="w-4 h-4" />
             </Button>
@@ -228,6 +309,9 @@ export default function NewSchoolYearTab() {
               <li className="flex items-center gap-2"><Archive className="w-3.5 h-3.5 text-muted-foreground" /> Deactivate <strong>{membersToArchive.size}</strong> member(s)</li>
               <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-green-600" /> Keep <strong>{advisors.length}</strong> advisor(s) active</li>
               <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-green-600" /> Keep <strong>{activeMembers.length - membersToArchive.size}</strong> member(s) active</li>
+              {promoteGrades && membersToPromote.length > 0 && (
+                <li className="flex items-center gap-2"><GraduationCap className="w-3.5 h-3.5 text-primary" /> Promote <strong>{membersToPromote.length}</strong> member(s) up a grade</li>
+              )}
             </ul>
           </div>
           <div className="flex gap-3">
@@ -249,7 +333,7 @@ export default function NewSchoolYearTab() {
           </div>
           <p className="font-heading font-bold text-lg">New school year started!</p>
           <p className="text-sm text-muted-foreground">Officers have been moved to Past Officers and selected members are now inactive. You can now add new officers and welcome new members.</p>
-          <Button variant="outline" onClick={() => { setStep('intro'); setMembersToArchive(new Set()); }} className="gap-1.5 mt-2 rounded-full">
+          <Button variant="outline" onClick={() => { setStep('intro'); setMembersToArchive(new Set()); setPromoteGrades(true); }} className="gap-1.5 mt-2 rounded-full">
             <RefreshCw className="w-4 h-4" /> Reset
           </Button>
         </div>
