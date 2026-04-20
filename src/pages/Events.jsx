@@ -38,13 +38,26 @@ export default function Events() {
   const loadEvents = useCallback(async () => {
     setLoading(true);
     const list = await base44.entities.ClubEvent.list('date');
-    setEvents(list);
+
+    // Optionally merge in events from a public Google Calendar iCal URL
+    let combined = list;
+    if (settings?.events_ical_url) {
+      try {
+        const { data } = await base44.functions.invoke('fetchGoogleCalendar', { url: settings.events_ical_url });
+        if (data?.events?.length) {
+          combined = [...list, ...data.events].sort((a, b) => new Date(a.date) - new Date(b.date));
+        }
+      } catch (err) {
+        console.error('Failed to load Google Calendar events:', err);
+      }
+    }
+    setEvents(combined);
     setLoading(false);
     if (memberUser) {
       const rsvpList = await base44.entities.EventRSVP.filter({ member_email: memberUser.email });
       setRsvps(rsvpList);
     }
-  }, [memberUser?.email]);
+  }, [memberUser?.email, settings?.events_ical_url]);
 
   useEffect(() => { loadEvents(); }, [loadEvents]);
 

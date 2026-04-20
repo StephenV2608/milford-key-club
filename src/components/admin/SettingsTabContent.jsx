@@ -193,6 +193,19 @@ export default function SettingsTabContent() {
           <Field label="Heading" value={form.events_heading} onChange={v => set('events_heading', v)} placeholder="Upcoming Events" />
           <Field label="Description" value={form.events_description} onChange={v => set('events_description', v)} type="textarea" />
           <ImageUploadField label="Header Image" value={form.events_header_image_url} onChange={v => set('events_header_image_url', v)} />
+          <div className="space-y-1.5 pt-2 border-t border-border">
+            <Field
+              label="Google Calendar iCal URL"
+              value={form.events_ical_url}
+              onChange={v => set('events_ical_url', v)}
+              placeholder="https://calendar.google.com/calendar/ical/.../basic.ics"
+            />
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Events from this Google Calendar will appear on the Events page alongside manually-added events.
+              In Google Calendar → Settings → select your calendar → "Integrate calendar" → copy the <b>Public address in iCal format</b>.
+              The calendar must be set to public.
+            </p>
+          </div>
         </div>
       </SettingsSection>
 

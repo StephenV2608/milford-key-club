@@ -93,6 +93,10 @@
       "type": "string",
       "title": "Events Page - Header Image"
     },
+    "events_ical_url": {
+      "type": "string",
+      "title": "Google Calendar iCal URL"
+    },
     "officers_eyebrow": {
       "type": "string",
       "title": "Officers Page - Eyebrow"
