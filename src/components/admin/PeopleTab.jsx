@@ -391,6 +391,28 @@ function AdminsSection() {
                 </select>
               </div>
             </div>
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-3">
+              <Crown className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+              <label className="flex-1 cursor-pointer">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={form.role === 'super_admin'}
+                    onChange={e => {
+                      const isSuper = e.target.checked;
+                      setForm(p => ({
+                        ...p,
+                        role: isSuper ? 'super_admin' : 'admin',
+                        permissions: isSuper ? ALL_PERMISSIONS.map(x => x.key) : p.permissions,
+                      }));
+                    }}
+                    className="rounded"
+                  />
+                  <span className="font-semibold text-sm text-amber-900">Grant Super Admin</span>
+                </div>
+                <p className="text-xs text-amber-800 mt-1">Full access including managing other admins, assigning officer roles, and resetting member passwords.</p>
+              </label>
+            </div>
             <div>
               <div className="flex items-center justify-between mb-2">
                 <Label className="text-xs uppercase tracking-wide text-muted-foreground">Permissions (auto-set by position)</Label>
