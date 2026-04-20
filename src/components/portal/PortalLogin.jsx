@@ -65,13 +65,13 @@ export default function PortalLogin({ adminAuth, memberAuth }) {
             />
           </div>
           <div className="space-y-1.5">
-            <Label>{mode === 'admin' ? 'ID Code or Password' : 'Password'}</Label>
+            <Label>{mode === 'admin' ? 'Password' : 'Password'}</Label>
             <div className="relative">
               <Input
                 type={showPw ? 'text' : 'password'}
                 value={form.password}
                 onChange={e => set('password', e.target.value)}
-                placeholder={mode === 'admin' ? 'MKC-XXXX-XXXX' : '••••••••'}
+                placeholder={mode === 'admin' ? 'Password' : '••••••••'}
                 required
                 className="pr-10"
               />
