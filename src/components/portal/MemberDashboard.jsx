@@ -32,8 +32,13 @@ export default function MemberDashboard({ memberAuth }) {
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({ date: '', start_time: '', end_time: '', organization: '', description: '' });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [projectOptions, setProjectOptions] = useState([]);
 
-  useEffect(() => { loadHours(); }, []);
+  useEffect(() => {
+    loadHours();
+    base44.entities.ServiceProject.filter({ active: true }, 'name')
+      .then(list => setProjectOptions(list.map(p => p.name)));
+  }, []);
   const loadHours = () => {
     base44.entities.ServiceHour.filter({ member_email: memberUser.email })
       .then(list => setMyHours(list.sort((a, b) => new Date(b.date) - new Date(a.date))));
@@ -140,7 +145,7 @@ export default function MemberDashboard({ memberAuth }) {
           <AnnouncementsBoard />
         )}
         {tab === 'hours' && (
-          <LogHoursTab form={form} setF={setF} computedHours={computedHours} submitting={submitting} handleSubmit={handleSubmit} />
+          <LogHoursTab form={form} setF={setF} computedHours={computedHours} submitting={submitting} handleSubmit={handleSubmit} projectOptions={projectOptions} />
         )}
         {tab === 'history' && (
           <HistoryTab myHours={myHours} />
@@ -184,7 +189,19 @@ export default function MemberDashboard({ memberAuth }) {
   );
 }
 
-function LogHoursTab({ form, setF, computedHours, submitting, handleSubmit }) {
+function LogHoursTab({ form, setF, computedHours, submitting, handleSubmit, projectOptions }) {
+  // "__other__" sentinel → show free-text input
+  const isOther = form.organization === '__other__' || (form.organization && !projectOptions.includes(form.organization) && form.organization !== '');
+  const selectValue = !form.organization ? '' : (projectOptions.includes(form.organization) ? form.organization : '__other__');
+
+  const handleSelect = (value) => {
+    if (value === '__other__') {
+      setF('organization', '__other__');
+    } else {
+      setF('organization', value);
+    }
+  };
+
   return (
     <div className="bg-card rounded-xl border border-border p-5">
       <h3 className="font-heading font-semibold text-base mb-4 flex items-center gap-2">
@@ -215,13 +232,32 @@ function LogHoursTab({ form, setF, computedHours, submitting, handleSubmit }) {
         )}
         <div className="space-y-1.5">
           <Label>Organization / Event *</Label>
-          <Input placeholder="e.g. Milford Food Bank" value={form.organization} onChange={e => setF('organization', e.target.value)} required />
+          <select
+            className="w-full border border-input rounded-md h-9 px-3 text-sm bg-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            value={selectValue}
+            onChange={e => handleSelect(e.target.value)}
+            required={!isOther}
+          >
+            <option value="">— Select a project —</option>
+            {projectOptions.map(name => <option key={name} value={name}>{name}</option>)}
+            <option value="__other__">Other (type in name)</option>
+          </select>
+          {isOther && (
+            <Input
+              autoFocus
+              placeholder="Enter project or organization name"
+              value={form.organization === '__other__' ? '' : form.organization}
+              onChange={e => setF('organization', e.target.value)}
+              required
+              className="mt-2"
+            />
+          )}
         </div>
         <div className="space-y-1.5">
           <Label>Description</Label>
           <Textarea placeholder="Briefly describe what you did..." rows={2} value={form.description} onChange={e => setF('description', e.target.value)} />
         </div>
-        <Button type="submit" className="rounded-full px-8 select-none" disabled={submitting || !computedHours || computedHours <= 0}>
+        <Button type="submit" className="rounded-full px-8 select-none" disabled={submitting || !computedHours || computedHours <= 0 || !form.organization || form.organization === '__other__'}>
           {submitting ? 'Submitting...' : 'Submit Hours'}
         </Button>
       </form>
