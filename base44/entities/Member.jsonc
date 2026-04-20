@@ -1,0 +1,59 @@
+{
+  "name": "Member",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Full Name"
+    },
+    "email": {
+      "type": "string",
+      "title": "Email"
+    },
+    "grade": {
+      "type": "string",
+      "title": "Grade",
+      "enum": [
+        "9",
+        "10",
+        "11",
+        "12"
+      ]
+    },
+    "class_year": {
+      "type": "string",
+      "title": "Graduation Year (e.g. 2027)"
+    },
+    "password": {
+      "type": "string",
+      "title": "Member Password"
+    },
+    "active": {
+      "type": "boolean",
+      "title": "Active Member",
+      "default": true
+    },
+    "photo_url": {
+      "type": "string",
+      "title": "Profile Photo URL"
+    },
+    "interests": {
+      "type": "string",
+      "title": "Interests",
+      "format": "textarea"
+    },
+    "skills": {
+      "type": "string",
+      "title": "Skills"
+    },
+    "past_roles": {
+      "type": "string",
+      "title": "Past Roles in Club",
+      "format": "textarea"
+    }
+  },
+  "required": [
+    "name",
+    "email"
+  ]
+}

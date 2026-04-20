@@ -456,22 +456,43 @@ function ContactOfficersForm({ memberUser }) {
 
 function ProfileTab({ memberUser, memberAuth, onDeleteRequest }) {
   const [editing, setEditing] = useState(false);
-  const [form, setForm] = useState({ name: memberUser.name, email: memberUser.email, grade: memberUser.grade || '', class_year: memberUser.class_year || '' });
+  const [form, setForm] = useState({
+    name: memberUser.name,
+    email: memberUser.email,
+    grade: memberUser.grade || '',
+    class_year: memberUser.class_year || '',
+    photo_url: memberUser.photo_url || '',
+    interests: memberUser.interests || '',
+    skills: memberUser.skills || '',
+    past_roles: memberUser.past_roles || '',
+  });
   const [saving, setSaving] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [changingPw, setChangingPw] = useState(false);
   const [pwForm, setPwForm] = useState({ current: '', next: '', confirm: '' });
+
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingPhoto(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    setForm(p => ({ ...p, photo_url: file_url }));
+    setUploadingPhoto(false);
+  };
 
   const save = async () => {
     if (!form.name || !form.email) { toast.error('Name and email required'); return; }
     setSaving(true);
     const members = await base44.entities.Member.filter({ email: memberUser.email });
     if (members.length) {
-      await base44.entities.Member.update(members[0].id, { name: form.name, email: form.email, grade: form.grade, class_year: form.class_year });
+      await base44.entities.Member.update(members[0].id, {
+        name: form.name, email: form.email, grade: form.grade, class_year: form.class_year,
+        photo_url: form.photo_url, interests: form.interests, skills: form.skills, past_roles: form.past_roles,
+      });
     }
     toast.success('Profile updated!');
     setSaving(false);
     setEditing(false);
-    // Update session
     sessionStorage.setItem('memberUser', JSON.stringify({ ...memberUser, ...form }));
   };
 
@@ -496,7 +517,23 @@ function ProfileTab({ memberUser, memberAuth, onDeleteRequest }) {
         </div>
 
         {editing ? (
-          <div className="space-y-3">
+          <div className="space-y-4">
+            {/* Photo upload */}
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-full bg-muted border border-border overflow-hidden shrink-0 flex items-center justify-center">
+                {form.photo_url
+                  ? <img src={form.photo_url} alt="Profile" className="w-full h-full object-cover" />
+                  : <User className="w-7 h-7 text-muted-foreground" />}
+              </div>
+              <div>
+                <label className="cursor-pointer inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline">
+                  {uploadingPhoto ? 'Uploading…' : 'Upload Photo'}
+                  <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} disabled={uploadingPhoto} />
+                </label>
+                <p className="text-xs text-muted-foreground mt-0.5">JPG, PNG, or GIF</p>
+              </div>
+            </div>
+
             <div className="grid sm:grid-cols-2 gap-3">
               <div className="space-y-1.5"><Label>Full Name</Label><Input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} /></div>
               <div className="space-y-1.5"><Label>Email</Label><Input type="email" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} /></div>
@@ -509,24 +546,51 @@ function ProfileTab({ memberUser, memberAuth, onDeleteRequest }) {
               </div>
               <div className="space-y-1.5"><Label>Graduation Year</Label><Input placeholder="2027" value={form.class_year} onChange={e => setForm(p => ({ ...p, class_year: e.target.value }))} /></div>
             </div>
+
+            <div className="space-y-1.5">
+              <Label>Skills <span className="text-muted-foreground font-normal text-xs">(comma-separated)</span></Label>
+              <Input placeholder="e.g. Graphic Design, Public Speaking, Photography" value={form.skills} onChange={e => setForm(p => ({ ...p, skills: e.target.value }))} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Interests</Label>
+              <Textarea rows={2} placeholder="What are you passionate about?" value={form.interests} onChange={e => setForm(p => ({ ...p, interests: e.target.value }))} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Past Roles in Club</Label>
+              <Textarea rows={2} placeholder="e.g. Committee Lead 2024, Volunteering Chair 2025" value={form.past_roles} onChange={e => setForm(p => ({ ...p, past_roles: e.target.value }))} />
+            </div>
+
             <div className="flex gap-2">
               <Button size="sm" onClick={save} disabled={saving} className="gap-1.5 select-none"><Check className="w-3.5 h-3.5" />{saving ? 'Saving...' : 'Save'}</Button>
               <Button size="sm" variant="ghost" onClick={() => setEditing(false)} className="gap-1.5 select-none"><X className="w-3.5 h-3.5" />Cancel</Button>
             </div>
           </div>
         ) : (
-          <div className="space-y-3">
-            {[
-              { label: 'Name', value: memberUser.name },
-              { label: 'Email', value: memberUser.email },
-              { label: 'Grade', value: memberUser.grade ? `Grade ${memberUser.grade}` : '—' },
-              { label: 'Graduation Year', value: memberUser.class_year || '—' },
-            ].map(({ label, value }) => (
-              <div key={label} className="flex items-center gap-3 py-2 border-b border-border last:border-0">
-                <span className="text-xs text-muted-foreground w-28 shrink-0 uppercase tracking-wide font-medium">{label}</span>
-                <span className="text-sm font-medium">{value}</span>
+          <div className="space-y-4">
+            {/* Photo + basic info */}
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-full bg-muted border border-border overflow-hidden shrink-0 flex items-center justify-center">
+                {memberUser.photo_url
+                  ? <img src={memberUser.photo_url} alt="Profile" className="w-full h-full object-cover" />
+                  : <User className="w-7 h-7 text-muted-foreground" />}
               </div>
-            ))}
+              <div>
+                <p className="font-semibold">{memberUser.name}</p>
+                <p className="text-sm text-muted-foreground">{memberUser.email}</p>
+                {memberUser.grade && <p className="text-xs text-muted-foreground">Grade {memberUser.grade}{memberUser.class_year ? ` · Class of ${memberUser.class_year}` : ''}</p>}
+              </div>
+            </div>
+
+            {[
+              { label: 'Skills', value: memberUser.skills },
+              { label: 'Interests', value: memberUser.interests },
+              { label: 'Past Roles', value: memberUser.past_roles },
+            ].map(({ label, value }) => value ? (
+              <div key={label} className="py-2 border-t border-border">
+                <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">{label}</p>
+                <p className="text-sm">{value}</p>
+              </div>
+            ) : null)}
           </div>
         )}
       </div>
