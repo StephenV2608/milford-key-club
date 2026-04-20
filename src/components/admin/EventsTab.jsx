@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus, Pencil, Trash2, QrCode, X, Check, Users } from 'lucide-react';
+import { Plus, Pencil, Trash2, QrCode, X, Check, Users, ChevronDown, ChevronUp } from 'lucide-react';
 import { toast } from 'sonner';
 
 const EMPTY = { title: '', date: '', time: '', location: '', description: '', type: 'meeting', max_rsvps: 0, hours_credit: 1, qr_enabled: false };
@@ -23,6 +23,9 @@ export default function EventsTab() {
   const [saving, setSaving] = useState(false);
   const [qrEventId, setQrEventId] = useState(null);
   const [rsvpCounts, setRsvpCounts] = useState({});
+  const [rsvpListEventId, setRsvpListEventId] = useState(null);
+  const [rsvpList, setRsvpList] = useState([]);
+  const [rsvpListLoading, setRsvpListLoading] = useState(false);
 
   useEffect(() => { load(); }, []);
 
@@ -69,6 +72,15 @@ export default function EventsTab() {
   };
 
   const qrUrl = qrEventId ? `${window.location.origin}/attend?event=${qrEventId}` : '';
+
+  const showRsvpList = async (eventId) => {
+    if (rsvpListEventId === eventId) { setRsvpListEventId(null); return; }
+    setRsvpListEventId(eventId);
+    setRsvpListLoading(true);
+    const list = await base44.entities.EventRSVP.filter({ event_id: eventId });
+    setRsvpList(list);
+    setRsvpListLoading(false);
+  };
 
   return (
     <div className="space-y-6">
@@ -164,35 +176,63 @@ export default function EventsTab() {
           {events.map(e => {
             const d = new Date(e.date);
             return (
-              <div key={e.id} className="bg-card rounded-xl border border-border p-4 flex items-center gap-4">
-                <div className="shrink-0 w-12 h-12 rounded-xl bg-primary flex flex-col items-center justify-center text-primary-foreground">
-                  <span className="text-[9px] font-bold uppercase">{isNaN(d) ? '' : d.toLocaleDateString('en-US',{month:'short'})}</span>
-                  <span className="text-base font-black leading-none">{isNaN(d) ? '?' : d.getDate()}</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex flex-wrap items-center gap-2 mb-0.5">
-                    <p className="font-semibold text-sm truncate">{e.title}</p>
-                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${typeColors[e.type] || 'bg-muted text-muted-foreground'}`}>{e.type}</span>
-                    {e.qr_enabled && <span className="text-[10px] font-bold bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full flex items-center gap-1"><QrCode className="w-2.5 h-2.5" />QR</span>}
+              <div key={e.id} className="bg-card rounded-xl border border-border overflow-hidden">
+                <div className="p-4 flex items-center gap-4">
+                  <div className="shrink-0 w-12 h-12 rounded-xl bg-primary flex flex-col items-center justify-center text-primary-foreground">
+                    <span className="text-[9px] font-bold uppercase">{isNaN(d) ? '' : d.toLocaleDateString('en-US',{month:'short'})}</span>
+                    <span className="text-base font-black leading-none">{isNaN(d) ? '?' : d.getDate()}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground">{e.time}{e.location ? ` · ${e.location}` : ''}</p>
-                  {rsvpCounts[e.id] !== undefined && (
-                    <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5"><Users className="w-3 h-3" />{rsvpCounts[e.id]} RSVPs</p>
-                  )}
-                </div>
-                <div className="flex items-center gap-1.5 shrink-0">
-                  {e.qr_enabled && (
-                    <Button size="icon" variant="outline" className="w-8 h-8" onClick={() => setQrEventId(e.id)} title="Show QR code">
-                      <QrCode className="w-3.5 h-3.5" />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-0.5">
+                      <p className="font-semibold text-sm truncate">{e.title}</p>
+                      <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${typeColors[e.type] || 'bg-muted text-muted-foreground'}`}>{e.type}</span>
+                      {e.qr_enabled && <span className="text-[10px] font-bold bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full flex items-center gap-1"><QrCode className="w-2.5 h-2.5" />QR</span>}
+                    </div>
+                    <p className="text-xs text-muted-foreground">{e.time}{e.location ? ` · ${e.location}` : ''}</p>
+                    {rsvpCounts[e.id] !== undefined && (
+                      <button className="text-xs text-primary flex items-center gap-1 mt-0.5 hover:underline" onClick={() => showRsvpList(e.id)}>
+                        <Users className="w-3 h-3" />{rsvpCounts[e.id]} signed up
+                        {rsvpListEventId === e.id ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                      </button>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {e.qr_enabled && (
+                      <Button size="icon" variant="outline" className="w-8 h-8" onClick={() => setQrEventId(e.id)} title="Show QR code">
+                        <QrCode className="w-3.5 h-3.5" />
+                      </Button>
+                    )}
+                    <Button size="icon" variant="outline" className="w-8 h-8" onClick={() => startEdit(e)}>
+                      <Pencil className="w-3.5 h-3.5" />
                     </Button>
-                  )}
-                  <Button size="icon" variant="outline" className="w-8 h-8" onClick={() => startEdit(e)}>
-                    <Pencil className="w-3.5 h-3.5" />
-                  </Button>
-                  <Button size="icon" variant="outline" className="w-8 h-8 text-destructive hover:bg-destructive/10" onClick={() => deleteEvent(e.id)}>
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </Button>
+                    <Button size="icon" variant="outline" className="w-8 h-8 text-destructive hover:bg-destructive/10" onClick={() => deleteEvent(e.id)}>
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
                 </div>
+                {/* RSVP List Panel */}
+                {rsvpListEventId === e.id && (
+                  <div className="border-t border-border bg-muted/30 px-4 py-3">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">Registered Members</p>
+                    {rsvpListLoading ? (
+                      <div className="text-xs text-muted-foreground">Loading...</div>
+                    ) : rsvpList.length === 0 ? (
+                      <div className="text-xs text-muted-foreground">No sign-ups yet.</div>
+                    ) : (
+                      <div className="grid sm:grid-cols-2 gap-1.5">
+                        {rsvpList.map((r, i) => (
+                          <div key={r.id} className="flex items-center gap-2 bg-card rounded-lg px-3 py-1.5 border border-border">
+                            <span className="text-xs text-muted-foreground shrink-0">{i + 1}.</span>
+                            <div className="min-w-0">
+                              <p className="text-xs font-medium truncate">{r.member_name || '—'}</p>
+                              <p className="text-[10px] text-muted-foreground truncate">{r.member_email}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             );
           })}
