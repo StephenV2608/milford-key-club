@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Plus, Pencil, Trash2, QrCode, X, Check, Users, ChevronDown, ChevronUp } from 'lucide-react';
 import { toast } from 'sonner';
+import EventsCsvImport from './EventsCsvImport';
 
 const EMPTY = { title: '', date: '', time: '', location: '', description: '', type: 'meeting', max_rsvps: 0, hours_credit: 1, qr_enabled: false };
 
@@ -89,6 +90,9 @@ export default function EventsTab() {
           <Plus className="w-4 h-4" /> New Event
         </Button>
       </div>
+
+      {/* CSV Import */}
+      {!editing && <EventsCsvImport onImported={load} />}
 
       {/* Form */}
       {editing && (
