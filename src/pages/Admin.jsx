@@ -27,11 +27,12 @@ import AttendanceSheet from '../components/admin/AttendanceSheet';
 import MeetingQRDisplay from '../components/admin/MeetingQRDisplay';
 import HoursReportTab from '../components/admin/HoursReportTab';
 import OfficerRolesTab from '../components/admin/OfficerRolesTab';
+import NewSchoolYearTab from '../components/admin/NewSchoolYearTab.jsx';
 
 import {
   Settings, Users, Image, Clock, Newspaper, FileText, BookOpen,
   Mail, FileStack, Sparkles, PowerOff, LogOut, Shield, UserCheck,
-  BarChart2, CalendarDays, Star, Megaphone, MessageCircle, ClipboardList, QrCode, FileBarChart
+  BarChart2, CalendarDays, Star, Megaphone, MessageCircle, ClipboardList, QrCode, FileBarChart, GraduationCap
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
@@ -73,7 +74,8 @@ const TAB_GROUPS = [
       { id: 'pages',     label: 'Pages',        icon: FileStack, perm: 'pages' },
       { id: 'analytics', label: 'Analytics',    icon: BarChart2, perm: null },
       { id: 'ai',        label: 'AI Content',   icon: Sparkles,  perm: null },
-      { id: 'shutdown',  label: 'Shutdown',     icon: PowerOff,  perm: null, superOnly: true },
+      { id: 'shutdown',  label: 'Shutdown',     icon: PowerOff,       perm: null, superOnly: true },
+      { id: 'newyear',   label: 'New School Year', icon: GraduationCap, perm: null, superOnly: true },
     ],
   },
 ];
@@ -129,6 +131,7 @@ export default function Admin() {
       case 'gamify':     return <GamificationTab />;
       case 'ai':         return <AIContentTab />;
       case 'shutdown':   return <SiteShutdownTab />;
+      case 'newyear':    return <NewSchoolYearTab />;
       default:           return null;
     }
   };
