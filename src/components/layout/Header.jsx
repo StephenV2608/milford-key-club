@@ -1,28 +1,37 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { Menu, X, ShieldCheck } from 'lucide-react';
+import { Menu, X, ShieldCheck, ChevronDown } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { useSiteSettings } from '../../hooks/useSiteSettings';
 
-const BUILT_IN_NAV = [
+// Primary nav: always visible on desktop
+const PRIMARY_NAV = [
   { label: 'Home', path: '/' },
   { label: 'About', path: '/about' },
   { label: 'Projects', path: '/projects' },
   { label: 'Events', path: '/events' },
+  { label: 'Impact', path: '/impact' },
+  { label: 'Contact', path: '/contact' },
+];
+
+// Secondary nav: grouped under "More" dropdown on desktop
+const MORE_NAV = [
   { label: 'Officers', path: '/officers' },
   { label: 'Gallery', path: '/gallery' },
-  { label: 'Log Hours', path: '/hours' },
-  { label: 'Contact', path: '/contact' },
-  { label: 'Resources', path: '/resources' },
   { label: 'Showcase', path: '/showcase' },
-  { label: 'Impact', path: '/impact' },
   { label: 'Partners', path: '/partners' },
+  { label: 'Resources', path: '/resources' },
+  { label: 'Log Hours', path: '/hours' },
   { label: 'Request Help', path: '/request-help' },
 ];
 
+const BUILT_IN_NAV = [...PRIMARY_NAV, ...MORE_NAV];
+
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const moreRef = useRef(null);
   const location = useLocation();
   const { settings } = useSiteSettings();
 
@@ -31,12 +40,27 @@ export default function Header() {
     base44.entities.CustomPage.filter({ show_in_nav: true }, 'order').then(setCustomPages);
   }, []);
 
+  // Close "More" dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (moreRef.current && !moreRef.current.contains(e.target)) setMoreOpen(false);
+    };
+    if (moreOpen) document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [moreOpen]);
+
+  // Close "More" dropdown on route change
+  useEffect(() => { setMoreOpen(false); }, [location.pathname]);
+
   const siteName = settings.site_name || 'Milford Key Club';
   const tagline = settings.tagline || 'Service · Leadership · Caring';
   const hiddenPaths = (settings.hidden_nav_items || '').split(',').map(s => s.trim()).filter(Boolean);
-  const builtInVisible = BUILT_IN_NAV.filter(l => !hiddenPaths.includes(l.path));
+  const primaryVisible = PRIMARY_NAV.filter(l => !hiddenPaths.includes(l.path));
+  const moreVisible = MORE_NAV.filter(l => !hiddenPaths.includes(l.path));
   const customNav = customPages.map(p => ({ label: p.title, path: `/pages/${p.slug}` }));
-  const visibleLinks = [...builtInVisible, ...customNav];
+  // Mobile shows everything in one list
+  const allVisibleLinks = [...primaryVisible, ...moreVisible, ...customNav];
+  const moreIsActive = moreVisible.some(l => l.path === location.pathname);
 
   return (
     <header className="sticky top-0 z-50 bg-white/90 dark:bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-sm safe-top">
@@ -59,7 +83,7 @@ export default function Header() {
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-0.5">
-            {visibleLinks.map((link) => (
+            {primaryVisible.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
@@ -72,6 +96,38 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
+
+            {(moreVisible.length > 0 || customNav.length > 0) && (
+              <div className="relative" ref={moreRef}>
+                <button
+                  onClick={() => setMoreOpen(v => !v)}
+                  className={`flex items-center gap-1 px-3.5 py-2 text-sm font-medium rounded-lg transition-all ${
+                    moreIsActive || moreOpen
+                      ? 'text-primary bg-primary/10 font-semibold'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                  }`}
+                >
+                  More <ChevronDown className={`w-3.5 h-3.5 transition-transform ${moreOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {moreOpen && (
+                  <div className="absolute right-0 top-full mt-1.5 w-56 bg-white dark:bg-background border border-border rounded-xl shadow-xl py-1.5 z-50">
+                    {[...moreVisible, ...customNav].map((link) => (
+                      <Link
+                        key={link.path}
+                        to={link.path}
+                        className={`block px-3.5 py-2 mx-1 text-sm font-medium rounded-lg transition-colors ${
+                          location.pathname === link.path
+                            ? 'text-primary bg-primary/10 font-semibold'
+                            : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                        }`}
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </nav>
 
           {/* Portal + Mobile Toggle */}
@@ -90,7 +146,7 @@ export default function Header() {
       {mobileOpen && (
         <div className="lg:hidden border-t border-border/50 bg-white/95 backdrop-blur-xl">
           <nav className="max-w-7xl mx-auto px-4 py-3 flex flex-col gap-1">
-            {visibleLinks.map((link) => (
+            {allVisibleLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
