@@ -138,6 +138,13 @@ export default function Register() {
           <Button type="submit" disabled={loading} className="w-full rounded-full">
             {loading ? 'Submitting...' : 'Submit Registration'}
           </Button>
+
+          <div className="bg-muted/50 border border-border rounded-lg p-3 text-xs text-muted-foreground leading-relaxed">
+            <p className="font-semibold text-foreground mb-1">Privacy Notice</p>
+            <p>
+              By registering, you agree to share your name, email, grade, and graduation year with the Milford Key Club for membership and service hour tracking purposes only. Your info is visible to club officers and advisors and is never sold or shared outside the club. You may request account deletion at any time from your portal.
+            </p>
+          </div>
         </form>
 
         <p className="text-center text-xs text-muted-foreground mt-4">

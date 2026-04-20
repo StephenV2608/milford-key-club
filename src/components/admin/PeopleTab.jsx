@@ -351,7 +351,7 @@ function AdminsSection() {
         <Crown className="w-5 h-5 text-primary shrink-0 mt-0.5" />
         <div>
           <p className="font-semibold text-sm">Built-in Super Admin</p>
-          <p className="text-xs text-muted-foreground mt-0.5">Username: <code className="bg-muted px-1 rounded">SuperAdmin</code> · Code: <code className="bg-muted px-1 rounded">MKC-SUPER-2026</code></p>
+          <p className="text-xs text-muted-foreground mt-0.5">Username: <code className="bg-muted px-1 rounded">SuperAdmin</code> · Code: <code className="bg-muted px-1 rounded">MKC-K7XQ-9PVR-4MBN</code></p>
         </div>
       </div>
 

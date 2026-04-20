@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 // Super admin seed — always has full access
 const SUPER_ADMIN_SEED = {
   username: 'SuperAdmin',
-  id_code: 'MKC-SUPER-2026',
+  id_code: 'MKC-K7XQ-9PVR-4MBN',
   role: 'super_admin',
 };
 
