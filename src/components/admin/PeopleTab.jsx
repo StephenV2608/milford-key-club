@@ -264,24 +264,22 @@ function MemberForm({ form, set, onSave, onCancel, isSuperAdmin }) {
           </select>
         </div>
         <div><Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Graduation Year</Label><Input className="mt-1" value={form.class_year || ''} onChange={e => set('class_year', e.target.value)} placeholder="2027" /></div>
-        {isSuperAdmin && (
-          <div>
-            <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Password</Label>
-            <div className="flex gap-1 mt-1">
-              <Input type={pwVisible ? 'text' : 'password'} value={form.password || ''} onChange={e => set('password', e.target.value)} placeholder="Member password" />
-              <Button type="button" size="icon" variant="ghost" className="h-9 w-9 shrink-0" onClick={() => setPwVisible(v => !v)}>
-                {pwVisible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </Button>
-            </div>
+        <div>
+          <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Password</Label>
+          <div className="flex gap-1 mt-1">
+            <Input type={pwVisible ? 'text' : 'password'} value={form.password || ''} onChange={e => set('password', e.target.value)} placeholder="Member password" />
+            <Button type="button" size="icon" variant="ghost" className="h-9 w-9 shrink-0" onClick={() => setPwVisible(v => !v)}>
+              {pwVisible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </Button>
           </div>
-        )}
+        </div>
         <div className="flex items-center gap-2 pt-5">
           <input type="checkbox" id="active-chk" checked={form.active !== false} onChange={e => set('active', e.target.checked)} />
           <label htmlFor="active-chk" className="text-sm cursor-pointer">Active Member</label>
         </div>
       </div>
 
-      {isSuperAdmin && (
+      {(
         <div className="border-t border-primary/20 pt-3 space-y-3">
           <div>
             <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground flex items-center gap-1.5">
