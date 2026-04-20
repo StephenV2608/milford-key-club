@@ -334,7 +334,7 @@ function AdminsSection() {
                   onChange={e => {
                     const r = e.target.value;
                     set('officer_role', r);
-                    if (r && OFFICER_ROLE_PRESETS[r]) setForm(p => ({ ...p, officer_role: r, permissions: OFFICER_ROLE_PRESETS[r], role: r === 'Webmaster' ? 'super_admin' : 'admin' }));
+                    if (r && OFFICER_ROLE_PRESETS[r]) setForm(p => ({ ...p, officer_role: r, permissions: OFFICER_ROLE_PRESETS[r], role: 'admin' }));
                     else set('officer_role', r);
                   }}
                   className="mt-1 w-full border border-input rounded-md h-9 px-3 text-sm bg-background"
