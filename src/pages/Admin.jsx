@@ -29,11 +29,14 @@ import HoursReportTab from '../components/admin/HoursReportTab';
 import OfficerRolesTab from '../components/admin/OfficerRolesTab';
 import NewSchoolYearTab from '../components/admin/NewSchoolYearTab.jsx';
 import ServiceProjectsTab from '../components/admin/ServiceProjectsTab.jsx';
+import CommunityRequestsTab from '../components/admin/CommunityRequestsTab.jsx';
+import PartnersTab from '../components/admin/PartnersTab.jsx';
 
 import {
   Settings, Users, Image, Clock, Newspaper, FileText, BookOpen,
   Mail, FileStack, Sparkles, PowerOff, LogOut, Shield, UserCheck,
-  BarChart2, CalendarDays, Star, Megaphone, MessageCircle, ClipboardList, QrCode, FileBarChart, GraduationCap, Briefcase
+  BarChart2, CalendarDays, Star, Megaphone, MessageCircle, ClipboardList, QrCode, FileBarChart, GraduationCap, Briefcase,
+  HandHeart, Handshake
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
@@ -67,6 +70,13 @@ const TAB_GROUPS = [
       { id: 'officers',     label: 'Officers',      icon: UserCheck, perm: 'officers' },
       { id: 'forms',        label: 'Documents',     icon: FileText,  perm: 'forms' },
       { id: 'resources',    label: 'Resources',     icon: BookOpen,  perm: 'resources' },
+    ],
+  },
+  {
+    label: 'Community',
+    tabs: [
+      { id: 'requests', label: 'Help Requests', icon: HandHeart, perm: 'messages' },
+      { id: 'partners', label: 'Partners',      icon: Handshake, perm: 'pages' },
     ],
   },
   {
@@ -119,6 +129,8 @@ export default function Admin() {
       case 'hours':      return <HoursTab />;
       case 'hoursreport': return <HoursReportTab />;
       case 'serviceprojects': return <ServiceProjectsTab />;
+      case 'requests':   return <CommunityRequestsTab />;
+      case 'partners':   return <PartnersTab />;
       case 'news':       return <NewsTab />;
       case 'forms':      return <FormsTab />;
       case 'resources':  return <ResourcesTab />;

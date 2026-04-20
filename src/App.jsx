@@ -24,6 +24,9 @@ import Portal from './pages/Portal';
 import Register from './pages/Register';
 import Showcase from './pages/Showcase';
 import AttendanceScan from './pages/AttendanceScan';
+import RequestHelp from './pages/RequestHelp';
+import Impact from './pages/Impact';
+import Partners from './pages/Partners';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -67,6 +70,9 @@ const AuthenticatedApp = () => {
         <Route path="/resources" element={<Resources />} />
         <Route path="/portal" element={<Portal />} />
         <Route path="/showcase" element={<Showcase />} />
+        <Route path="/request-help" element={<RequestHelp />} />
+        <Route path="/impact" element={<Impact />} />
+        <Route path="/partners" element={<Partners />} />
       </Route>
       <Route path="/attend" element={<AttendanceScan />} />
       <Route path="/register" element={<Register />} />

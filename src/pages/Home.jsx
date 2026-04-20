@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 import { Button } from "@/components/ui/button";
-import { Trophy, Handshake, Calendar, Heart, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Trophy, Handshake, Calendar, Heart, ArrowRight, ChevronLeft, ChevronRight, HandHeart, TrendingUp } from 'lucide-react';
 import SectionHeading from '../components/shared/SectionHeading';
 import LatestUpdates from '../components/home/LatestUpdates';
 import { base44 } from '@/api/base44Client';
@@ -187,6 +187,45 @@ export default function Home() {
                 </Link>
               </Button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Community Section */}
+      <section className="py-16 md:py-20 bg-gradient-to-br from-rose-50/60 via-background to-blue-50/40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-rose-600 bg-rose-100 border border-rose-200 px-3 py-1 rounded-full mb-4">
+              For Our Community
+            </span>
+            <h2 className="font-heading font-black text-3xl md:text-4xl mb-3 tracking-tight">Serving Milford, Together</h2>
+            <p className="text-muted-foreground leading-relaxed">Key Club isn't just for students — it's a resource for the whole community. See our impact, meet our partners, or request help for your cause.</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-5">
+            <Link to="/impact" className="group bg-card rounded-2xl border border-border p-6 hover:border-primary/40 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+              <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <TrendingUp className="w-5 h-5" />
+              </div>
+              <h3 className="font-heading font-bold text-lg mb-1.5">Our Impact</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-3">Hours served, lives touched — see the numbers behind our service.</p>
+              <span className="text-sm text-primary font-semibold inline-flex items-center gap-1 group-hover:gap-2 transition-all">View Stats <ArrowRight className="w-3.5 h-3.5" /></span>
+            </Link>
+            <Link to="/request-help" className="group bg-card rounded-2xl border border-border p-6 hover:border-primary/40 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+              <div className="w-11 h-11 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <HandHeart className="w-5 h-5" />
+              </div>
+              <h3 className="font-heading font-bold text-lg mb-1.5">Request Our Help</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-3">Need volunteers for your nonprofit, event, or cause? Let us know.</p>
+              <span className="text-sm text-primary font-semibold inline-flex items-center gap-1 group-hover:gap-2 transition-all">Submit Request <ArrowRight className="w-3.5 h-3.5" /></span>
+            </Link>
+            <Link to="/partners" className="group bg-card rounded-2xl border border-border p-6 hover:border-primary/40 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+              <div className="w-11 h-11 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Handshake className="w-5 h-5" />
+              </div>
+              <h3 className="font-heading font-bold text-lg mb-1.5">Our Partners</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-3">Meet the organizations and businesses that make our work possible.</p>
+              <span className="text-sm text-primary font-semibold inline-flex items-center gap-1 group-hover:gap-2 transition-all">See Partners <ArrowRight className="w-3.5 h-3.5" /></span>
+            </Link>
           </div>
         </div>
       </section>

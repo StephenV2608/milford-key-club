@@ -16,6 +16,9 @@ const BUILT_IN_NAV = [
   { label: 'Contact', path: '/contact' },
   { label: 'Resources', path: '/resources' },
   { label: 'Showcase', path: '/showcase' },
+  { label: 'Impact', path: '/impact' },
+  { label: 'Partners', path: '/partners' },
+  { label: 'Request Help', path: '/request-help' },
 ];
 
 export default function Header() {

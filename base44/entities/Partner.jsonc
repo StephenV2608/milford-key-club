@@ -1,0 +1,52 @@
+{
+  "name": "Partner",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Partner / Organization Name"
+    },
+    "description": {
+      "type": "string",
+      "title": "Short Description",
+      "format": "textarea"
+    },
+    "logo_url": {
+      "type": "string",
+      "title": "Logo / Image URL"
+    },
+    "website_url": {
+      "type": "string",
+      "title": "Website URL"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "enum": [
+        "Nonprofit",
+        "School",
+        "Business",
+        "Kiwanis",
+        "Community Group",
+        "Other"
+      ]
+    },
+    "featured": {
+      "type": "boolean",
+      "title": "Featured Partner",
+      "default": false
+    },
+    "order": {
+      "type": "number",
+      "title": "Display Order"
+    },
+    "active": {
+      "type": "boolean",
+      "title": "Active / Visible",
+      "default": true
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

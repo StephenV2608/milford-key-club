@@ -1,0 +1,75 @@
+{
+  "name": "HelpRequestSubmission",
+  "type": "object",
+  "properties": {
+    "requester_name": {
+      "type": "string",
+      "title": "Your Name"
+    },
+    "organization": {
+      "type": "string",
+      "title": "Organization / Group (optional)"
+    },
+    "email": {
+      "type": "string",
+      "title": "Email"
+    },
+    "phone": {
+      "type": "string",
+      "title": "Phone (optional)"
+    },
+    "category": {
+      "type": "string",
+      "title": "Type of Help",
+      "enum": [
+        "Yard Work / Chores",
+        "Event Volunteers",
+        "Tutoring / Mentoring",
+        "Donation Drive",
+        "Cleanup / Beautification",
+        "Senior Assistance",
+        "Other"
+      ]
+    },
+    "date_needed": {
+      "type": "string",
+      "title": "Date Needed"
+    },
+    "volunteers_needed": {
+      "type": "number",
+      "title": "# Volunteers Needed"
+    },
+    "description": {
+      "type": "string",
+      "title": "Describe What You Need",
+      "format": "textarea"
+    },
+    "location": {
+      "type": "string",
+      "title": "Location / Address"
+    },
+    "status": {
+      "type": "string",
+      "title": "Status",
+      "enum": [
+        "new",
+        "reviewing",
+        "accepted",
+        "completed",
+        "declined"
+      ],
+      "default": "new"
+    },
+    "admin_notes": {
+      "type": "string",
+      "title": "Admin Notes",
+      "format": "textarea"
+    }
+  },
+  "required": [
+    "requester_name",
+    "email",
+    "category",
+    "description"
+  ]
+}
