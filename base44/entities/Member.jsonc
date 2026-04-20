@@ -50,6 +50,41 @@
       "type": "string",
       "title": "Past Roles in Club",
       "format": "textarea"
+    },
+    "officer_role": {
+      "type": "string",
+      "title": "Officer Role (grants admin access)",
+      "enum": [
+        "",
+        "President",
+        "Vice President",
+        "Secretary",
+        "Treasurer",
+        "Editor",
+        "Webmaster"
+      ]
+    },
+    "admin_permissions": {
+      "type": "array",
+      "title": "Admin Permissions",
+      "items": {
+        "type": "string",
+        "enum": [
+          "announcements",
+          "messages",
+          "events",
+          "people",
+          "hours",
+          "forms",
+          "resources",
+          "news",
+          "gallery",
+          "showcase",
+          "officers",
+          "pages",
+          "settings"
+        ]
+      }
     }
   },
   "required": [

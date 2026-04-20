@@ -180,6 +180,7 @@ function MembersSection({ isSuperAdmin }) {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-medium text-sm">{m.name}</span>
+                      {m.officer_role && <span className="text-[10px] bg-amber-100 text-amber-700 font-bold px-2 py-0.5 rounded-full flex items-center gap-1"><Crown className="w-2.5 h-2.5" />{m.officer_role}</span>}
                       {m.grade && <span className="text-[10px] bg-primary/10 text-primary font-bold px-2 py-0.5 rounded-full">Grade {m.grade}</span>}
                       {m.active === false && <span className="text-[10px] bg-destructive/10 text-destructive font-bold px-2 py-0.5 rounded-full">Inactive</span>}
                     </div>
@@ -239,6 +240,18 @@ function MembersSection({ isSuperAdmin }) {
 
 function MemberForm({ form, set, onSave, onCancel, isSuperAdmin }) {
   const [pwVisible, setPwVisible] = useState(false);
+  const officerRole = form.officer_role || '';
+  const perms = form.admin_permissions || [];
+  const togglePerm = (key) => {
+    const next = perms.includes(key) ? perms.filter(x => x !== key) : [...perms, key];
+    set('admin_permissions', next);
+  };
+  const applyPreset = (role) => {
+    set('officer_role', role);
+    if (role && OFFICER_ROLE_PRESETS[role]) set('admin_permissions', OFFICER_ROLE_PRESETS[role]);
+    if (!role) set('admin_permissions', []);
+  };
+
   return (
     <div className="bg-accent/30 rounded-xl border border-primary/20 p-4 space-y-3 mb-3">
       <div className="grid sm:grid-cols-2 gap-3">
@@ -267,6 +280,40 @@ function MemberForm({ form, set, onSave, onCancel, isSuperAdmin }) {
           <label htmlFor="active-chk" className="text-sm cursor-pointer">Active Member</label>
         </div>
       </div>
+
+      {isSuperAdmin && (
+        <div className="border-t border-primary/20 pt-3 space-y-3">
+          <div>
+            <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground flex items-center gap-1.5">
+              <Crown className="w-3 h-3" /> Officer Role (grants admin access using email + password)
+            </Label>
+            <select
+              className="mt-1 w-full border border-input rounded-md h-9 px-3 text-sm bg-background"
+              value={officerRole}
+              onChange={e => applyPreset(e.target.value)}
+            >
+              <option value="">— None (Regular Member) —</option>
+              {OFFICER_ROLES.map(r => <option key={r} value={r}>{r}</option>)}
+            </select>
+          </div>
+          {officerRole && (
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Admin Permissions</Label>
+                <button type="button" onClick={() => set('admin_permissions', [])} className="text-xs text-muted-foreground hover:underline">Clear</button>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {ALL_PERMISSIONS.map(({ key, label }) => (
+                  <label key={key} className="flex items-center gap-2 cursor-pointer text-xs">
+                    <input type="checkbox" checked={perms.includes(key)} onChange={() => togglePerm(key)} className="rounded" />{label}
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="flex gap-2">
         <Button size="sm" onClick={onSave} className="gap-1.5"><Check className="w-3.5 h-3.5" />Save</Button>
         <Button size="sm" variant="ghost" onClick={onCancel} className="gap-1.5"><X className="w-3.5 h-3.5" />Cancel</Button>

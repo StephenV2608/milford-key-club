@@ -56,16 +56,16 @@ export default function PortalLogin({ adminAuth, memberAuth }) {
         {/* Form */}
         <form onSubmit={handleSubmit} className="bg-card rounded-2xl border border-border p-6 space-y-4 shadow-sm">
           <div className="space-y-1.5">
-            <Label>{mode === 'admin' ? 'Username' : 'Email Address'}</Label>
+            <Label>{mode === 'admin' ? 'Username or Email' : 'Email Address'}</Label>
             <Input
               value={form.identifier}
               onChange={e => set('identifier', e.target.value)}
-              placeholder={mode === 'admin' ? 'SuperAdmin' : 'you@school.edu'}
+              placeholder={mode === 'admin' ? 'SuperAdmin or ava@school.edu' : 'you@school.edu'}
               required
             />
           </div>
           <div className="space-y-1.5">
-            <Label>{mode === 'admin' ? 'ID Code' : 'Password'}</Label>
+            <Label>{mode === 'admin' ? 'ID Code or Password' : 'Password'}</Label>
             <div className="relative">
               <Input
                 type={showPw ? 'text' : 'password'}
