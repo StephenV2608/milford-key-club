@@ -70,7 +70,12 @@ export default function Projects() {
       const newR = await base44.entities.EventRSVP.create({ event_id: event.id, member_email: memberUser.email, member_name: memberUser.name });
       setRsvps(p => [...p, newR]);
       setRsvpCounts(p => ({ ...p, [event.id]: (p[event.id] || 0) + 1 }));
-      toast.success('Signed up!');
+      toast.success('Signed up! Check your email for confirmation.');
+      base44.functions.invoke('sendRsvpConfirmation', {
+        to: memberUser.email,
+        name: memberUser.name,
+        event: { title: event.title, date: event.date, time: event.time, location: event.location, description: event.description },
+      });
     }
     setRsvpLoading(null);
   };
