@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAdminAuth } from '../hooks/useAdminAuth';
 import AdminLogin from '../components/admin/AdminLogin';
+import AdminHome from '../components/admin/AdminHome';
 import PeopleTab from '../components/admin/PeopleTab';
 import AIContentTab from '../components/admin/AIContentTab';
 import SiteShutdownTab from '../components/admin/SiteShutdownTab';
@@ -36,40 +37,49 @@ import {
   Settings, Users, Image, Clock, Newspaper, FileText, BookOpen,
   Mail, FileStack, Sparkles, PowerOff, LogOut, Shield, UserCheck,
   BarChart2, CalendarDays, Star, Megaphone, MessageCircle, ClipboardList, QrCode, FileBarChart, GraduationCap, Briefcase,
-  HandHeart, Handshake
+  HandHeart, Handshake, Home, ArrowLeft, MoreHorizontal
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
-const TAB_GROUPS = [
+// Primary cards — shown on the home dashboard (the 80/20 most-used)
+const HOME_CARDS = [
+  { id: 'announcements', label: 'Announcements', description: 'Post news to members', icon: Megaphone, section: 'Everyday', perm: 'announcements' },
+  { id: 'events',        label: 'Events',        description: 'Meetings & projects',  icon: CalendarDays,  section: 'Everyday', perm: 'events' },
+  { id: 'hours',         label: 'Service Hours', description: 'Approve submissions',  icon: Clock,         section: 'Everyday', perm: 'hours' },
+  { id: 'messages',      label: 'Messages',      description: 'Member inbox',         icon: MessageCircle, section: 'Everyday', perm: 'messages' },
+
+  { id: 'people',        label: 'Members',       description: 'Roster & admins',      icon: Users,         section: 'Members',  perm: 'people' },
+  { id: 'attendance',    label: 'Attendance',    description: 'Meeting check-ins',    icon: ClipboardList, section: 'Members',  perm: 'hours' },
+  { id: 'hoursreport',   label: 'Hours Report',  description: 'Totals & exports',     icon: FileBarChart,  section: 'Members',  perm: 'hours' },
+  { id: 'qr',            label: 'Meeting QR',    description: 'Display check-in code',icon: QrCode,        section: 'Members',  perm: 'hours' },
+
+  { id: 'gallery',       label: 'Gallery',       description: 'Photos & albums',      icon: Image,         section: 'Content',  perm: 'gallery' },
+  { id: 'officers',      label: 'Officers',      description: 'Leadership team',      icon: UserCheck,     section: 'Content',  perm: 'officers' },
+  { id: 'settings',      label: 'Site Settings', description: 'Branding & pages',     icon: Settings,      section: 'Site',     perm: 'settings' },
+  { id: 'more',          label: 'More…',         description: 'All other tools',      icon: MoreHorizontal,section: 'Site',     perm: null },
+];
+
+// Secondary tabs — accessible from the "More" view
+const MORE_GROUPS = [
   {
     label: 'Communicate',
     tabs: [
-      { id: 'announcements', label: 'Announcements', icon: Megaphone,     perm: 'announcements' },
-      { id: 'messages',      label: 'Messages',      icon: MessageCircle, perm: 'messages' },
-      { id: 'newsletter',    label: 'Newsletter',    icon: Mail,          perm: 'news' },
-      { id: 'news',          label: 'News Posts',    icon: Newspaper,     perm: 'news' },
+      { id: 'news',       label: 'News Posts',    icon: Newspaper, perm: 'news' },
+      { id: 'newsletter', label: 'Newsletter',    icon: Mail,      perm: 'news' },
     ],
   },
   {
-    label: 'Members',
+    label: 'Members & Service',
     tabs: [
-      { id: 'people',      label: 'Members',       icon: Users,         perm: 'people' },
-      { id: 'hours',       label: 'Service Hours', icon: Clock,         perm: 'hours' },
-      { id: 'hoursreport', label: 'Hours Report',  icon: FileBarChart,  perm: 'hours' },
       { id: 'serviceprojects', label: 'Projects List', icon: Briefcase, perm: 'hours' },
-      { id: 'events',      label: 'Events',        icon: CalendarDays,  perm: 'events' },
-      { id: 'attendance',  label: 'Attendance',    icon: ClipboardList, perm: 'hours' },
-      { id: 'qr',          label: 'Meeting QR',    icon: QrCode,        perm: 'hours' },
     ],
   },
   {
     label: 'Content',
     tabs: [
-      { id: 'gallery',      label: 'Gallery',       icon: Image,     perm: 'gallery' },
-      { id: 'showcase',     label: 'Showcase',      icon: Star,      perm: 'showcase' },
-      { id: 'officers',     label: 'Officers',      icon: UserCheck, perm: 'officers' },
-      { id: 'forms',        label: 'Documents',     icon: FileText,  perm: 'forms' },
-      { id: 'resources',    label: 'Resources',     icon: BookOpen,  perm: 'resources' },
+      { id: 'showcase',  label: 'Showcase',  icon: Star,     perm: 'showcase' },
+      { id: 'forms',     label: 'Documents', icon: FileText, perm: 'forms' },
+      { id: 'resources', label: 'Resources', icon: BookOpen, perm: 'resources' },
     ],
   },
   {
@@ -80,23 +90,25 @@ const TAB_GROUPS = [
     ],
   },
   {
-    label: 'Site',
+    label: 'Site Tools',
     tabs: [
-      { id: 'settings',  label: 'Settings',     icon: Settings,  perm: 'settings' },
-      { id: 'pages',     label: 'Pages',        icon: FileStack, perm: 'pages' },
+      { id: 'pages',     label: 'Custom Pages', icon: FileStack, perm: 'pages' },
       { id: 'analytics', label: 'Analytics',    icon: BarChart2, perm: null },
       { id: 'ai',        label: 'AI Content',   icon: Sparkles,  perm: null },
-      { id: 'shutdown',  label: 'Shutdown',     icon: PowerOff,       perm: null, superOnly: true },
-      { id: 'newyear',   label: 'New School Year', icon: GraduationCap, perm: null, superOnly: true },
+    ],
+  },
+  {
+    label: 'Advanced',
+    tabs: [
+      { id: 'shutdown', label: 'Site Shutdown',    icon: PowerOff,      perm: null, superOnly: true },
+      { id: 'newyear',  label: 'New School Year',  icon: GraduationCap, perm: null, superOnly: true },
     ],
   },
 ];
 
-const ALL_TABS = TAB_GROUPS.flatMap(g => g.tabs);
-
 export default function Admin() {
   const { adminUser, checking, login, logout, isSuperAdmin, hasPermission } = useAdminAuth();
-  const [activeTab, setActiveTab] = useState('announcements');
+  const [activeTab, setActiveTab] = useState('home');
 
   if (checking) {
     return (
@@ -110,14 +122,18 @@ export default function Admin() {
     return <AdminLogin onLogin={login} />;
   }
 
-  const visibleTabs = ALL_TABS.filter(t => {
-    if (t.superOnly && !isSuperAdmin) return false;
-    if (t.perm && !isSuperAdmin && !hasPermission(t.perm)) return false;
+  const canSee = (item) => {
+    if (item.superOnly && !isSuperAdmin) return false;
+    if (item.perm && !isSuperAdmin && !hasPermission(item.perm)) return false;
     return true;
-  });
+  };
+
+  const visibleHomeCards = HOME_CARDS.filter(canSee);
 
   const renderContent = () => {
     switch (activeTab) {
+      case 'home':       return <AdminHome cards={visibleHomeCards} onNavigate={setActiveTab} />;
+      case 'more':       return <MoreMenu groups={MORE_GROUPS} canSee={canSee} onNavigate={setActiveTab} />;
       case 'settings':   return <SettingsTabContent />;
       case 'people':     return <PeopleTab isSuperAdmin={isSuperAdmin} hasPermission={hasPermission} />;
       case 'officers':   return <OfficersTab />;
@@ -151,90 +167,77 @@ export default function Admin() {
     }
   };
 
+  const showBack = activeTab !== 'home';
+
   return (
     <div className="min-h-screen bg-muted/30">
       {/* Header */}
       <div className="bg-card border-b border-border px-4 sm:px-6 py-4 flex items-center justify-between sticky top-0 z-10">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-            <Shield className="w-4 h-4 text-primary" />
-          </div>
-          <div>
-            <h1 className="font-heading font-bold text-base leading-tight">Admin Panel</h1>
-            <p className="text-xs text-muted-foreground">{adminUser.username} · {isSuperAdmin ? 'Super Admin' : 'Admin'}</p>
+        <div className="flex items-center gap-3 min-w-0">
+          {showBack ? (
+            <Button variant="ghost" size="sm" onClick={() => setActiveTab('home')} className="gap-1.5 -ml-2">
+              <ArrowLeft className="w-4 h-4" />
+              <span className="hidden sm:inline">Dashboard</span>
+            </Button>
+          ) : (
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Shield className="w-4 h-4 text-primary" />
+            </div>
+          )}
+          <div className="min-w-0">
+            <h1 className="font-heading font-bold text-base leading-tight truncate">Admin Panel</h1>
+            <p className="text-xs text-muted-foreground truncate">{adminUser.username} · {isSuperAdmin ? 'Super Admin' : 'Admin'}</p>
           </div>
         </div>
-        <Button variant="ghost" size="sm" onClick={logout} className="gap-1.5 text-muted-foreground">
+        <Button variant="ghost" size="sm" onClick={logout} className="gap-1.5 text-muted-foreground shrink-0">
           <LogOut className="w-4 h-4" />
           <span className="hidden sm:inline">Sign Out</span>
         </Button>
       </div>
 
-      <div className="flex">
-        {/* Sidebar */}
-        <aside className="w-48 shrink-0 border-r border-border bg-card min-h-[calc(100vh-61px)] hidden md:block">
-          <nav className="p-2 space-y-4 py-3">
-            {TAB_GROUPS.map(group => {
-              const groupTabs = group.tabs.filter(t => {
-                if (t.superOnly && !isSuperAdmin) return false;
-                if (t.perm && !isSuperAdmin && !hasPermission(t.perm)) return false;
-                return true;
-              });
-              if (groupTabs.length === 0) return null;
-              return (
-                <div key={group.label}>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 px-3 mb-1">{group.label}</p>
-                  <div className="space-y-0.5">
-                    {groupTabs.map(tab => {
-                      const Icon = tab.icon;
-                      return (
-                        <button
-                          key={tab.id}
-                          onClick={() => setActiveTab(tab.id)}
-                          className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors text-left ${
-                            activeTab === tab.id
-                              ? 'bg-primary/10 text-primary font-semibold'
-                              : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                          }`}
-                        >
-                          <Icon className="w-4 h-4 shrink-0" />
-                          {tab.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </nav>
-        </aside>
+      <main className="p-4 sm:p-6 min-w-0">
+        {renderContent()}
+      </main>
+    </div>
+  );
+}
 
-        {/* Mobile tab bar */}
-        <div className="md:hidden w-full fixed bottom-0 left-0 bg-card border-t border-border z-20 overflow-x-auto">
-          <div className="flex gap-1 p-2 min-w-max">
-            {visibleTabs.map(tab => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg text-[10px] transition-colors whitespace-nowrap ${
-                    activeTab === tab.id ? 'bg-primary/10 text-primary font-semibold' : 'text-muted-foreground'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Main content */}
-        <main className="flex-1 p-4 sm:p-6 pb-24 md:pb-6 min-w-0">
-          {renderContent()}
-        </main>
+function MoreMenu({ groups, canSee, onNavigate }) {
+  return (
+    <div className="space-y-8 max-w-5xl">
+      <div>
+        <h2 className="font-heading font-bold text-2xl mb-1">More Tools</h2>
+        <p className="text-sm text-muted-foreground">Less-frequently used admin features.</p>
       </div>
+
+      {groups.map(group => {
+        const visibleTabs = group.tabs.filter(canSee);
+        if (visibleTabs.length === 0) return null;
+        return (
+          <div key={group.label}>
+            <h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/70 mb-3">
+              {group.label}
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              {visibleTabs.map(tab => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => onNavigate(tab.id)}
+                    className="group text-left bg-card hover:bg-accent/40 border border-border hover:border-primary/30 rounded-xl p-4 transition-all hover:shadow-sm flex items-center gap-3"
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
+                      <Icon className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </div>
+                    <p className="font-medium text-sm leading-tight">{tab.label}</p>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
