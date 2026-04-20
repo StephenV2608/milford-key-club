@@ -40,16 +40,13 @@ export default function Projects() {
     );
     setServiceEvents(upcoming);
 
+    const allRsvps = await base44.entities.EventRSVP.list();
     const counts = {};
-    await Promise.all(upcoming.map(async e => {
-      const r = await base44.entities.EventRSVP.filter({ event_id: e.id });
-      counts[e.id] = r.length;
-    }));
+    allRsvps.forEach(r => { counts[r.event_id] = (counts[r.event_id] || 0) + 1; });
     setRsvpCounts(counts);
 
     if (memberUser) {
-      const myRsvps = await base44.entities.EventRSVP.filter({ member_email: memberUser.email });
-      setRsvps(myRsvps);
+      setRsvps(allRsvps.filter(r => r.member_email === memberUser.email));
     }
   }, [memberUser?.email]);
 

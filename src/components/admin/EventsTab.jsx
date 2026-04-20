@@ -31,15 +31,14 @@ export default function EventsTab() {
 
   const load = async () => {
     setLoading(true);
-    const list = await base44.entities.ClubEvent.list('date');
+    const [list, allRsvps] = await Promise.all([
+      base44.entities.ClubEvent.list('date'),
+      base44.entities.EventRSVP.list(),
+    ]);
     setEvents(list);
     setLoading(false);
-    // Load RSVP counts
     const counts = {};
-    await Promise.all(list.map(async e => {
-      const rsvps = await base44.entities.EventRSVP.filter({ event_id: e.id });
-      counts[e.id] = rsvps.length;
-    }));
+    allRsvps.forEach(r => { counts[r.event_id] = (counts[r.event_id] || 0) + 1; });
     setRsvpCounts(counts);
   };
 
