@@ -347,14 +347,6 @@ function AdminsSection() {
 
   return (
     <div className="space-y-4">
-      <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 flex items-start gap-3">
-        <Crown className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-        <div>
-          <p className="font-semibold text-sm">Built-in Super Admin</p>
-          <p className="text-xs text-muted-foreground mt-0.5">Username: <code className="bg-muted px-1 rounded">SuperAdmin</code> · Code: <code className="bg-muted px-1 rounded">MKC-K7XQ-9PVR-4MBN</code></p>
-        </div>
-      </div>
-
       <div className="bg-card rounded-xl border border-border p-5">
         <div className="flex justify-between items-center mb-4">
           <h3 className="font-heading font-semibold text-base flex items-center gap-2"><Shield className="w-4 h-4 text-primary" />Admin Accounts</h3>

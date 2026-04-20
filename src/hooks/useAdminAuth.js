@@ -1,13 +1,6 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 
-// Super admin seed — always has full access
-const SUPER_ADMIN_SEED = {
-  username: 'SuperAdmin',
-  id_code: 'MKC-K7XQ-9PVR-4MBN',
-  role: 'super_admin',
-};
-
 export function useAdminAuth() {
   const [adminUser, setAdminUser] = useState(null);
   const [checking, setChecking] = useState(true);
@@ -23,14 +16,6 @@ export function useAdminAuth() {
   const login = async (identifier, secret) => {
     const id = identifier.trim();
     const pw = secret.trim();
-
-    // Check super admin seed first
-    if (id === SUPER_ADMIN_SEED.username && pw === SUPER_ADMIN_SEED.id_code) {
-      const user = { ...SUPER_ADMIN_SEED, permissions: ['announcements','messages','events','people','hours','forms','resources','news','gallery','showcase','officers','pages','settings'] };
-      sessionStorage.setItem('mkc_admin', JSON.stringify(user));
-      setAdminUser(user);
-      return { success: true };
-    }
 
     // Check database admins (username + id code)
     const adminList = await base44.entities.AdminUser.filter({ username: id });
