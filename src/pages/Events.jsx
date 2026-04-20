@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, MapPin, Clock, CheckCircle2, Users, QrCode, ChevronLeft, ChevronRight, Star } from 'lucide-react';
+import { Calendar, MapPin, Clock, CheckCircle2, Users, QrCode, ChevronLeft, ChevronRight, Star, CalendarPlus } from 'lucide-react';
+import { googleCalendarUrl } from '../lib/googleCalendar';
 import PageHeader from '../components/shared/PageHeader';
 import { base44 } from '@/api/base44Client';
 import { useSiteSettings } from '../hooks/useSiteSettings';
@@ -236,14 +237,27 @@ function EventCard({ event, isRsvpd, onRSVP, rsvpLoading, memberUser }) {
 
       {/* RSVP */}
       <Button
-        className={`w-full rounded-full mb-3 ${isRsvpd ? 'bg-green-600 hover:bg-green-700 text-white' : ''}`}
+        className={`w-full rounded-full mb-2 ${isRsvpd ? 'bg-green-600 hover:bg-green-700 text-white' : ''}`}
         variant={isRsvpd ? 'default' : 'default'}
         onClick={onRSVP}
         disabled={rsvpLoading}
       >
         {rsvpLoading ? 'Updating...' : isRsvpd ? <><CheckCircle2 className="w-4 h-4 mr-1.5" /> RSVPd — Click to Cancel</> : 'RSVP for This Event'}
       </Button>
-      {!memberUser && <p className="text-xs text-center text-muted-foreground">Log in to the <Link to="/portal" className="text-primary hover:underline">member portal</Link> to RSVP</p>}
+      {!memberUser && <p className="text-xs text-center text-muted-foreground mb-2">Log in to the <Link to="/portal" className="text-primary hover:underline">member portal</Link> to RSVP</p>}
+
+      {/* Add to Google Calendar */}
+      {googleCalendarUrl(event) && (
+        <a
+          href={googleCalendarUrl(event)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-background hover:bg-muted text-sm font-medium py-2 transition-colors"
+        >
+          <CalendarPlus className="w-4 h-4" />
+          Add to Google Calendar
+        </a>
+      )}
 
       {/* QR */}
       {event.qr_enabled && (
