@@ -33,9 +33,12 @@ const OFFICER_ROLE_PRESETS = {
   Treasurer:   ['forms', 'resources'],
   Editor:      ['news', 'gallery', 'showcase'],
   Webmaster:   ['settings', 'pages', 'officers', 'forms', 'resources', 'news', 'gallery', 'showcase', 'announcements', 'events', 'people', 'hours', 'messages'],
+  'Fundraising Chairperson': ['forms', 'resources', 'announcements', 'events'],
+  'Social Chairperson':      ['events', 'announcements', 'gallery', 'messages'],
+  'Service Chairperson':     ['events', 'hours', 'announcements', 'showcase', 'gallery'],
 };
 
-const OFFICER_ROLES = ['President', 'Vice President', 'Secretary', 'Treasurer', 'Editor', 'Webmaster'];
+const OFFICER_ROLES = ['President', 'Vice President', 'Secretary', 'Treasurer', 'Editor', 'Webmaster', 'Fundraising Chairperson', 'Social Chairperson', 'Service Chairperson'];
 
 function generateCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';

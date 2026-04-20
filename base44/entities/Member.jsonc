@@ -61,7 +61,10 @@
         "Secretary",
         "Treasurer",
         "Editor",
-        "Webmaster"
+        "Webmaster",
+        "Fundraising Chairperson",
+        "Social Chairperson",
+        "Service Chairperson"
       ]
     },
     "admin_permissions": {
