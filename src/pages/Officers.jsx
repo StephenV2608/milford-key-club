@@ -36,9 +36,17 @@ export default function Officers() {
   const useRoles = officerRoles.length > 0;
   const hasOfficerData = officers.length > 0;
 
-  const active = useRoles
+  const allActive = useRoles
     ? officerRoles
     : hasOfficerData ? officers.filter(o => !o.archived) : FALLBACK_OFFICERS;
+
+  // Separate advisors from student officers
+  const isAdvisor = (item) => {
+    const role = (useRoles ? (item.title === 'Other' ? item.custom_title : item.title) : item.role) || '';
+    return /advisor|adviser/i.test(role);
+  };
+  const active = allActive.filter(o => !isAdvisor(o));
+  const advisors = allActive.filter(isAdvisor);
 
   const past = hasOfficerData && !useRoles ? officers.filter(o => o.archived) : [];
 
@@ -88,6 +96,42 @@ export default function Officers() {
                   />
                 )
               ))}
+            </div>
+          )}
+
+          {/* Faculty Advisor(s) - separate section */}
+          {!loading && advisors.length > 0 && (
+            <div className="mt-16 pt-12 border-t border-border">
+              <div className="text-center mb-8">
+                <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-muted-foreground/70 mb-2">
+                  Faculty
+                </span>
+                <h2 className="font-heading font-black text-2xl md:text-3xl tracking-tight">
+                  {advisors.length > 1 ? 'Our Advisors' : 'Our Advisor'}
+                </h2>
+              </div>
+              <div className={`grid gap-4 md:gap-6 max-w-3xl mx-auto ${advisors.length === 1 ? 'grid-cols-1 sm:max-w-xs' : 'grid-cols-2 md:grid-cols-3'}`}>
+                {advisors.map((officer) => (
+                  useRoles ? (
+                    <OfficerCard
+                      key={officer.id}
+                      name={officer.member_name}
+                      role={getDisplayTitle(officer)}
+                      funFact={officer.bio}
+                      photoUrl={officer.photo_url}
+                      email={officer.show_email ? officer.member_email : null}
+                    />
+                  ) : (
+                    <OfficerCard
+                      key={officer.id}
+                      name={officer.name}
+                      role={officer.role}
+                      funFact={officer.fun_fact}
+                      photoUrl={officer.photo_url}
+                    />
+                  )
+                ))}
+              </div>
             </div>
           )}
 
