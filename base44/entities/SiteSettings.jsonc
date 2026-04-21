@@ -245,6 +245,43 @@
       "type": "string",
       "title": "Site Closed Message",
       "format": "textarea"
+    },
+    "impact_eyebrow": {
+      "type": "string",
+      "title": "Impact Page - Eyebrow"
+    },
+    "impact_heading": {
+      "type": "string",
+      "title": "Impact Page - Heading"
+    },
+    "impact_description": {
+      "type": "string",
+      "title": "Impact Page - Description"
+    },
+    "impact_total_hours_override": {
+      "type": "number",
+      "title": "Override: Total Service Hours"
+    },
+    "impact_hours_this_year_override": {
+      "type": "number",
+      "title": "Override: Hours This Year"
+    },
+    "impact_active_members_override": {
+      "type": "number",
+      "title": "Override: Active Members"
+    },
+    "impact_orgs_served_override": {
+      "type": "number",
+      "title": "Override: Organizations Helped"
+    },
+    "impact_events_hosted_override": {
+      "type": "number",
+      "title": "Override: Events Hosted"
+    },
+    "impact_this_year_caption": {
+      "type": "string",
+      "title": "Impact - 'This Year' Caption",
+      "format": "textarea"
     }
   },
   "required": []

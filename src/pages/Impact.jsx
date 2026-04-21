@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Clock, Users, Handshake, Calendar, TrendingUp, Heart } from 'lucide-react';
 import PageHeader from '../components/shared/PageHeader';
-import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
+import { useSiteSettings } from '../hooks/useSiteSettings';
+
+const pick = (override, computed) =>
+  (override !== null && override !== undefined && override !== '') ? Number(override) : computed;
 
 function AnimatedCounter({ value, duration = 1500, decimals = 0 }) {
   const [n, setN] = useState(0);
@@ -22,6 +25,7 @@ function AnimatedCounter({ value, duration = 1500, decimals = 0 }) {
 }
 
 export default function Impact() {
+  const { settings } = useSiteSettings();
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
@@ -41,15 +45,15 @@ export default function Impact() {
       const eventsPast = events.filter(e => new Date(e.date) <= new Date()).length;
 
       setStats({
-        totalHours,
-        hoursThisYear,
-        activeMembers: members.length,
-        orgsServed: uniqueOrgs.size,
-        eventsHosted: eventsPast,
+        totalHours: pick(settings?.impact_total_hours_override, totalHours),
+        hoursThisYear: pick(settings?.impact_hours_this_year_override, hoursThisYear),
+        activeMembers: pick(settings?.impact_active_members_override, members.length),
+        orgsServed: pick(settings?.impact_orgs_served_override, uniqueOrgs.size),
+        eventsHosted: pick(settings?.impact_events_hosted_override, eventsPast),
         partners: partners.length,
       });
     })();
-  }, []);
+  }, [settings]);
 
   if (!stats) {
     return (
@@ -72,9 +76,9 @@ export default function Impact() {
   return (
     <div>
       <PageHeader
-        eyebrow="Community Impact"
-        title="Service in Numbers"
-        description="The difference Milford Key Club makes — measured in hours, hands, and hearts."
+        eyebrow={settings?.impact_eyebrow || "Community Impact"}
+        title={settings?.impact_heading || "Service in Numbers"}
+        description={settings?.impact_description || "The difference Milford Key Club makes — measured in hours, hands, and hearts."}
       />
 
       {/* Big Counters */}
@@ -106,7 +110,7 @@ export default function Impact() {
             <AnimatedCounter value={stats.hoursThisYear} decimals={1} /> hours
           </h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto leading-relaxed">
-            Volunteered by Milford Key Club members in {new Date().getFullYear()} alone. Every hour is a step toward a stronger community.
+            {settings?.impact_this_year_caption || `Volunteered by Milford Key Club members in ${new Date().getFullYear()} alone. Every hour is a step toward a stronger community.`}
           </p>
         </div>
       </section>

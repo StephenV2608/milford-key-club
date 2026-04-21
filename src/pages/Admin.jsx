@@ -32,12 +32,13 @@ import NewSchoolYearTab from '../components/admin/NewSchoolYearTab.jsx';
 import ServiceProjectsTab from '../components/admin/ServiceProjectsTab.jsx';
 import CommunityRequestsTab from '../components/admin/CommunityRequestsTab.jsx';
 import PartnersTab from '../components/admin/PartnersTab.jsx';
+import ImpactStatsTab from '../components/admin/ImpactStatsTab.jsx';
 
 import {
   Settings, Users, Image, Clock, Newspaper, FileText, BookOpen,
   Mail, FileStack, Sparkles, PowerOff, LogOut, Shield, UserCheck,
   BarChart2, CalendarDays, Star, Megaphone, MessageCircle, ClipboardList, QrCode, FileBarChart, GraduationCap, Briefcase,
-  HandHeart, Handshake, Home, ArrowLeft, MoreHorizontal
+  HandHeart, Handshake, Home, ArrowLeft, MoreHorizontal, TrendingUp
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
@@ -87,6 +88,7 @@ const MORE_GROUPS = [
     tabs: [
       { id: 'requests', label: 'Help Requests', icon: HandHeart, perm: 'messages' },
       { id: 'partners', label: 'Partners',      icon: Handshake, perm: 'pages' },
+      { id: 'impactstats', label: 'Impact Stats', icon: TrendingUp, perm: 'settings' },
     ],
   },
   {
@@ -147,6 +149,7 @@ export default function Admin() {
       case 'serviceprojects': return <ServiceProjectsTab />;
       case 'requests':   return <CommunityRequestsTab />;
       case 'partners':   return <PartnersTab />;
+      case 'impactstats': return <ImpactStatsTab />;
       case 'news':       return <NewsTab />;
       case 'forms':      return <FormsTab />;
       case 'resources':  return <ResourcesTab />;
