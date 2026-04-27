@@ -22,6 +22,7 @@ import CustomPageView from './pages/CustomPageView';
 import Resources from './pages/Resources';
 import Portal from './pages/Portal';
 import Register from './pages/Register';
+import AdviserSetup from './pages/AdviserSetup';
 import Showcase from './pages/Showcase';
 import AttendanceScan from './pages/AttendanceScan';
 import RequestHelp from './pages/RequestHelp';
@@ -43,9 +44,9 @@ const AuthenticatedApp = () => {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
-      // Allow /register and /portal to be accessed without auth
+      // Allow /register, /portal, and /adviser-setup to be accessed without auth
       const path = window.location.pathname;
-      if (path !== '/register' && path !== '/portal') {
+      if (path !== '/register' && path !== '/portal' && path !== '/adviser-setup') {
         navigateToLogin();
         return null;
       }
@@ -76,6 +77,7 @@ const AuthenticatedApp = () => {
       </Route>
       <Route path="/attend" element={<AttendanceScan />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/adviser-setup" element={<AdviserSetup />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
