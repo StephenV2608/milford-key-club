@@ -4,26 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Shield, CheckCircle2, Eye, EyeOff, Lock, AlertTriangle } from 'lucide-react';
+import { Shield, CheckCircle2, Eye, EyeOff, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-// Private invite token — change this value to invalidate the link.
-// Share the link as: /adviser-setup?token=<INVITE_TOKEN>
-const INVITE_TOKEN = 'mkc-adviser-2026-7Q9XZK';
-
 export default function AdviserSetup() {
-  const [tokenOk, setTokenOk] = useState(false);
-  const [checking, setChecking] = useState(true);
   const [form, setForm] = useState({ full_name: '', email: '', username: '', id_code: '', confirm: '' });
   const [showCode, setShowCode] = useState(false);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    setTokenOk(params.get('token') === INVITE_TOKEN);
-    setChecking(false);
-  }, []);
 
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
@@ -62,33 +50,6 @@ export default function AdviserSetup() {
     setDone(true);
     setLoading(false);
   };
-
-  if (checking) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-primary rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  if (!tokenOk) {
-    return (
-      <div className="min-h-screen bg-muted/40 flex items-center justify-center px-4">
-        <div className="w-full max-w-md text-center">
-          <div className="w-16 h-16 rounded-2xl bg-destructive/10 flex items-center justify-center mx-auto mb-4">
-            <AlertTriangle className="w-8 h-8 text-destructive" />
-          </div>
-          <h1 className="font-heading font-bold text-2xl mb-2">Invalid or expired link</h1>
-          <p className="text-muted-foreground text-sm mb-6">
-            This setup link is private. Please use the original link you were sent.
-          </p>
-          <Link to="/">
-            <Button variant="outline" className="rounded-full px-6">Back to Home</Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   if (done) {
     return (
