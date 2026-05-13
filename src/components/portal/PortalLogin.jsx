@@ -60,7 +60,7 @@ export default function PortalLogin({ adminAuth, memberAuth }) {
             <Input
               value={form.identifier}
               onChange={e => set('identifier', e.target.value)}
-              placeholder={mode === 'admin' ? 'SuperAdmin or first.last@school.edu' : 'you@school.edu'}
+              placeholder={mode === 'admin' ? 'SuperAdmin or First.Last@milfordps.org' : 'you@school.edu'}
               required
             />
           </div>
