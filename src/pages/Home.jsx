@@ -69,13 +69,12 @@ export default function Home() {
       {/* Hero */}
       <section className="relative h-[70vh] min-h-[500px] max-h-[700px] flex items-center justify-center overflow-hidden">
         {slides.map((src, i) =>
-        <div
+        <img
           key={src}
-          className={`absolute inset-0 transition-opacity duration-1000 ${i === slideIndex ? 'opacity-100' : 'opacity-0'}`}>
-            {/* Blurred background fill so the full photo can sit on top without crop */}
-            <img src={src} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl opacity-60" />
-            <img src={src} alt="" className="absolute inset-0 w-full h-full object-contain" />
-          </div>
+          src={src}
+          alt=""
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${i === slideIndex ? 'opacity-100' : 'opacity-0'}`} />
+
         )}
         <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/45 to-black/75" />
         <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
