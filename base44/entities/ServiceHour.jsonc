@@ -1,0 +1,50 @@
+{
+  "name": "ServiceHour",
+  "type": "object",
+  "properties": {
+    "member_email": {
+      "type": "string",
+      "title": "Member Email"
+    },
+    "member_name": {
+      "type": "string",
+      "title": "Member Name"
+    },
+    "date": {
+      "type": "string",
+      "title": "Date of Service"
+    },
+    "hours": {
+      "type": "number",
+      "title": "Hours"
+    },
+    "organization": {
+      "type": "string",
+      "title": "Organization / Event"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "status": {
+      "type": "string",
+      "title": "Status",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "admin_notes": {
+      "type": "string",
+      "title": "Admin Notes"
+    }
+  },
+  "required": [
+    "member_name",
+    "date",
+    "hours",
+    "organization"
+  ]
+}

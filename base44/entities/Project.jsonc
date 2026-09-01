@@ -1,0 +1,27 @@
+{
+  "name": "Project",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Title"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description",
+      "format": "textarea"
+    },
+    "image_url": {
+      "type": "string",
+      "title": "Image URL"
+    },
+    "order": {
+      "type": "number",
+      "title": "Display Order"
+    }
+  },
+  "required": [
+    "title",
+    "description"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "name": "GalleryImage",
+  "type": "object",
+  "properties": {
+    "image_url": {
+      "type": "string",
+      "title": "Image URL"
+    },
+    "alt_text": {
+      "type": "string",
+      "title": "Alt Text / Caption"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "enum": [
+        "Service",
+        "Projects",
+        "Meetings",
+        "Events"
+      ]
+    },
+    "order": {
+      "type": "number",
+      "title": "Display Order"
+    }
+  },
+  "required": [
+    "image_url",
+    "category"
+  ]
+}

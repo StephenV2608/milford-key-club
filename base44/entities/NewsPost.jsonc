@@ -1,0 +1,32 @@
+{
+  "name": "NewsPost",
+  "type": "object",
+  "properties": {
+    "headline": {
+      "type": "string",
+      "title": "Headline"
+    },
+    "snippet": {
+      "type": "string",
+      "title": "Short Snippet"
+    },
+    "content": {
+      "type": "string",
+      "title": "Full Content"
+    },
+    "date": {
+      "type": "string",
+      "title": "Date"
+    },
+    "published": {
+      "type": "boolean",
+      "title": "Published",
+      "default": true
+    }
+  },
+  "required": [
+    "headline",
+    "snippet",
+    "date"
+  ]
+}
