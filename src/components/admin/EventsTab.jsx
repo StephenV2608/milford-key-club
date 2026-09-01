@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import FormSelect from '@/components/ui/form-select';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -117,9 +118,7 @@ export default function EventsTab() {
             </div>
             <div className="space-y-1.5">
               <Label>Type</Label>
-              <select value={form.type} onChange={e => set('type', e.target.value)} className="w-full border border-input rounded-md h-9 px-3 text-sm bg-background">
-                {typeOptions.map(t => <option key={t} value={t} className="capitalize">{t}</option>)}
-              </select>
+              <FormSelect value={form.type} onChange={v => set('type', v)} className="w-full" options={typeOptions.map(t => ({ value: t, label: t }))} />
             </div>
             <div className="space-y-1.5">
               <Label>Max RSVPs (0 = unlimited)</Label>

@@ -7,6 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { HandHeart, CheckCircle2, Users, Clock, Mail } from 'lucide-react';
 import PageHeader from '../components/shared/PageHeader';
+import MobileBackButton from '../components/layout/MobileBackButton';
+import FormSelect from '../components/ui/form-select';
 
 const CATEGORIES = [
   "Yard Work / Chores",
@@ -55,6 +57,7 @@ export default function RequestHelp() {
   if (submitted) {
     return (
       <div>
+        <MobileBackButton />
         <PageHeader eyebrow="Request Help" title="Request Submitted!" description="Thank you for reaching out — we'll review your request and respond within a few days." />
         <section className="py-16 md:py-20">
           <div className="max-w-xl mx-auto px-4 text-center">
@@ -75,6 +78,7 @@ export default function RequestHelp() {
 
   return (
     <div>
+      <MobileBackButton />
       <PageHeader
         eyebrow="Community Support"
         title="Request Our Help"
@@ -121,15 +125,13 @@ export default function RequestHelp() {
               </div>
               <div className="space-y-1.5">
                 <Label>Type of Help *</Label>
-                <select
-                  className="w-full border border-input rounded-md h-9 px-3 text-sm bg-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                <FormSelect
+                  className="w-full"
+                  placeholder="— Select —"
                   value={form.category}
-                  onChange={e => set('category', e.target.value)}
-                  required
-                >
-                  <option value="">— Select —</option>
-                  {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
+                  onChange={v => set('category', v)}
+                  options={CATEGORIES.map(c => ({ value: c, label: c }))}
+                />
               </div>
               <div className="space-y-1.5">
                 <Label>Date Needed</Label>

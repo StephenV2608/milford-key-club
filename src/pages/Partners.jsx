@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { ExternalLink, Handshake, Star } from 'lucide-react';
 import PageHeader from '../components/shared/PageHeader';
+import MobileBackButton from '../components/layout/MobileBackButton';
 
 export default function Partners() {
   const [partners, setPartners] = useState([]);
@@ -21,6 +22,7 @@ export default function Partners() {
 
   return (
     <div>
+      <MobileBackButton />
       <PageHeader
         eyebrow="Our Network"
         title="Partners & Supporters"

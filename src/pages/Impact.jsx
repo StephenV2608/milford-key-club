@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Clock, Users, Handshake, Calendar, TrendingUp, Heart } from 'lucide-react';
 import PageHeader from '../components/shared/PageHeader';
+import MobileBackButton from '../components/layout/MobileBackButton';
 import { Link } from 'react-router-dom';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 
@@ -58,6 +59,7 @@ export default function Impact() {
   if (!stats) {
     return (
       <div>
+        <MobileBackButton />
         <PageHeader eyebrow="Community Impact" title="Our Impact" description="How Milford Key Club serves our community." />
         <div className="py-16 text-center">
           <div className="inline-block w-8 h-8 border-4 border-slate-200 border-t-primary rounded-full animate-spin" />
@@ -75,6 +77,7 @@ export default function Impact() {
 
   return (
     <div>
+      <MobileBackButton />
       <PageHeader
         eyebrow={settings?.impact_eyebrow || "Community Impact"}
         title={settings?.impact_heading || "Service in Numbers"}

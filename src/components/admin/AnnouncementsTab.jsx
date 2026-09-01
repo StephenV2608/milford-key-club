@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import FormSelect from '@/components/ui/form-select';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -112,11 +113,7 @@ export default function AnnouncementsTab() {
             </div>
             <div className="space-y-1.5">
               <Label>Priority</Label>
-              <select value={form.priority} onChange={e => set('priority', e.target.value)} className="w-full border border-input rounded-md h-9 px-3 text-sm bg-background">
-                <option value="normal">Normal</option>
-                <option value="important">Important</option>
-                <option value="urgent">Urgent</option>
-              </select>
+              <FormSelect value={form.priority} onChange={v => set('priority', v)} className="w-full" options={[{ value: 'normal', label: 'Normal' }, { value: 'important', label: 'Important' }, { value: 'urgent', label: 'Urgent' }]} />
             </div>
             <div className="space-y-1.5">
               <Label>Posted By</Label>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import FormSelect from '@/components/ui/form-select';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -232,16 +233,16 @@ function LogHoursTab({ form, setF, computedHours, submitting, handleSubmit, proj
         )}
         <div className="space-y-1.5">
           <Label>Organization / Event *</Label>
-          <select
-            className="w-full border border-input rounded-md h-9 px-3 text-sm bg-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          <FormSelect
+            className="w-full"
+            placeholder="— Select a project —"
             value={selectValue}
-            onChange={e => handleSelect(e.target.value)}
-            required={!isOther}
-          >
-            <option value="">— Select a project —</option>
-            {projectOptions.map(name => <option key={name} value={name}>{name}</option>)}
-            <option value="__other__">Other (type in name)</option>
-          </select>
+            onChange={v => handleSelect(v)}
+            options={[
+              ...projectOptions.map(name => ({ value: name, label: name })),
+              { value: '__other__', label: 'Other (type in name)' }
+            ]}
+          />
           {isOther && (
             <Input
               autoFocus
@@ -575,10 +576,13 @@ function ProfileTab({ memberUser, memberAuth, onDeleteRequest }) {
               <div className="space-y-1.5"><Label>Email</Label><Input type="email" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} /></div>
               <div className="space-y-1.5">
                 <Label>Grade</Label>
-                <select className="w-full border border-input rounded-md h-9 px-3 text-sm bg-background select-none" value={form.grade} onChange={e => setForm(p => ({ ...p, grade: e.target.value }))}>
-                  <option value="">— Select —</option>
-                  {['9','10','11','12'].map(g => <option key={g} value={g}>Grade {g}</option>)}
-                </select>
+                <FormSelect
+                  className="w-full"
+                  placeholder="— Select —"
+                  value={form.grade}
+                  onChange={v => setForm(p => ({ ...p, grade: v }))}
+                  options={['9','10','11','12'].map(g => ({ value: g, label: `Grade ${g}` }))}
+                />
               </div>
               <div className="space-y-1.5"><Label>Graduation Year</Label><Input placeholder="2027" value={form.class_year} onChange={e => setForm(p => ({ ...p, class_year: e.target.value }))} /></div>
             </div>

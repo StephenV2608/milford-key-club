@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import FormSelect from '@/components/ui/form-select';
 import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -104,10 +105,7 @@ function PartnerForm({ form, set, onSave, onCancel, onUpload }) {
         </div>
         <div>
           <Label className="text-xs uppercase tracking-wide text-muted-foreground">Category</Label>
-          <select className="mt-1 w-full border border-input rounded-md h-9 px-3 text-sm bg-background" value={form.category || ''} onChange={e => set('category', e.target.value)}>
-            <option value="">— Select —</option>
-            {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-          </select>
+          <FormSelect className="mt-1 w-full" placeholder="— Select —" value={form.category || ''} onChange={v => set('category', v)} options={CATEGORIES.map(c => ({ value: c, label: c }))} />
         </div>
         <div className="sm:col-span-2">
           <Label className="text-xs uppercase tracking-wide text-muted-foreground">Description</Label>

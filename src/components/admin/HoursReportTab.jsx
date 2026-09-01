@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import FormSelect from '@/components/ui/form-select';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Download, FileText, User, Clock, Filter } from 'lucide-react';
@@ -105,13 +106,7 @@ export default function HoursReportTab() {
           </div>
           <div>
             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">Status</label>
-            <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
-              className="w-full border border-input rounded-md h-9 px-2 text-sm bg-background">
-              <option value="all">All Statuses</option>
-              <option value="approved">Approved</option>
-              <option value="pending">Pending</option>
-              <option value="rejected">Rejected</option>
-            </select>
+            <FormSelect value={statusFilter} onChange={v => setStatusFilter(v)} className="w-full" options={[{ value: 'all', label: 'All Statuses' }, { value: 'approved', label: 'Approved' }, { value: 'pending', label: 'Pending' }, { value: 'rejected', label: 'Rejected' }]} />
           </div>
           <div>
             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">Member</label>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import FormSelect from '@/components/ui/form-select';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { QrCode, Maximize2, Users, Clock, MapPin, CheckCircle2, RefreshCw, X } from 'lucide-react';
@@ -104,18 +105,15 @@ export default function MeetingQRDisplay() {
         {/* Event picker */}
         <div className="bg-card rounded-xl border border-border p-4">
           <label className="text-xs uppercase tracking-wide text-muted-foreground font-medium block mb-1.5">Active Event</label>
-          <select
-            className="w-full border border-input rounded-md h-9 px-3 text-sm bg-background"
+          <FormSelect
+            className="w-full"
             value={selectedId}
-            onChange={e => setSelectedId(e.target.value)}
-          >
-            {events.map(ev => (
-              <option key={ev.id} value={ev.id}>
-                {ev.date ? `${new Date(ev.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} · ` : ''}
-                {ev.title}
-              </option>
-            ))}
-          </select>
+            onChange={v => setSelectedId(v)}
+            options={events.map(ev => ({
+              value: ev.id,
+              label: `${ev.date ? `${new Date(ev.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} · ` : ''}${ev.title}`
+            }))}
+          />
         </div>
 
         {selected && (

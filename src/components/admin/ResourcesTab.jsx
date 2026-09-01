@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import FormSelect from '@/components/ui/form-select';
 import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -75,9 +76,7 @@ export default function ResourcesTab() {
           </div>
           <div>
             <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Category</Label>
-            <select className="mt-1 w-full border border-input rounded-md h-9 px-3 text-sm bg-background" value={form.category} onChange={e => set('category', e.target.value)}>
-              {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
+            <FormSelect className="mt-1 w-full" value={form.category} onChange={v => set('category', v)} options={CATEGORIES.map(c => ({ value: c, label: c }))} />
           </div>
           <div className="sm:col-span-2">
             <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Description (optional)</Label>
@@ -112,9 +111,7 @@ export default function ResourcesTab() {
                       <div className="bg-accent/30 rounded-lg border border-primary/20 p-3 space-y-2">
                         <div className="grid sm:grid-cols-2 gap-2">
                           <Input value={form.title} onChange={e => set('title', e.target.value)} placeholder="Title" className="h-8 text-sm" />
-                          <select className="border border-input rounded-md h-8 px-2 text-sm bg-background" value={form.category} onChange={e => set('category', e.target.value)}>
-                            {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-                          </select>
+                          <FormSelect className="w-full" value={form.category} onChange={v => set('category', v)} options={CATEGORIES.map(c => ({ value: c, label: c }))} />
                           <Input value={form.description} onChange={e => set('description', e.target.value)} placeholder="Description" className="h-8 text-sm sm:col-span-2" />
                         </div>
                         <div className="flex gap-2">

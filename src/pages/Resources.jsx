@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Download, FileText, Search } from 'lucide-react';
 import SectionHeading from '../components/shared/SectionHeading';
+import MobileBackButton from '../components/layout/MobileBackButton';
 
 const CATEGORIES = ['All', 'Guides', 'Templates', 'Documents', 'Forms', 'Other'];
 
@@ -36,6 +37,7 @@ export default function Resources() {
 
   return (
     <div className="min-h-screen bg-background">
+      <MobileBackButton />
       {/* Header */}
       <section className="py-16 md:py-20 bg-muted/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

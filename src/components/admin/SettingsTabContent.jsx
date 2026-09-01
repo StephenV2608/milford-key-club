@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import FormSelect from '@/components/ui/form-select';
 import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -143,16 +144,13 @@ export default function SettingsTabContent() {
       <SettingsSection title="Featured Project" icon={Star}>
         <div className="mt-2 space-y-2">
           <p className="text-xs text-muted-foreground">Choose which project is highlighted on the home page.</p>
-          <select
-            className="w-full border border-input rounded-md h-9 px-3 text-sm bg-background"
+          <FormSelect
+            className="w-full"
+            placeholder="— First project (default) —"
             value={form.featured_project_id || ''}
-            onChange={e => set('featured_project_id', e.target.value)}
-          >
-            <option value="">— First project (default) —</option>
-            {projects.map(p => (
-              <option key={p.id} value={p.id}>{p.title}</option>
-            ))}
-          </select>
+            onChange={v => set('featured_project_id', v)}
+            options={projects.map(p => ({ value: p.id, label: p.title }))}
+          />
           {form.featured_project_id && projects.find(p => p.id === form.featured_project_id)?.image_url && (
             <img
               src={projects.find(p => p.id === form.featured_project_id).image_url}

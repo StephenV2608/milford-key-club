@@ -26,7 +26,7 @@ export default function PortalLogin({ adminAuth, memberAuth }) {
   };
 
   return (
-    <div className="min-h-screen bg-muted/40 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-muted/40 flex items-center justify-center px-4 py-12 safe-top">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">

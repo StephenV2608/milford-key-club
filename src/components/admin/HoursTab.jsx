@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import FormSelect from '@/components/ui/form-select';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Check, X, Clock, User, Sparkles, ChevronDown, ChevronUp, ArrowUpDown, Filter } from 'lucide-react';
@@ -188,9 +189,7 @@ Respond with JSON: { "decision": "approved" | "rejected", "reason": "..." }`,
             </div>
             <div>
               <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">Sort By</label>
-              <select value={sort} onChange={e => setSort(e.target.value)} className="w-full border border-input rounded-md h-8 px-2 text-sm bg-background">
-                {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-              </select>
+              <FormSelect value={sort} onChange={v => setSort(v)} className="w-full" options={SORT_OPTIONS} />
             </div>
             <div className="sm:col-span-4 flex justify-end">
               <Button size="sm" variant="ghost" onClick={() => { setSearch(''); setMinHours(''); setMaxHours(''); setSort('date_desc'); }} className="text-xs">Clear All</Button>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useAdminAuth } from '../hooks/useAdminAuth';
 import AdminLogin from '../components/admin/AdminLogin';
 import AdminHome from '../components/admin/AdminHome';
@@ -199,7 +200,17 @@ export default function Admin() {
       </div>
 
       <main className="p-4 sm:p-6 min-w-0">
-        {renderContent()}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, x: 15 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -15 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+          >
+            {renderContent()}
+          </motion.div>
+        </AnimatePresence>
       </main>
     </div>
   );

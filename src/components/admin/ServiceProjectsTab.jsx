@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import FormSelect from '@/components/ui/form-select';
 import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -194,28 +195,26 @@ export default function ServiceProjectsTab() {
         <div className="grid sm:grid-cols-2 gap-3">
           <div>
             <Label className="text-xs uppercase tracking-wide text-muted-foreground">From (source)</Label>
-            <select
+            <FormSelect
+              className="mt-1 w-full"
+              placeholder="— Select duplicate —"
               value={mergeFrom}
-              onChange={e => setMergeFrom(e.target.value)}
-              className="mt-1 w-full border border-input rounded-md h-9 px-3 text-sm bg-background"
-            >
-              <option value="">— Select duplicate —</option>
-              {allOrgNames.map(n => {
+              onChange={v => setMergeFrom(v)}
+              options={allOrgNames.map(n => {
                 const count = hourOrgs.find(o => o.name === n)?.count || 0;
-                return <option key={n} value={n}>{n} ({count} entr{count === 1 ? 'y' : 'ies'})</option>;
+                return { value: n, label: `${n} (${count} entr${count === 1 ? 'y' : 'ies'})` };
               })}
-            </select>
+            />
           </div>
           <div>
             <Label className="text-xs uppercase tracking-wide text-muted-foreground">To (keep this name)</Label>
-            <select
+            <FormSelect
+              className="mt-1 w-full"
+              placeholder="— Select correct name —"
               value={mergeTo}
-              onChange={e => setMergeTo(e.target.value)}
-              className="mt-1 w-full border border-input rounded-md h-9 px-3 text-sm bg-background"
-            >
-              <option value="">— Select correct name —</option>
-              {allOrgNames.map(n => <option key={n} value={n}>{n}</option>)}
-            </select>
+              onChange={v => setMergeTo(v)}
+              options={allOrgNames.map(n => ({ value: n, label: n }))}
+            />
           </div>
         </div>
         <Button onClick={doMerge} disabled={merging || !mergeFrom || !mergeTo} className="gap-1.5 mt-4">

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import FormSelect from '@/components/ui/form-select';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -118,13 +119,12 @@ export default function OfficerRolesTab() {
             {/* Role title */}
             <div>
               <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">Role Title</label>
-              <div className="relative">
-                <select value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-                  className="w-full border border-input rounded-md h-9 px-3 text-sm bg-background appearance-none pr-8">
-                  {ROLE_TITLES.map(t => <option key={t} value={t}>{t}</option>)}
-                </select>
-                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-              </div>
+              <FormSelect
+                className="w-full"
+                value={form.title}
+                onChange={v => setForm(f => ({ ...f, title: v }))}
+                options={ROLE_TITLES.map(t => ({ value: t, label: t }))}
+              />
             </div>
             {form.title === 'Other' && (
               <div>
@@ -136,14 +136,13 @@ export default function OfficerRolesTab() {
             {/* Link member */}
             <div>
               <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">Link to Member</label>
-              <div className="relative">
-                <select value={form.member_id || ''} onChange={e => linkMember(e.target.value)}
-                  className="w-full border border-input rounded-md h-9 px-3 text-sm bg-background appearance-none pr-8">
-                  <option value="">— Select member (optional) —</option>
-                  {members.map(m => <option key={m.id} value={m.id}>{m.name} ({m.email})</option>)}
-                </select>
-                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-              </div>
+              <FormSelect
+                className="w-full"
+                placeholder="— Select member (optional) —"
+                value={form.member_id || ''}
+                onChange={v => linkMember(v)}
+                options={members.map(m => ({ value: m.id, label: `${m.name} (${m.email})` }))}
+              />
             </div>
             <div>
               <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">Member Name</label>

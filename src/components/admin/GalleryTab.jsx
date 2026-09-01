@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import FormSelect from '@/components/ui/form-select';
 import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -59,9 +60,7 @@ export default function GalleryTab() {
         <div className="flex flex-wrap items-end gap-3">
           <div>
             <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Category for all uploaded images</Label>
-            <select className="mt-1 w-full border border-input rounded-md h-9 px-3 text-sm bg-background" value={massCategory} onChange={e => setMassCategory(e.target.value)}>
-              {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
+            <FormSelect className="mt-1 w-full" value={massCategory} onChange={v => setMassCategory(v)} options={CATEGORIES.map(c => ({ value: c, label: c }))} />
           </div>
           <div>
             <input ref={massFileRef} type="file" accept="image/*" multiple className="hidden" onChange={handleMassUpload} />
@@ -87,9 +86,7 @@ export default function GalleryTab() {
               <div><Label className="text-xs uppercase tracking-wide text-muted-foreground">Caption</Label><Input value={form.alt_text || ''} onChange={e => set('alt_text', e.target.value)} className="mt-1" placeholder="Caption..." /></div>
               <div>
                 <Label className="text-xs uppercase tracking-wide text-muted-foreground">Category</Label>
-                <select value={form.category || 'Service'} onChange={e => set('category', e.target.value)} className="mt-1 w-full border border-input rounded-md h-9 px-3 text-sm bg-background">
-                  {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
+                <FormSelect value={form.category || 'Service'} onChange={v => set('category', v)} className="mt-1 w-full" options={CATEGORIES.map(c => ({ value: c, label: c }))} />
               </div>
             </div>
             <div className="flex gap-2">
@@ -106,9 +103,7 @@ export default function GalleryTab() {
                 <div className="bg-card p-3 h-full overflow-auto space-y-2">
                   <ImageInput value={form.image_url} onChange={v => set('image_url', v)} size="sm" />
                   <Input value={form.alt_text || ''} onChange={e => set('alt_text', e.target.value)} placeholder="Caption" className="h-7 text-xs" />
-                  <select value={form.category || 'Service'} onChange={e => set('category', e.target.value)} className="w-full border border-input rounded h-7 px-2 text-xs bg-background">
-                    {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-                  </select>
+                  <FormSelect value={form.category || 'Service'} onChange={v => set('category', v)} className="w-full" options={CATEGORIES.map(c => ({ value: c, label: c }))} />
                   <div className="flex gap-1">
                     <Button size="sm" onClick={save} className="gap-1 h-7 text-xs"><Check className="w-3 h-3" />Save</Button>
                     <Button size="sm" variant="ghost" onClick={cancel} className="h-7 text-xs"><X className="w-3 h-3" /></Button>

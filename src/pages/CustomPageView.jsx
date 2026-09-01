@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import ReactMarkdown from 'react-markdown';
 import SectionHeading from '../components/shared/SectionHeading';
+import MobileBackButton from '../components/layout/MobileBackButton';
 
 export default function CustomPageView() {
   const slug = window.location.pathname.replace('/pages/', '');
@@ -38,6 +39,7 @@ export default function CustomPageView() {
 
   return (
     <div>
+      <MobileBackButton />
       <section className="py-16 md:py-24 bg-muted/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading eyebrow={page.eyebrow} title={page.title} description={page.description} />

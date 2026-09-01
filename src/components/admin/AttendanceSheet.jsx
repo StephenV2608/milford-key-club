@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import FormSelect from '@/components/ui/form-select';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -137,25 +138,19 @@ export default function AttendanceSheet() {
       {/* Event selector */}
       <div className="bg-card rounded-xl border border-border p-4 space-y-2">
         <Label className="text-xs uppercase tracking-wide text-muted-foreground">Select Event / Meeting</Label>
-        <div className="relative">
-          <select
-            className="w-full border border-input rounded-md h-9 px-3 text-sm bg-background appearance-none pr-8"
-            value={selectedEvent?.id || ''}
-            onChange={e => {
-              const ev = events.find(ev => ev.id === e.target.value);
-              setSelectedEvent(ev || null);
-            }}
-          >
-            <option value="">— Pick an event —</option>
-            {events.map(ev => (
-              <option key={ev.id} value={ev.id}>
-                {ev.date ? `${new Date(ev.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} · ` : ''}
-                {ev.title}
-              </option>
-            ))}
-          </select>
-          <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-        </div>
+        <FormSelect
+          className="w-full"
+          placeholder="— Pick an event —"
+          value={selectedEvent?.id || ''}
+          onChange={v => {
+            const ev = events.find(ev => ev.id === v);
+            setSelectedEvent(ev || null);
+          }}
+          options={events.map(ev => ({
+            value: ev.id,
+            label: `${ev.date ? `${new Date(ev.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} · ` : ''}${ev.title}`
+          }))}
+        />
       </div>
 
       {selectedEvent && (
@@ -239,9 +234,7 @@ export default function AttendanceSheet() {
                   </div>
                   <div>
                     <Label className="text-xs uppercase tracking-wide text-muted-foreground">Grade</Label>
-                    <select className="mt-1 w-full border border-input rounded-md h-9 px-3 text-sm bg-background" value={newMember.grade} onChange={e => setNewMember(p => ({ ...p, grade: e.target.value }))}>
-                      {GRADES.map(g => <option key={g} value={g}>Grade {g}</option>)}
-                    </select>
+                    <FormSelect className="mt-1 w-full" value={newMember.grade} onChange={v => setNewMember(p => ({ ...p, grade: v }))} options={GRADES.map(g => ({ value: g, label: `Grade ${g}` }))} />
                   </div>
                 </div>
                 <div className="flex gap-2">

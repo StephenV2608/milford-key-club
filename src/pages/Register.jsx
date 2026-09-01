@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { UserPlus, CheckCircle2, Eye, EyeOff } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import FormSelect from '../components/ui/form-select';
 
 const GRADES = ['9', '10', '11', '12'];
 
@@ -56,7 +57,7 @@ export default function Register() {
 
   if (done) {
     return (
-      <div className="min-h-screen bg-muted/40 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-muted/40 flex items-center justify-center px-4 safe-top">
         <div className="w-full max-w-md text-center">
           <div className="w-16 h-16 rounded-2xl bg-green-100 flex items-center justify-center mx-auto mb-4">
             <CheckCircle2 className="w-8 h-8 text-green-600" />
@@ -74,7 +75,7 @@ export default function Register() {
   }
 
   return (
-    <div className="min-h-screen bg-muted/40 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-muted/40 flex items-center justify-center px-4 py-12 safe-top">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
@@ -96,13 +97,12 @@ export default function Register() {
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label>Grade</Label>
-              <select
-                className="w-full border border-input rounded-md h-9 px-3 text-sm bg-background"
+              <FormSelect
+                className="w-full"
                 value={form.grade}
-                onChange={e => set('grade', e.target.value)}
-              >
-                {GRADES.map(g => <option key={g} value={g}>Grade {g}</option>)}
-              </select>
+                onChange={v => set('grade', v)}
+                options={GRADES.map(g => ({ value: g, label: `Grade ${g}` }))}
+              />
             </div>
             <div className="space-y-1.5">
               <Label>Graduation Year</Label>

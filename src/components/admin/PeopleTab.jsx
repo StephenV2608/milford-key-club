@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import FormSelect from '@/components/ui/form-select';
 import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -262,9 +263,7 @@ function MemberForm({ form, set, onSave, onCancel, isSuperAdmin }) {
         <div><Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Email *</Label><Input className="mt-1" type="email" value={form.email || ''} onChange={e => set('email', e.target.value)} placeholder="jane@example.com" /></div>
         <div>
           <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Grade</Label>
-          <select className="mt-1 w-full border border-input rounded-md h-9 px-3 text-sm bg-background" value={form.grade || '9'} onChange={e => set('grade', e.target.value)}>
-            {GRADES.map(g => <option key={g} value={g}>Grade {g}</option>)}
-          </select>
+          <FormSelect className="mt-1 w-full" value={form.grade || '9'} onChange={v => set('grade', v)} options={GRADES.map(g => ({ value: g, label: `Grade ${g}` }))} />
         </div>
         <div><Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Graduation Year</Label><Input className="mt-1" value={form.class_year || ''} onChange={e => set('class_year', e.target.value)} placeholder="2027" /></div>
         {isSuperAdmin && (
@@ -290,14 +289,13 @@ function MemberForm({ form, set, onSave, onCancel, isSuperAdmin }) {
             <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground flex items-center gap-1.5">
               <Crown className="w-3 h-3" /> Officer Role (grants admin access using email + password)
             </Label>
-            <select
-              className="mt-1 w-full border border-input rounded-md h-9 px-3 text-sm bg-background"
+            <FormSelect
+              className="mt-1 w-full"
+              placeholder="— None (Regular Member) —"
               value={officerRole}
-              onChange={e => applyPreset(e.target.value)}
-            >
-              <option value="">— None (Regular Member) —</option>
-              {OFFICER_ROLES.map(r => <option key={r} value={r}>{r}</option>)}
-            </select>
+              onChange={v => applyPreset(v)}
+              options={OFFICER_ROLES.map(r => ({ value: r, label: r }))}
+            />
           </div>
           {officerRole && (
             <div>
@@ -371,19 +369,18 @@ function AdminsSection() {
               </div>
               <div>
                 <Label className="text-xs uppercase tracking-wide text-muted-foreground">Officer Position</Label>
-                <select
+                <FormSelect
                   value={form.officer_role}
-                  onChange={e => {
-                    const r = e.target.value;
+                  onChange={v => {
+                    const r = v;
                     set('officer_role', r);
                     if (r && OFFICER_ROLE_PRESETS[r]) setForm(p => ({ ...p, officer_role: r, permissions: OFFICER_ROLE_PRESETS[r], role: 'admin' }));
                     else set('officer_role', r);
                   }}
-                  className="mt-1 w-full border border-input rounded-md h-9 px-3 text-sm bg-background"
-                >
-                  <option value="">— Select Position —</option>
-                  {OFFICER_ROLES.map(r => <option key={r} value={r}>{r}</option>)}
-                </select>
+                  className="mt-1 w-full"
+                  placeholder="— Select Position —"
+                  options={OFFICER_ROLES.map(r => ({ value: r, label: r }))}
+                />
               </div>
             </div>
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-3">
