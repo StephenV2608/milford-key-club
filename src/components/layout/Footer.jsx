@@ -42,9 +42,15 @@ export default function Footer() {
     base44.entities.CustomPage.filter({ show_in_footer: true }, 'order').then(setCustomPages);
   }, []);
 
-  const footerLinks = settings.footer_links
-    ? JSON.parse(settings.footer_links)
-    : DEFAULT_LINKS;
+  let footerLinks = DEFAULT_LINKS;
+  if (settings.footer_links) {
+    try {
+      const parsed = JSON.parse(settings.footer_links);
+      if (Array.isArray(parsed)) footerLinks = parsed;
+    } catch (e) {
+      // Invalid JSON stored — fall back to default links
+    }
+  }
   const allFooterLinks = [...footerLinks, ...customPages.map(p => ({ label: p.title, path: `/pages/${p.slug}` }))];
 
   return (
