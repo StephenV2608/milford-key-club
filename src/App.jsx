@@ -29,7 +29,6 @@ import AttendanceScan from './pages/AttendanceScan';
 import RequestHelp from './pages/RequestHelp';
 import Impact from './pages/Impact';
 import Partners from './pages/Partners';
-import OfficerDashboard from './pages/OfficerDashboard';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -78,7 +77,6 @@ const AuthenticatedApp = () => {
         <Route path="/partners" element={<Partners />} />
       </Route>
       <Route path="/attend" element={<AttendanceScan />} />
-      <Route path="/officer-dashboard" element={<OfficerDashboard />} />
       <Route path="/register" element={<Register />} />
       <Route path="/adviser-setup" element={<AdviserSetup />} />
       <Route path="*" element={<PageNotFound />} />
